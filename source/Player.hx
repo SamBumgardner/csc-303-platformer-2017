@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
@@ -19,6 +20,8 @@ class Player extends FlxSprite
 	public var runSpeed:Float = 200;
 	
 	public var xSlowdown:Float = 600;
+	
+	public var onGround:Bool = false;
 
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -123,7 +126,27 @@ class Player extends FlxSprite
 			horizontalMove++;
 		}
 		
-		groundMovement(isRunning, horizontalMove);
+		// Determine if attempted to jump
+		var attemptedJump:Bool = FlxG.keys.anyPressed([FlxKey.X, FlxKey.BACKSLASH]);
+		
+		if (isTouching(FlxObject.DOWN))
+		{
+			onGround = true;
+		}
+		
+		
+		if (onGround)
+		{
+			if (attemptedJump)
+			{
+				onGround = false;
+				velocity.y = -400;
+			}
+			else
+			{
+				groundMovement(isRunning, horizontalMove, elapsed);
+			}
+		}
 		
 		super.update(elapsed);
 	}
