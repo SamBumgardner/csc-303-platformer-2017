@@ -24,7 +24,7 @@ class Player extends FlxSprite
 	{
 		super(X, Y, SimpleGraphic);
 		
-		makeGraphic(32, 32, FlxColor.BLUE);
+		makeGraphic(32, 32, FlxColor.ORANGE);
 		
 		xMaxSpeed = walkSpeed;
 	}
