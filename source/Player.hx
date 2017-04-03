@@ -35,7 +35,7 @@ class Player extends FlxSprite
 		return xMaxSpeed = newXSpeed;
 	}
 	
-	private function groundMovement(isRunning:Bool, horizontalMove:Int):Void
+	private function groundMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
 	{
 		// Change max speed if the player is running
 		if (isRunning)
@@ -106,7 +106,7 @@ class Player extends FlxSprite
 	public override function update(elapsed:Float):Void
 	{
 		// Determine if running
-		var isRunning:Bool = FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD])
+		var isRunning:Bool = FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
 		
 		// Determine direction of movement
 		var horizontalMove:Int = 0;
