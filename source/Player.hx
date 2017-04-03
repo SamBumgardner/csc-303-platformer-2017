@@ -27,11 +27,14 @@ class Player extends FlxSprite
 	{
 		super(X, Y, SimpleGraphic);
 		
+		// Initializes a basic graphic for the player
 		makeGraphic(32, 32, FlxColor.ORANGE);
 		
+		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		maxVelocity.y = acceleration.y;
 		
+		// Sets the starting x max velocity.
 		xMaxSpeed = walkSpeed;
 	}
 	
