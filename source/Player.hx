@@ -26,6 +26,9 @@ class Player extends FlxSprite
 		
 		makeGraphic(32, 32, FlxColor.ORANGE);
 		
+		acceleration.y = (cast FlxG.state).GRAVITY;
+		maxVelocity.y = acceleration.y;
+		
 		xMaxSpeed = walkSpeed;
 	}
 	
