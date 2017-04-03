@@ -35,28 +35,16 @@ class Player extends FlxSprite
 		return xMaxSpeed = newXSpeed;
 	}
 	
-	public override function update(elapsed:Float):Void
+	private function groundMovement(isRunning:Bool, horizontalMove:Int):Void
 	{
-		// Determine if running
-		if (FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]))
+		// Change max speed if the player is running
+		if (isRunning)
 		{
 			xMaxSpeed = runSpeed;
 		}
 		else
 		{
 			xMaxSpeed = walkSpeed;
-		}
-		
-		// Determine direction of movement
-		var horizontalMove:Int = 0;
-		
-		if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
-		{
-			horizontalMove--;
-		}
-		if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
-		{
-			horizontalMove++;
 		}
 		
 		// Moving Left
@@ -113,6 +101,26 @@ class Player extends FlxSprite
 				}
 			}
 		}
+	}
+	
+	public override function update(elapsed:Float):Void
+	{
+		// Determine if running
+		var isRunning:Bool = FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD])
+		
+		// Determine direction of movement
+		var horizontalMove:Int = 0;
+		
+		if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
+		{
+			horizontalMove--;
+		}
+		if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
+		{
+			horizontalMove++;
+		}
+		
+		groundMovement(isRunning, horizontalMove);
 		
 		super.update(elapsed);
 	}
