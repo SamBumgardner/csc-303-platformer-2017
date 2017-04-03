@@ -31,7 +31,7 @@ class Player extends FlxSprite
 	
 	public function set_xMaxSpeed(newXSpeed:Float):Float
 	{
-		maxVelocity.set(newXSpeed);
+		maxVelocity.x = newXSpeed;
 		return xMaxSpeed = newXSpeed;
 	}
 	
@@ -64,11 +64,11 @@ class Player extends FlxSprite
 		{
 			if (velocity.x > 0)
 			{
-				acceleration.set(-xSlowdown + -xAccel);
+				acceleration.x = -xSlowdown + -xAccel;
 			}
 			else
 			{
-				acceleration.set(-xAccel);
+				acceleration.x = -xAccel;
 			}
 		}
 		
@@ -77,11 +77,11 @@ class Player extends FlxSprite
 		{
 			if (velocity.x < 0)
 			{
-				acceleration.set(xSlowdown + xAccel);
+				acceleration.x = xSlowdown + xAccel;
 			}
 			else
 			{
-				acceleration.set(xAccel);
+				acceleration.x = xAccel;
 			}
 		}
 		
@@ -92,24 +92,24 @@ class Player extends FlxSprite
 			{
 				if (velocity.x <= xSlowdown * elapsed)
 				{
-					velocity.set(0);
-					acceleration.set(0);
+					velocity.x = 0;
+					acceleration.x = 0;
 				}
 				else
 				{
-					acceleration.set(-xSlowdown);
+					acceleration.x = -xSlowdown;
 				}
 			}
 			else if (velocity.x < 0)
 			{
 				if (velocity.x >= -xSlowdown * elapsed)
 				{
-					velocity.set(0);
-					acceleration.set(0);
+					velocity.x = 0;
+					acceleration.x = 0;
 				}
 				else
 				{
-					acceleration.set(xSlowdown);
+					acceleration.x = xSlowdown;
 				}
 			}
 		}
