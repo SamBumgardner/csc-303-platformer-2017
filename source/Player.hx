@@ -110,6 +110,17 @@ class Player extends FlxSprite
 				}
 			}
 		}
+		#if debug // Only compile this code into a debug version of the game.
+		
+		// Display an error message in the console if an invalid horizontalMove
+		// 	value is detected.
+		else
+		{
+			trace("ERROR: An invalid value for horizontalMove (" + 
+				horizontalMove + ") was passed into groundMovement()");
+		}
+		
+		#end // End of the conditional compilation section.
 	}
 	
 	public override function update(elapsed:Float):Void
