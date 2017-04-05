@@ -33,6 +33,14 @@ class Player extends FlxSprite
 	public var onGround:Bool = false;
 
 
+	/**
+	 * Intializer
+	 * 
+	 * @param	X	Starting x coordinate
+	 * @param	Y	Starting y coordinate
+	 * @param	SimpleGraphic	Non-animating graphic. Nothing fancy (optional)
+	 */
+
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
@@ -49,12 +57,28 @@ class Player extends FlxSprite
 		xMaxSpeed = walkSpeed;
 	}
 	
+	/**
+	 * Setter for the xMaxSpeed variable.
+	 * Updates maxVelocity's x component to match the new value.
+	 * 
+	 * @param	newXSpeed	The new max speed in the x direction.
+	 * @return	The new value contained in xMaxSpeed.
+	 */
 	public function set_xMaxSpeed(newXSpeed:Float):Float
 	{
 		maxVelocity.x = newXSpeed;
 		return xMaxSpeed = newXSpeed;
 	}
 	
+	/**
+	 * Handles all ground movement logic.
+	 * Mostly just has to set the player's acceleration to match whatever
+	 * 	direction they're supposed to start moving in.
+	 * 
+	 * @param	isRunning		Whether the player should use its running or walking max spped.
+	 * @param	horizontalMove	The direction of the player's horizontal input. -1 for left, 1 for right.
+	 * @param	elapsed			Time elapsed since the last call to groundMovement in seconds.
+	 */
 	private function groundMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
 	{
 		// Change max speed if the player is running
@@ -134,6 +158,19 @@ class Player extends FlxSprite
 		#end // End of the conditional compilation section.
 	}
 	
+	
+	/**
+	 * Handles all air movement logic.
+	 * Mostly just has to set the player's acceleration to match whatever
+	 * 	direction they're supposed to start moving in.
+	 * 
+	 * Main difference from groundMovement() :
+	 * It doesn't automatically slow down the player if no directional input is held.
+	 * 
+	 * @param	isRunning		Whether the player should use its running or walking max spped.
+	 * @param	horizontalMove	The direction of the player's horizontal input. -1 for left, 1 for right.
+	 * @param	elapsed			Time elapsed since the last call to groundMovement in seconds.
+	 */
 	private function airMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
 	{
 		var holdingJump:Bool =  FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
@@ -186,6 +223,14 @@ class Player extends FlxSprite
 		#end // End of the conditional compilation section.
 	}
 	
+	/**
+	 * Update function.
+	 * 
+	 * Responsible for parsing input and handing those inputs off to whatever functions
+	 * need them to operate correctly.
+	 * 
+	 * @param	elapsed	Time passed since last call to update in seconds.
+	 */
 	public override function update(elapsed:Float):Void
 	{
 		// Determine if running
