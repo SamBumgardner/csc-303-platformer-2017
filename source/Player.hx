@@ -56,7 +56,7 @@ class Player extends FlxSprite
 			xMaxSpeed = walkSpeed;
 		}
 		
-		// Moving Left
+		// If horizontalMove is -1, the Player should move left.
 		if (horizontalMove == -1)
 		{
 			if (velocity.x > 0)
@@ -69,8 +69,8 @@ class Player extends FlxSprite
 			}
 		}
 		
-		// Moving Right
-		if (horizontalMove == 1)
+		// If horizontalMove is 1, the Player should move right.
+		else if (horizontalMove == 1)
 		{
 			if (velocity.x < 0)
 			{
@@ -83,7 +83,7 @@ class Player extends FlxSprite
 		}
 		
 		// Slow down if no direction held
-		if (horizontalMove == 0)
+		else if (horizontalMove == 0)
 		{
 			if (velocity.x > 0)
 			{
