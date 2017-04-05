@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 
 /**
@@ -16,12 +17,21 @@ class Player extends FlxSprite
 	public var xAccel:Float = 400;
 	public var xMaxSpeed(default, set):Float;
 	
+	/*	when pressing jump, the player will have thrust at the jumpSpeed
+		for a maximum of jumpThrustTime*/ 
+	public var jumpSpeed:Float = -300; //velocity at which player jumps.
+	public var jumpThrustTime:Float = 0.35; //time thrust is applied to player
+	public var jumpReleased:Bool = true; //button was released while on the ground
+	public var stoppedJumping = true; // if the a button was released while jumping.
+	public var jumpStartedTime:FlxTimer; //timer to limit jump time
+	
 	public var walkSpeed:Float = 100;
-	public var runSpeed:Float = 200;
+	public var runSpeed:Float = 250;
 	
 	public var xSlowdown:Float = 600;
 	
 	public var onGround:Bool = false;
+
 
 	/**
 	 * Intializer
@@ -30,10 +40,12 @@ class Player extends FlxSprite
 	 * @param	Y	Starting y coordinate
 	 * @param	SimpleGraphic	Non-animating graphic. Nothing fancy (optional)
 	 */
+
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
-		
+		jumpStartedTime = new FlxTimer();
+		jumpStartedTime.start(jumpThrustTime);
 		// Initializes a basic graphic for the player
 		makeGraphic(32, 32, FlxColor.ORANGE);
 		
@@ -161,7 +173,16 @@ class Player extends FlxSprite
 	 */
 	private function airMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
 	{
+		var holdingJump:Bool =  FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
+		jumpReleased = false;
 	// Change max speed if the player is running
+		if (!jumpStartedTime.finished && holdingJump && !stoppedJumping){
+			velocity.y = jumpSpeed;
+		}
+		else{
+			stoppedJumping = true;
+		}
+		
 		if (isRunning)
 		{
 			xMaxSpeed = runSpeed;
@@ -227,24 +248,32 @@ class Player extends FlxSprite
 			horizontalMove++;
 		}
 		
-		// Determine if attempted to jump
-		var attemptedJump:Bool = FlxG.keys.anyJustPressed([FlxKey.X, FlxKey.SLASH]);
+		
+		var attemptedJump:Bool = false; //declare attempted jump
 		
 		if (isTouching(FlxObject.DOWN))
 		{
 			onGround = true;
+			// Determine if attempted to jump
+			if (!FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH])){
+			jumpReleased = true;
+		}
+		attemptedJump= FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
 		}
 		
 		
 		if (onGround)
 		{
-			if (attemptedJump)
+			if (attemptedJump && jumpReleased)
 			{
 				onGround = false;
-				velocity.y = -400;
+				stoppedJumping = false;
+				velocity.y = jumpSpeed;
+				jumpStartedTime.reset();
 			}
 			else
 			{
+				stoppedJumping = true;
 				groundMovement(isRunning, horizontalMove, elapsed);
 			}
 		}
