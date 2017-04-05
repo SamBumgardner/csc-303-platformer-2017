@@ -210,6 +210,8 @@ class Player extends FlxSprite
 		}
 		
 		super.update(elapsed);
+		
+		onGround = false;
 	}
 	
 }
