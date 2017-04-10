@@ -21,8 +21,8 @@ class PlayState extends FlxState
 		player = new Player(50, 50);
 		add(player);
 		
-		//create new platform moving
-		platform =  new Platforms(200, 150, 100, 100, 50, 50);
+		//create new moving platform
+		platform =  new Platforms(200, 150, 4, 100, 100, 50, 50);
 		platform.solid = platform.immovable = true;
 		platform.collisonXDrag = true;
 		add(platform);

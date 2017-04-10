@@ -9,7 +9,7 @@ import flixel.input.keyboard.FlxKey;
 
 /**
  * ...
- * @author Sam Bumgardner
+ * @author Jess Geiger
  */
 class Platforms extends FlxSprite 
 {
@@ -18,16 +18,17 @@ class Platforms extends FlxSprite
     public var DOWN:Bool = true;
     public var LEFT:Bool = false;
     public var RIGHT: Bool = true;
+    //Initialize min and max positioning
     public var minX:Float;
     public var maxX:Float;
     public var minY:Float;
     public var maxY:Float;
+    //Set starting position and width of platform
     public var startX:Float;
     public var startY:Float;
+    public var platformwidth:Int;
 
-	public function new(?X:Float=0, ?Y:Float=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?SimpleGraphic:FlxGraphicAsset
-    
-    ) 
+	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		
@@ -37,9 +38,10 @@ class Platforms extends FlxSprite
         maxX = R;
         minY = U;
         maxY = D;
+        platformwidth = 32 * W;
 
 		// Initializes a basic graphic for the player
-		makeGraphic(92, 32, FlxColor.YELLOW);
+		makeGraphic(platformwidth, 32, FlxColor.YELLOW);
 
 	}
 
