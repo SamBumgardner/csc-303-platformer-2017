@@ -72,7 +72,6 @@ class PlayerAirState extends PlayerState
 		// Slow down if no direction held
 		else if (horizontalMove == 0)
 		{
-      player.velocity.x = 0;
       player.acceleration.x = 0;
 		}
 		#if debug // Only compile this code into a debug version of the game.

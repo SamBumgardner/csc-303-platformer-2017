@@ -68,65 +68,10 @@ import flixel.input.keyboard.FlxKey;
 	}
 
 	/**
-	 * Handles all air movement logic.
-	 * Mostly just has to set the player's acceleration to match whatever
-	 * 	direction they're supposed to start moving in.
-	 *
-	 * Main difference from groundMovement() :
-	 * It doesn't automatically slow down the player if no directional input is held.
-	 *
-	 * @param	isRunning		Whether the player should use its running or walking max spped.
-	 * @param	horizontalMove	The direction of the player's horizontal input. -1 for left, 1 for right.
-	 * @param	elapsed			Time elapsed since the last call to groundMovement in seconds.
-	 */
-	private function airMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
-	{
-	// Change max speed if the player is running
-		if (isRunning)
-		{
-			xMaxSpeed = runSpeed;
-		}
-		else
-		{
-			xMaxSpeed = walkSpeed;
-		}
-
-		// If horizontalMove is -1, the Player should move left.
-		if (horizontalMove == -1)
-		{
-				acceleration.x = -xAccel;
-		}
-
-		// If horizontalMove is 1, the Player should move right.
-		else if (horizontalMove == 1)
-		{
-			acceleration.x = xAccel;
-		}
-
-		// Stop horizontal acceleration if no direction held
-		else if (horizontalMove == 0)
-		{
-			acceleration.x = 0;
-		}
-
-		#if debug // Only compile this code into a debug version of the game.
-
-		// Display an error message in the console if an invalid horizontalMove
-		// 	value is detected.
-		else
-		{
-			trace("ERROR: An invalid value for horizontalMove (" +
-				horizontalMove + ") was passed into airMovement()");
-		}
-
-		#end // End of the conditional compilation section.
-	}
-
-	/**
 	 * Update function.
 	 *
-	 * Responsible for parsing input and handing those inputs off to whatever functions
-	 * need them to operate correctly.
+	 * Responsible for calling the update method of the current state and
+   * switching states if a new one is returned.
 	 *
 	 * @param	elapsed	Time passed since last call to update in seconds.
 	 */
@@ -138,7 +83,7 @@ import flixel.input.keyboard.FlxKey;
     {
       activeState = nextState;
     }
-    
+
 		super.update(elapsed);
 	}
 }
