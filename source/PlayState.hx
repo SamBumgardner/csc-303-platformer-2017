@@ -45,8 +45,8 @@ class PlayState extends FlxState
 		add(map);
 		
 		//make-a da blockies
-		blockGroup.add(new Block(3, 8));
-		blockGroup.add(new Block(4, 8));
+		blockGroup.add(new Block(3, 8, true));
+		blockGroup.add(new Block(4, 8, true));
 		blockGroup.add(new Block(7, 6));
 		add(blockGroup);
 	}
@@ -56,6 +56,6 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
-		FlxG.collide(blockGroup, player);
+		FlxG.collide(blockGroup, player, function(b:Block, p:Player) {b.onTouch();} );
 	}
 }

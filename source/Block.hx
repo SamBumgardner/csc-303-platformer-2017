@@ -6,34 +6,50 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 
 /**
- * ...
+ * General blocks.  Can be invulnerable or destroyed when hit from below.
  * @author TR Nale
  */
 class Block extends FlxSprite 
 {
 	static var SCALEFACTOR:Int = 32;
-	
 	public var isBreakable:Bool;
 	
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, ?Breakable:Bool) 
+	/**
+	 * Constructor
+	 * 
+	 * @param	X	X coordinate in tilemap
+	 * @param	Y	Y coordinate in tilemap
+	 * @param	SimpleGraphic	Non-animating graphic.
+	 * @param	Breakable	Whether the block breaks when hit from below; defaults to false
+	 */
+	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, ?Breakable:Bool=false) 
 	{
 		super(X*SCALEFACTOR, Y*SCALEFACTOR, SimpleGraphic);
+		
+		if (SimpleGraphic == null)
+		{
+			makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.BLUE);
+		}
+		
 		immovable = true;
-		
-		makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.BLUE);
-		
 		isBreakable = Breakable;
 	}
 	
+	/**
+	 * Destructor
+	 */
 	override public function destroy():Void 
 	{
+		isBreakable = null;
 		super.destroy();
 	}
 	
-	public function onHit(Direction:Int)
+	/**
+	 * Processes hit logic for normal blocks
+	 */
+	public function onTouch()
 	{
-		//hit logic
-		if (Direction == FlxObject.DOWN)
+		if (isTouching(FlxObject.DOWN) && isBreakable) //ensure block was hit from below and is breakable
 		{
 			this.destroy();
 		}
