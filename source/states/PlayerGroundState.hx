@@ -16,14 +16,14 @@ class PlayerGroundState extends PlayerState
   private override function transition():Bool
   {
     // Determine if attempted to jump
-		var attemptedJump:Bool = FlxG.keys.anyJustPressed([FlxKey.X, FlxKey.SLASH]);
+    var attemptedJump:Bool = FlxG.keys.anyJustPressed([FlxKey.X, FlxKey.SLASH]);
 
-		if (attemptedJump)
-		{
+    if (attemptedJump)
+    {
       nextState = new PlayerAirState();
-			return true;
-		}
-		return super.transition();
+      return true;
+    }
+    return super.transition();
   }
 
   private override function action(object:FlxObject):Void
