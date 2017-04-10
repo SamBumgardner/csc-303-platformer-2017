@@ -28,7 +28,7 @@ class Block extends FlxSprite
 		
 		if (SimpleGraphic == null)
 		{
-			makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.BLUE);
+			makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.WHITE);
 		}
 		
 		immovable = true;
