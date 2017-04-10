@@ -11,7 +11,7 @@ import flixel.util.FlxColor;
  */
 class Block extends FlxSprite 
 {
-	static var SCALEFACTOR:Int = 32;
+	static public var SCALEFACTOR(default, never):Int = 32;
 	public var isBreakable:Bool;
 	
 	/**

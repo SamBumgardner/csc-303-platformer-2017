@@ -12,9 +12,9 @@ import haxe.Timer;
  */
 class FallingBlock extends Block
 {
-	static var FALLACCEL:Float = 100;
-	static var MAXSPEED:Float = 500;
-	static var DESTRUCTIONLINE = 500;
+	static public var FALLACCEL(default, never):Float = 100;
+	static public var MAXSPEED(default, never):Float = 500;
+	static public var DESTRUCTIONLINE(default, never):Float = 500;
 	public var fallDelay:Int;
 	private var isFalling:Bool;
 	
