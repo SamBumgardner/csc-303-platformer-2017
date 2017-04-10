@@ -1,5 +1,6 @@
 package;
 
+import states.FSM;
 import states.BaseState;
 import states.PlayerGroundState;
 import states.PlayerAirState;
@@ -17,7 +18,7 @@ import flixel.input.keyboard.FlxKey;
  */
  class Player extends FlxSprite
  {
-  public var activeState:BaseState;
+  public var brain:FSM;
 
 	public var xAccel:Float = 400;
 	public var xMaxSpeed(default, set):Float;
@@ -51,7 +52,7 @@ import flixel.input.keyboard.FlxKey;
 		xMaxSpeed = walkSpeed;
 
 		// Initialize the finite-state machine with initial state
-		activeState = new PlayerAirState();
+		brain = new FSM( new PlayerAirState() );
 	}
 
 	/**
@@ -77,13 +78,7 @@ import flixel.input.keyboard.FlxKey;
 	 */
 	public override function update(elapsed:Float):Void
 	{
-		var nextState = activeState.update(this);
-
-    if (nextState != null)
-    {
-      activeState = nextState;
-    }
-
+		brain.update(this);
 		super.update(elapsed);
 	}
 }
