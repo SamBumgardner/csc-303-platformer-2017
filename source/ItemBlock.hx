@@ -44,7 +44,7 @@ class ItemBlock extends Block
 	/**
 	 * Processes hit logic for item block
 	 */
-	override public function onTouch()
+	override public function onTouch(p:Player)
 	{
 		//produce item logic
 		if (isTouching(FlxObject.DOWN))

@@ -47,7 +47,7 @@ class FallingBlock extends Block
 	/**
 	 * Causes block to fall after a delay when touched from the top
 	 */
-	override public function onTouch()
+	override public function onTouch(p:Player)
 	{
 		if (isTouching(FlxObject.UP))
 		{

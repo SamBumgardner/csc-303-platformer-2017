@@ -47,8 +47,21 @@ class Block extends FlxSprite
 	/**
 	 * Processes hit logic for normal blocks
 	 */
-	public function onTouch()
+	public function onTouch(p:Player)
 	{
+		trace("block x, y: ", x, y);
+		trace("player x, y: ", p.x, p.y);
+		trace("X diff: ", Math.abs(x - p.x));
+		trace("Y diff: ", Math.abs(y - p.y));
+		if (Math.abs(x - p.x) > Math.abs(y - p.y))
+		{
+			touching = ((x - p.x) > 0 ? FlxObject.LEFT: FlxObject.RIGHT);
+		}
+		else
+		{
+			touching = ((y - p.y) > 0 ? FlxObject.UP: FlxObject.DOWN);
+		}
+		//trace("block touched ", isTouching(FlxObject.UP), isTouching(FlxObject.DOWN), isTouching(FlxObject.LEFT), isTouching(FlxObject.RIGHT));
 		if (isTouching(FlxObject.DOWN) && isBreakable) //ensure block was hit from below and is breakable
 		{
 			this.destroy();
