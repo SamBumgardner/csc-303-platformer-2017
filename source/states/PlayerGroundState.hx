@@ -69,8 +69,30 @@ class PlayerGroundState extends PlayerState
 		// Slow down if no direction held
 		else if (horizontalMove == 0)
 		{
-      player.velocity.x = 0;
-      player.acceleration.x = 0;
+      if (player.velocity.x > 0)
+			{
+				if (player.velocity.x <= player.xSlowdown * FlxG.elapsed)
+				{
+					player.velocity.x = 0;
+					player.acceleration.x = 0;
+				}
+				else
+				{
+					player.acceleration.x = -player.xSlowdown;
+				}
+			}
+			else if (player.velocity.x < 0)
+			{
+				if (player.velocity.x >= -player.xSlowdown * FlxG.elapsed)
+				{
+					player.velocity.x = 0;
+					player.acceleration.x = 0;
+				}
+				else
+				{
+					player.acceleration.x = player.xSlowdown;
+				}
+			}
 		}
 		#if debug // Only compile this code into a debug version of the game.
 
