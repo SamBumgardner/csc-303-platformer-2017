@@ -35,56 +35,56 @@ class PlayerAirState extends PlayerState
     var horizontalMove:Int = pollForHorizontalMove();
 
     if (isPlayerRunning())
-		{
-			player.xMaxSpeed = player.runSpeed;
-		}
-		else
-		{
-			player.xMaxSpeed = player.walkSpeed;
-		}
+    {
+      player.xMaxSpeed = player.runSpeed;
+    }
+    else
+    {
+      player.xMaxSpeed = player.walkSpeed;
+    }
 
     // If horizontalMove is -1, the Player should move left.
-		if (horizontalMove == -1)
-		{
-			if (player.velocity.x > 0)
-			{
-				player.acceleration.x = -player.xSlowdown + -player.xAccel;
-			}
-			else
-			{
-				player.acceleration.x = -player.xAccel;
-			}
-		}
+    if (horizontalMove == -1)
+    {
+      if (player.velocity.x > 0)
+      {
+        player.acceleration.x = -player.xSlowdown + -player.xAccel;
+      }
+      else
+      {
+        player.acceleration.x = -player.xAccel;
+      }
+    }
 
-		// If horizontalMove is 1, the Player should move right.
-		else if (horizontalMove == 1)
-		{
-			if (player.velocity.x < 0)
-			{
-				player.acceleration.x = player.xSlowdown + player.xAccel;
-			}
-			else
-			{
-				player.acceleration.x = player.xAccel;
-			}
-		}
+    // If horizontalMove is 1, the Player should move right.
+    else if (horizontalMove == 1)
+    {
+      if (player.velocity.x < 0)
+      {
+        player.acceleration.x = player.xSlowdown + player.xAccel;
+      }
+      else
+      {
+        player.acceleration.x = player.xAccel;
+      }
+    }
 
-		// Slow down if no direction held
-		else if (horizontalMove == 0)
-		{
+    // Slow down if no direction held
+    else if (horizontalMove == 0)
+    {
       player.acceleration.x = 0;
-		}
-		#if debug // Only compile this code into a debug version of the game.
+    }
+    #if debug // Only compile this code into a debug version of the game.
 
-		// Display an error message in the console if an invalid horizontalMove
-		// 	value is detected.
-		else
-		{
-			trace("ERROR: An invalid value for horizontalMove (" +
-				horizontalMove + ") found for this action");
-		}
+    // Display an error message in the console if an invalid horizontalMove
+    // 	value is detected.
+    else
+    {
+      trace("ERROR: An invalid value for horizontalMove (" +
+      horizontalMove + ") found for this action");
+    }
 
-		#end // End of the conditional compilation section.
+    #end // End of the conditional compilation section.
   }
 
   private override function exit(object:FlxObject):Void
