@@ -48,6 +48,8 @@ class PlayState extends FlxState
 		blockGroup.add(new Block(3, 8, true));
 		blockGroup.add(new Block(4, 8, true));
 		blockGroup.add(new Block(7, 6));
+		blockGroup.add(new ItemBlock(8, 6, "Fake Item"));
+		blockGroup.add(new FallingBlock(9, 6));
 		add(blockGroup);
 	}
 
