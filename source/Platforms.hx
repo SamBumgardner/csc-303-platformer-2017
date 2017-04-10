@@ -31,7 +31,7 @@ class Platforms extends FlxSprite
 	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
-		
+		//set starting positions based on requested dimensions/positions
         startX = X;
         startY = Y;
         minX = L;
@@ -45,6 +45,7 @@ class Platforms extends FlxSprite
 
 	}
 
+    //Movement as requested by user parameters
     public override function update(elapsed:Float):Void
 	{
 		if (DOWN) {

@@ -48,17 +48,15 @@ class PlayState extends FlxState
 		add(map);
 	}
 	
-	//returns touches from sides - NOT top and bottom
-	function doDamage(plyr:Player, ptfm:Platforms):Void {
-		x += 1;
-		trace(x);
-	}
+	//returns touches between player and platform - WIP
+	// function doDamage(plyr:Player, ptfm:Platforms):Void {
+	// 	x += 1;
+	// 	trace(x);
+	// }
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-
 
 		FlxG.collide(map, player);
 		FlxG.collide(platform, player);
