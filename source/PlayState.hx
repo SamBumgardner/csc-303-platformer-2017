@@ -22,7 +22,7 @@ class PlayState extends FlxState
 		add(player);
 		
 		//create new moving platform
-		platform =  new Platforms(200, 150, 4, 100, 100, 50, 50);
+		platform =  new Platforms(200, 150, 4, 100, 100, 50, 50, player);
 		platform.solid = platform.immovable = true;
 		platform.collisonXDrag = true;
 		add(platform);
@@ -49,10 +49,10 @@ class PlayState extends FlxState
 	}
 	
 	//returns touches between player and platform - WIP
-	// function doDamage(plyr:Player, ptfm:Platforms):Void {
-	// 	x += 1;
-	// 	trace(x);
-	// }
+	function doDamage(plyr:Player, ptfm:Platforms):Void {
+		x += 1;
+		trace(x);
+	}
 
 	override public function update(elapsed:Float):Void
 	{

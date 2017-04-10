@@ -14,21 +14,22 @@ import flixel.input.keyboard.FlxKey;
 class Platforms extends FlxSprite 
 {
     //set initial movement
-    public var UP:Bool = false;
-    public var DOWN:Bool = true;
-    public var LEFT:Bool = false;
-    public var RIGHT: Bool = true;
+    private var UP:Bool = false;
+    private var DOWN:Bool = true;
+    private var LEFT:Bool = false;
+    private var RIGHT: Bool = true;
     //Initialize min and max positioning
-    public var minX:Float;
-    public var maxX:Float;
-    public var minY:Float;
-    public var maxY:Float;
+    private var minX:Float;
+    private var maxX:Float;
+    private var minY:Float;
+    private var maxY:Float;
     //Set starting position and width of platform
-    public var startX:Float;
-    public var startY:Float;
-    public var platformwidth:Int;
+    private var startX:Float;
+    private var startY:Float;
+    private var platformwidth:Int;
+    private var player:Player;
 
-	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
+	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		//set starting positions based on requested dimensions/positions
@@ -46,8 +47,8 @@ class Platforms extends FlxSprite
 	}
 
     //Movement as requested by user parameters
-    public override function update(elapsed:Float):Void
-	{
+    public function movement():Void
+    {
 		if (DOWN) {
             if (y >= (startY + maxY)) {
                 UP = true;
@@ -84,6 +85,11 @@ class Platforms extends FlxSprite
                 x += 1;
             }
         }
+    }
+
+    public override function update(elapsed:Float):Void
+	{
+        movement();
 		super.update(elapsed);
 	}
 }
