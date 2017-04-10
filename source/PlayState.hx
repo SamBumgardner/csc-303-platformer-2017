@@ -12,6 +12,8 @@ class PlayState extends FlxState
 	
 	private var map:FlxTilemap;
 	private var player:Player;
+	private var dtmEnemy:DontTouchMe;
+	private var sentry1:Sentry;
 	
 	override public function create():Void
 	{
@@ -19,6 +21,12 @@ class PlayState extends FlxState
 		
 		player = new Player(50, 50);
 		add(player);
+		
+		dtmEnemy = new DontTouchMe(400, 200);
+		add(dtmEnemy);
+		
+		sentry1 = new Sentry(320, 32, player);
+		add(sentry1);
 		
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -46,5 +54,8 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
+		FlxG.collide(player, sentry1);
+		FlxG.collide(map, dtmEnemy);
+		FlxG.collide(player, dtmEnemy);
 	}
 }
