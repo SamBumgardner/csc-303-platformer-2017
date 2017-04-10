@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.group.FlxGroup;
 
 class PlayState extends FlxState
 {
@@ -12,6 +13,9 @@ class PlayState extends FlxState
 	
 	private var map:FlxTilemap;
 	private var player:Player;
+	
+	//group for handling block collisions
+	var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	
 	override public function create():Void
 	{
@@ -39,6 +43,12 @@ class PlayState extends FlxState
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			20, 15, AssetPaths.tiles__png, 32, 32);
 		add(map);
+		
+		//make-a da blockies
+		blockGroup.add(new Block(3, 8));
+		blockGroup.add(new Block(4, 8));
+		blockGroup.add(new Block(7, 6));
+		add(blockGroup);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -46,5 +56,6 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
+		FlxG.collide(blockGroup, player);
 	}
 }
