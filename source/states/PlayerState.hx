@@ -4,6 +4,12 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
+/**
+ * Any player related states should extend this one as it provides several
+ * convenience methods that will surely be needed
+ *
+ * @author Garren Ijames
+ */
 class PlayerState extends BaseState
 {
   private var isRunning:Bool;
