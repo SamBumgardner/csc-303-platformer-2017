@@ -32,16 +32,6 @@ class ItemBlock extends Block
 	}
 	
 	/**
-	 * Destructor
-	 */
-	override public function destroy()
-	{
-		containedItem = null;
-		isExpended = null;
-		super.destroy();
-	}
-	
-	/**
 	 * Processes hit logic for item block
 	 */
 	override public function onTouch(p:Player)

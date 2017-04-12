@@ -35,16 +35,6 @@ class FallingBlock extends Block
 	}
 	
 	/**
-	 * Destructor
-	 */
-	override public function destroy()
-	{
-		fallDelay = null;
-		isFalling = null;
-		super.destroy();
-	}
-	
-	/**
 	 * Causes block to fall after a delay when touched from the top
 	 */
 	override public function onTouch(p:Player)

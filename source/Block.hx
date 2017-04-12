@@ -36,15 +36,6 @@ class Block extends FlxSprite
 	}
 	
 	/**
-	 * Destructor
-	 */
-	override public function destroy():Void 
-	{
-		isBreakable = null;
-		super.destroy();
-	}
-	
-	/**
 	 * Processes hit logic for normal blocks
 	 */
 	public function onTouch(p:Player)
