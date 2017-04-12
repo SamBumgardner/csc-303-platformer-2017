@@ -125,7 +125,9 @@ import flixel.input.keyboard.FlxKey;
   }
 
   /**
-   * ...
+   * Convenience method for checking if the player is running
+   *
+   * @ return boolean value for if the run key is eing held
    */
   public function isRunning():Bool
   {
