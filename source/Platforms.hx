@@ -28,7 +28,10 @@ class Platforms extends FlxSprite
     private var startY:Float;
     private var platformwidth:Int;
     private var player:Player;
-
+    private var tracer:Int = 0;
+    private var offsetX:Float = 0;
+    public var sticky:Bool = false;
+    public var newbool:Bool;
 	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
@@ -87,9 +90,35 @@ class Platforms extends FlxSprite
         }
     }
 
+    //returns offset of player when player jumps on block
+    public function setOffset(plyr:Player, self):Void {
+        //only redefine offset x if the player is JUST NOW starting to touch the block
+        if (!sticky) {
+            offsetX = plyr.x - self.x;
+            trace(offsetX);
+            sticky = true;
+            trace(sticky);
+            movePlayer(plyr, self);
+        }
+        //otherwise just move the player based on 
+        else {
+            movePlayer(plyr, self);
+        }
+        
+    }
+
+	//returns touches between player and platform - WIP
+	public function movePlayer(plyr:Player, self):Void {
+		plyr.x = self.x + offsetX;
+        plyr.y = self.y;
+        //plyr.onGround = true;
+	}
+
+
     public override function update(elapsed:Float):Void
 	{
         movement();
+       
 		super.update(elapsed);
 	}
 }

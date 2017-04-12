@@ -22,7 +22,7 @@ class PlayState extends FlxState
 		add(player);
 		
 		//create new moving platform
-		platform =  new Platforms(200, 150, 4, 100, 100, 50, 50, player);
+		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
 		platform.solid = platform.immovable = true;
 		platform.collisonXDrag = true;
 		add(platform);
@@ -47,21 +47,17 @@ class PlayState extends FlxState
 			20, 15, AssetPaths.tiles__png, 32, 32);
 		add(map);
 	}
-	
-	//returns touches between player and platform - WIP
-	function doDamage(plyr:Player, ptfm:Platforms):Void {
-		x += 1;
-		trace(x);
-	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-
+		//FlxG.collide(map, platform);
+        FlxG.overlap(player, platform, platform.setOffset);
 		FlxG.collide(map, player);
-		FlxG.collide(platform, player);
-		FlxG.overlap(player, platform, doDamage);
-
+		if (!FlxG.collide(platform, player)) {
+			platform.sticky = false;
+		}
+		
 
 	}
 }
