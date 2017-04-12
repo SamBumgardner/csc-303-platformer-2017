@@ -28,8 +28,6 @@ import flixel.input.keyboard.FlxKey;
 
 	public var xSlowdown:Float = 600;
 
-	public var onGround:Bool = false;
-
 	/**
 	 * Intializer
 	 *
@@ -81,4 +79,56 @@ import flixel.input.keyboard.FlxKey;
 		brain.update(this);
 		super.update(elapsed);
 	}
+
+  /**
+   * Convenience method for polling for horizontal movement as
+   * most of the player states need to take it into account
+   *
+   * @return scalar value of the players next horizontal move
+   */
+  public function pollForHorizontalMove():Int
+  {
+    var step:Int = 0;
+
+    if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
+    {
+      step--;
+    }
+    if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
+    {
+      step++;
+    }
+
+    return step;
+  }
+
+  /**
+   * Convenience method for checking if a jump is being requested.
+   *
+   * @return boolean value for if the jump key is being held
+   */
+  public function isJumping():Bool
+  {
+    return FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
+  }
+
+  /**
+   * Convenience method for checking if the player is currently touching a
+   * surface from above the surface.
+   *
+   * @return boolean value for if the player is touching a surface from above
+   *         the surface
+   */
+  public function isOnGround():Bool
+  {
+    return isTouching(FlxObject.DOWN);
+  }
+
+  /**
+   * ...
+   */
+  public function isRunning():Bool
+  {
+    return FlxG.keys.anyPressed([FlxKey.Z]);
+  }
 }

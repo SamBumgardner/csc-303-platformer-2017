@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 
 /**
@@ -14,11 +15,13 @@ class BaseState
 {
   public  var nextState:Null<BaseState>;
 
-  private var duration:Int;
+  private var framesLeft:Int;
+  private var duration:Float;
 
   public function new()
   {
-    duration = -1;
+    framesLeft = -1;
+    duration   = -1;
   }
 
   /**
@@ -31,7 +34,7 @@ class BaseState
    */
   public function update(object:FlxObject):Null<BaseState>
   {
-    if (!transition())
+    if (!transition(object))
     {
       action(object);
       return null;
@@ -51,19 +54,28 @@ class BaseState
    *
    * @return boolean value for if it is time to transition to the next state.
    */
-  private function transition():Bool
+  private function transition(object:FlxObject):Bool
   {
-     if (duration > 0)
-     {
-       duration -= 1;
-     }
+      if (duration > 0)
+      {
+        duration -= FlxG.elapsed;
+      }
+      else if (Math.fround(duration - FlxG.elapsed) == 0)
+      {
+        return true;
+      }
 
-     else if (duration == 0)
-     {
-       return true;
-     }
+      if (framesLeft > 0)
+      {
+        framesLeft -= 1;
+      }
+      else if (framesLeft == 0)
+      {
+        return true;
+      }
 
-     return false;
+    // Not time to transition, return false
+    return false;
   }
 
   /**

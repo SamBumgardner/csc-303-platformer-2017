@@ -4,23 +4,23 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
-class PlayerAirState extends PlayerState
+class PlayerAirState extends BaseState
 {
   public function new()
   {
     super();
-
-    onGround = false;
   }
 
-  private override function transition():Bool
+  private override function transition(object:FlxObject):Bool
   {
-    if (isPlayerOnGround())
+    var player = cast(object, Player);
+
+    if (player.isOnGround())
     {
       nextState = new PlayerGroundState();
       return true;
     }
-    return false;
+    return super.transition(object);
   }
 
   public override function enter(object:FlxObject):Void
@@ -32,9 +32,9 @@ class PlayerAirState extends PlayerState
   private override function action(object:FlxObject):Void
   {
     var player = cast(object, Player);
-    var horizontalMove:Int = pollForHorizontalMove();
+    var horizontalMove:Int = player.pollForHorizontalMove();
 
-    if (isPlayerRunning())
+    if (player.isRunning())
     {
       player.xMaxSpeed = player.runSpeed;
     }
@@ -69,7 +69,7 @@ class PlayerAirState extends PlayerState
       }
     }
 
-    // Slow down if no direction held
+    // If horizontalMove is 0, top acceleration
     else if (horizontalMove == 0)
     {
       player.acceleration.x = 0;

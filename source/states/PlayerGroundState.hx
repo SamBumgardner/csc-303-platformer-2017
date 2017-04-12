@@ -4,34 +4,33 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
-class PlayerGroundState extends PlayerState
+class PlayerGroundState extends BaseState
 {
   public function new()
   {
     super();
-
-    onGround = true;
   }
 
-  private override function transition():Bool
+  private override function transition(object:FlxObject):Bool
   {
-    // Determine if attempted to jump
-    var attemptedJump:Bool = FlxG.keys.anyJustPressed([FlxKey.X, FlxKey.SLASH]);
+    var player = cast(object, Player);
+    var attemptedJump:Bool = player.isJumping();
 
     if (attemptedJump)
     {
       nextState = new PlayerAirState();
       return true;
     }
-    return super.transition();
+
+    return super.transition(object);
   }
 
   private override function action(object:FlxObject):Void
   {
     var player = cast(object, Player);
-    var horizontalMove:Int = pollForHorizontalMove();
+    var horizontalMove:Int = player.pollForHorizontalMove();
 
-    if (isPlayerRunning())
+    if (player.isRunning())
     {
       player.xMaxSpeed = player.runSpeed;
     }
