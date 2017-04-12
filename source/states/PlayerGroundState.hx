@@ -18,7 +18,7 @@ class PlayerGroundState extends BaseState
 
     if (attemptedJump)
     {
-      nextState = new PlayerAirState();
+      nextState = new PlayerJumpState();
       return true;
     }
 

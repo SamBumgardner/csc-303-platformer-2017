@@ -105,4 +105,17 @@ class BaseState
    */
   private function exit(object:FlxObject):Void
   {}
+
+  private function isTimeLeft():Bool
+  {
+    if (duration > 0)
+    {
+      return true;
+    }
+    if (Math.fround(duration - FlxG.elapsed) > 0)
+    {
+      return true;
+    }
+    return false;
+  }
 }

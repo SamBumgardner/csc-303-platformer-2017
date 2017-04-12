@@ -26,7 +26,7 @@ class PlayerAirState extends BaseState
   public override function enter(object:FlxObject):Void
   {
       var player = cast(object, Player);
-      player.velocity.y = -400;
+      player.velocity.y = -300;
   }
 
   private override function action(object:FlxObject):Void
