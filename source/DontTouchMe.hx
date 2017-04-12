@@ -17,6 +17,8 @@ class DontTouchMe extends Enemy
 	public var xMaxSpeed:Float = 30;
 			
 	public var onGround:Bool = false;
+	
+	//private var dHB:Damage_Hit_Box;
 
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{

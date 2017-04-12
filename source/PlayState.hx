@@ -5,6 +5,8 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.group.FlxGroup.FlxTypedGroup;
+
 
 class PlayState extends FlxState
 {
@@ -12,8 +14,12 @@ class PlayState extends FlxState
 	
 	private var map:FlxTilemap;
 	private var player:Player;
+	
+	// Enemies
 	private var dtmEnemy:DontTouchMe;
 	private var sentry1:Sentry;
+	private var bullets:FlxTypedGroup<Bullet>;
+
 	
 	override public function create():Void
 	{
@@ -25,7 +31,10 @@ class PlayState extends FlxState
 		dtmEnemy = new DontTouchMe(400, 200);
 		add(dtmEnemy);
 		
-		sentry1 = new Sentry(320, 32, player);
+		
+		bullets = new FlxTypedGroup<Bullet>(20);
+		add(bullets);
+		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
 		
 		map = new FlxTilemap();
@@ -56,6 +65,8 @@ class PlayState extends FlxState
 		FlxG.collide(map, player);
 		FlxG.collide(player, sentry1);
 		FlxG.collide(map, dtmEnemy);
+		FlxG.collide(map, bullets);
+		
 		FlxG.collide(player, dtmEnemy);
 	}
 }

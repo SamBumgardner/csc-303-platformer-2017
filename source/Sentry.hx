@@ -6,7 +6,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 
-
 /**
  * ...
  * @author Keith Cissell
@@ -22,7 +21,7 @@ class Sentry extends Enemy
 	// Group of bullets
 	private var bullets:FlxTypedGroup<Bullet>;
 
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, player:Player) 
+	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, bults:FlxTypedGroup<Bullet>, player:Player) 
 	{
 		super(X, Y, SimpleGraphic);
 		
@@ -31,9 +30,10 @@ class Sentry extends Enemy
 				
 		// Set class specific variables
 		name = "Sentry";
+		bullets = bults;
 		trackedPlayer = player;
 		playerMidpoint = FlxPoint.get();
-		shotClock = 0;
+		shotClock = 4.0;
 		
 	}
 	
@@ -42,10 +42,10 @@ class Sentry extends Enemy
 	 * 
 	 * @param	angle The angle at which to fire the bullet.
 	 */
-	public function fireBullet(angle:Float)
+	public function fireBullet(angle:Float):Void
 	{
 		var midpoint = getMidpoint(_point);
-		var b:Bullet = new Bullet(midpoint.x, midpoint.y); //bullets.recycle(Bullet);
+		var b:Bullet = bullets.recycle(Bullet);
 		b.shoot(getMidpoint(_point), angle);
 	}
 	
@@ -71,7 +71,7 @@ class Sentry extends Enemy
 		// Increment shotClock
 		shotClock += elapsed;
 		
-		if (shotClock >= 2.0)
+		if (shotClock >= 4.0)
 		{
 			shotClock = 0;
 			fireBullet(angle);
