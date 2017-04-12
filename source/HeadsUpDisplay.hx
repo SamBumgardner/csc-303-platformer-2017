@@ -20,6 +20,12 @@ class HeadsUpDisplay extends FlxGroup
 	private var coins:FlxText;
 	//This class is a static member of PlayState, and should be called from there.
 	
+	/**
+	 * 
+	 * @param	x	The X coordinate of the top left of the HUD
+	 * @param	y	The Y coordinate of the top left of the HUD
+	 * @param	playerName The name displayed above the score. Will be converted to upper case.
+	 */
 	public  function new(x:Int, y:Int, playerName:String) 
 	{
 		//creates a HUD
@@ -55,6 +61,10 @@ class HeadsUpDisplay extends FlxGroup
 		add(coinIcon);
 	}
 	
+	/**
+	 * 
+	 * @param	newTime The time you want displayed on the HUD. Displays last 3 digits of number.
+	 */
 	private function handleTimeUpdate(newTime:Int):Void{
 		//trim number down to last 3 digits if over 3 digits
 		var parsedTime:String = Std.string(newTime);
@@ -69,7 +79,10 @@ class HeadsUpDisplay extends FlxGroup
 		}
 		time.text = timeString;
 	}
-	
+	/**
+	 * 
+	 * @param	newCoinCount the coin count you want displayed on the HUD. Displays last 2 digits of number.
+	 */
 	private function handleCoinsUpdate(newCoinCount:Int){
 		//trim number down to last 2 digits if over 2 digits
 		var parsedCoins:String = Std.string(newCoinCount);
@@ -85,6 +98,10 @@ class HeadsUpDisplay extends FlxGroup
 		coins.text = coinString;
 	}
 	
+	/**
+	 * 
+	 * @param	newScore the score you want displayed on the HUD. Displays last 8 digits of number.
+	 */
 	private function handleScoreUpdate(newScore:Int){
 		//trim number down to last 8 digits if over 8 digits
 		var parsedScore:String = Std.string(newScore);
@@ -98,6 +115,10 @@ class HeadsUpDisplay extends FlxGroup
 		}
 		score.text = scoreString;
 	}
+	/**
+	 * 
+	 * @param	elapsed
+	 */
 	
 	public override function update(elapsed:Float):Void
 	{
