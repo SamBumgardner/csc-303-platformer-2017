@@ -37,20 +37,17 @@ class FallingBlock extends Block
 	/**
 	 * Causes block to fall after a delay when touched from the top
 	 */
-	override public function onTouch(p:Player)
+	override public function onTouch()
 	{
-		if (isTouching(FlxObject.UP))
+		color = FlxColor.YELLOW;
+		if (!isFalling)
 		{
-			color = FlxColor.YELLOW;
-			if (!isFalling)
-			{
-				isFalling = true;
-				//creates a timer that causes the block to fall after fallDelay milliseconds
-				Timer.delay(function():Void {
-					immovable = false;
-					acceleration.y = FALLACCEL;
-				}, fallDelay);
-			}
+			isFalling = true;
+			//creates a timer that causes the block to fall after fallDelay milliseconds
+			Timer.delay(function():Void {
+				immovable = false;
+				acceleration.y = FALLACCEL;
+			}, fallDelay);
 		}
 	}
 	
