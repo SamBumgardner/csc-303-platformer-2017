@@ -9,7 +9,6 @@ class PlayerJumpState extends PlayerAirState
   public function new()
   {
     super();
-    duration = 0.2; // set maximum jump time for 0.1 seconds
   }
 
   private override function transition(object:FlxObject):Bool
@@ -25,17 +24,5 @@ class PlayerJumpState extends PlayerAirState
       return true;
     }
     return super.transition(object);
-  }
-
-  private override function action(object:FlxObject):Void
-  {
-    var player = cast(object, Player);
-
-    if (player.isJumping())
-    {
-      player.acceleration.y = -300;
-    }
-
-    super.action(object);
   }
 }

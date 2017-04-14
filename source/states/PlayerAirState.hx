@@ -6,6 +6,8 @@ import flixel.input.keyboard.FlxKey;
 
 class PlayerAirState extends BaseState
 {
+  static private var JUMP:Int = 400;
+
   public function new()
   {
     super();
@@ -20,13 +22,20 @@ class PlayerAirState extends BaseState
       nextState = new PlayerGroundState();
       return true;
     }
+
+    if (player.velocity.y >= 0)
+    {
+      nextState = new PlayerFallState();
+      return true;
+    }
+
     return super.transition(object);
   }
 
   public override function enter(object:FlxObject):Void
   {
       var player = cast(object, Player);
-      player.velocity.y = -300;
+      player.velocity.y = -JUMP;
   }
 
   private override function action(object:FlxObject):Void
