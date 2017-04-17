@@ -5,9 +5,11 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxPath;
 
 /**
  * ...
@@ -21,6 +23,10 @@ class FlagPole extends FlxSprite
 	private var flag:WinFlag;
 	private var pole_height:Int = 110;
 	private var pole_width:Int = 5;
+	private var pole_x_pos:Float;
+	private var pole_y_pos:Float;
+	private var player_x:Float;
+	private var player_y:Float;
 	/**
 	 * Intializer
 	 * 
@@ -31,8 +37,10 @@ class FlagPole extends FlxSprite
 	public function new(?X:Float=0, ?Y:Float=0, ?pole_graphic:FlxGraphicAsset) 
 	{
 		super(X, Y, pole_graphic);
+		pole_x_pos = X;
+		pole_y_pos = Y;
 		//Win flag with a height of 10 and width of 30
-		flag = new WinFlag(x, y, pole_height);
+		flag = new WinFlag(X, Y, pole_height);
 		
 		totalFlxGrp = new FlxGroup();
 		totalFlxGrp.add(flag);
@@ -58,6 +66,13 @@ class FlagPole extends FlxSprite
 	public function win_animation(player:FlxBasic, flagpole:FlxBasic ):Void
 	{
 		flag.isLevelOver = true;
+		cast(player, FlxSprite).velocity.x = 0;
+		//subtract 16 for the half of the character image
+		player_x = cast(player, FlxSprite).x + 16; // - pole_width / 2;
+		player_y =  cast(player, FlxSprite).y;
+		cast(player, FlxSprite).path = new FlxPath().start([new FlxPoint(player_x, player_y+16), new FlxPoint(player_x, pole_y_pos+pole_height-16)], 25, FlxPath.FORWARD);
+		
+		
 		flag.flag_animate();
 	}
 }

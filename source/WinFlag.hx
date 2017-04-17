@@ -29,9 +29,11 @@ class WinFlag extends FlxSprite
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?height:Float, ?flag_graphic:FlxGraphicAsset) 
 	{
-		super(X, Y, flag_graphic);
+		super(X-graphic_width, Y, flag_graphic);
 		flag_height = height;
-		flag_distance = height + y - graphic_height;
+		flag_distance = height + Y - graphic_height;
+		trace(X);
+		trace(Y);
 		
 		// Initializes a basic graphic for the winflag
 		makeGraphic(graphic_width, graphic_height, FlxColor.RED);
@@ -49,7 +51,7 @@ class WinFlag extends FlxSprite
 	 */
 	public function flag_animate():Void
 	{
-		this.x -= graphic_width/2; // move it to the other side of the pole
+		//this.x -= graphic_width/2; // move it to the other side of the pole
 		//angle = 180; //rotate the image
 		velocity.y = 25;
 	}
