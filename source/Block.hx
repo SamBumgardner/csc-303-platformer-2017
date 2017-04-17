@@ -30,11 +30,6 @@ class Block extends FlxSprite
 			Graphic = IMAGE;
 		}
 		super(X*SCALEFACTOR, Y*SCALEFACTOR, Graphic);
-		//loadGraphic(Graphic, false, 32, 32);
-		//if (SimpleGraphic == null)
-		//{
-		//	makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.WHITE);
-		//}
 		
 		immovable = true;
 		isBreakable = Breakable;
