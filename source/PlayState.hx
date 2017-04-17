@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.group.FlxGroup;
 
 class PlayState extends FlxState
 {
@@ -12,6 +13,7 @@ class PlayState extends FlxState
 	
 	private var map:FlxTilemap;
 	private var player:Player;
+	private var coins:FlxGroup;
 	
 	override public function create():Void
 	{
@@ -19,6 +21,15 @@ class PlayState extends FlxState
 		
 		player = new Player(50, 50);
 		add(player);
+		
+		//Coins are added to a group, coin group added to playstate
+		coins = new FlxGroup();
+		coins.add(Coin.createCoin(8, 8, true));
+		coins.add(Coin.createCoin(13, 8, true));
+		coins.add(Coin.createCoin(12, 8, false));
+		coins.add(Coin.createCoin(10, 8, false));
+		coins.add(Coin.createCoin(15, 8, false));
+		add(coins);
 		
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -46,5 +57,8 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
+		
+		//When player overlaps a coin, the coin is destroyed
+		FlxG.overlap(player, coins, Coin.getCoin);
 	}
 }
