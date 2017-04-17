@@ -22,8 +22,8 @@ class ItemBlock extends Block
 	 * @param	X	X coordinate in tilemap
 	 * @param	Y	Y coordinate in tilemap
 	 * @param	Item	Placeholder for the contained item
-	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block is breakable; defaults to false
+	 * @param	SimpleGraphic	Non-animating graphic.
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, Item:String, ?Breakable:Bool=false, ?Graphic:FlxGraphicAsset) 
 	{

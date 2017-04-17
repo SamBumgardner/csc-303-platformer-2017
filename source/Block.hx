@@ -20,11 +20,12 @@ class Block extends FlxSprite
 	 * 
 	 * @param	X	X coordinate in tilemap
 	 * @param	Y	Y coordinate in tilemap
-	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block breaks when hit from below; defaults to false
+	 * @param	SimpleGraphic	Non-animating graphic.
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?Breakable:Bool=false, ?Graphic:FlxGraphicAsset) 
 	{
+		//if no graphic is provided, use the default brick image
 		if (Graphic == null)
 		{
 			Graphic = IMAGE;
@@ -40,7 +41,6 @@ class Block extends FlxSprite
 	 */
 	public function onTouch()
 	{
-		//trace("block touched ", isTouching(FlxObject.UP), isTouching(FlxObject.DOWN), isTouching(FlxObject.LEFT), isTouching(FlxObject.RIGHT));
 		if (isTouching(FlxObject.DOWN) && isBreakable) //ensure block was hit from below and is breakable
 		{
 			this.destroy();

@@ -23,8 +23,7 @@ class FallingBlock extends Block
 	 * 
 	 * @param	X	X coordinate in tilemap
 	 * @param	Y	Y coordinate in tilemap
-	 * @param	SimpleGraphic	Non-animating graphic.
-	 * @param	Breakable	Whether the block breaks when hit from below; defaults to false
+	 * @param	Delay	Time from touch until the block falls, in milliseconds
 	 */
 	public function new(?X:Float=0, ?Y:Float=0,?Delay:Int=1000) 
 	{
