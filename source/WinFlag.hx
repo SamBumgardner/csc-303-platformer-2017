@@ -29,11 +29,10 @@ class WinFlag extends FlxSprite
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?height:Float, ?flag_graphic:FlxGraphicAsset) 
 	{
-		super(X-graphic_width, Y, flag_graphic);
+		super(X - graphic_width, Y, flag_graphic);
+		
 		flag_height = height;
 		flag_distance = height + Y - graphic_height;
-		trace(X);
-		trace(Y);
 		
 		// Initializes a basic graphic for the winflag
 		makeGraphic(graphic_width, graphic_height, FlxColor.RED);
@@ -52,14 +51,14 @@ class WinFlag extends FlxSprite
 	public function flag_animate():Void
 	{
 		//this.x -= graphic_width/2; // move it to the other side of the pole
-		//angle = 180; //rotate the image
+		//angle = 180; //we need to mirror reverse the image the image
 		velocity.y = 25;
 	}
 	
 	public override function update(elapsed:Float):Void
 	{
         if (isLevelOver){
-			//if (y > (y + flag_height)) //this will evaluate false no matter what?
+			//if (y > (y + flag_height - graphic_height)){ //this will evaluate false no matter what?
 			if (y > flag_distance){ // but this will function correctly
 				velocity.y = 0;
 			}

@@ -21,7 +21,7 @@ class FlagPole extends FlxSprite
 	public var totalFlxGrp:FlxGroup;
 	
 	private var flag:WinFlag;
-	private var pole_height:Int = 110;
+	private var pole_height:Int = 210;
 	private var pole_width:Int = 5;
 	private var pole_x_pos:Float;
 	private var pole_y_pos:Float;
@@ -31,16 +31,17 @@ class FlagPole extends FlxSprite
 	 * Intializer
 	 * 
 	 * @param	X	Starting x coordinate
-	 * @param	Y	Starting y coordinate
+	 * @param	Y	Starting y coordinate: Ground level
 	 * @param	pole_graphic	Non-animating flagpole graphic. Nothing fancy (optional)
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?pole_graphic:FlxGraphicAsset) 
 	{
-		super(X, Y, pole_graphic);
 		pole_x_pos = X;
-		pole_y_pos = Y;
+		pole_y_pos = Y-pole_height;
+		super(pole_x_pos, pole_y_pos, pole_graphic);
+		
 		//Win flag with a height of 10 and width of 30
-		flag = new WinFlag(X, Y, pole_height);
+		flag = new WinFlag(pole_x_pos, pole_y_pos, pole_height);
 		
 		totalFlxGrp = new FlxGroup();
 		totalFlxGrp.add(flag);
@@ -53,8 +54,7 @@ class FlagPole extends FlxSprite
 	public function level_over():Bool{
 		return flag.isLevelOver;
 	}
-	
-	
+		
 	/**
 	 * Overlap function for player and flagpole
 	 * Control win animation and music. Begin transition to next level

@@ -5,6 +5,7 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 
 class PlayState extends FlxState
 {
@@ -19,10 +20,9 @@ class PlayState extends FlxState
 		super.create();
 		
 		/*Create the flagpole at the end of the level 
-		 * which has a height of 110 and width of 5
 		 * This will also instantiate the flag
 		*/
-		flagpole = new FlagPole(550, 242);
+		flagpole = new FlagPole(550, 350);
 		add(flagpole.totalFlxGrp);
 		
 		
@@ -62,9 +62,16 @@ class PlayState extends FlxState
 		
 		if (!flagpole.level_over()){
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
+		} else {
+			// time (seconds), callback, loops
+			new FlxTimer().start(10, myCallback, 1);
 		}
 	}
 	
+	private function myCallback(Timer:FlxTimer):Void
+	{
+		FlxG.resetState();
+	}
 	
 	
 }
