@@ -5,13 +5,14 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.FlxObject;
 
 class PlayState extends FlxState
 {
 	public var GRAVITY(default, never):Float = 600;
 	
 	private var map:FlxTilemap;
-	private var player:Player;
+	public var player:Player;
 	private var platform:Platforms;
 	private var x:Float = 0;
 	override public function create():Void
@@ -19,12 +20,15 @@ class PlayState extends FlxState
 		super.create();
 		
 		player = new Player(50, 50);
+		//player.collisonXDrag = true;
 		add(player);
 		
 		//create new moving platform
 		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
-		platform.solid = platform.immovable = true;
-		platform.collisonXDrag = true;
+		platform.immovable  = platform.solid = true;
+		//platform.collisonXDrag = true;
+		platform.allowCollisions = FlxObject.UP;
+		platform.sticky = false;
 		add(platform);
 
 		map = new FlxTilemap();
@@ -51,14 +55,29 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		//FlxG.collide(map, platform);
-        FlxG.overlap(player, platform, platform.setOffset);
+
 		FlxG.collide(map, player);
-		if (!FlxG.collide(platform, player)) {
+
+		if (!FlxG.overlap(player, platform)) {
 			platform.sticky = false;
 		}
-		
+
+		if (FlxG.collide(player, platform)) {
+			trace(platform.sticky);
+			if (!platform.sticky) {
+				platform.sticky = true;
+				trace(platform.sticky);
+				platform.offsetX = player.x - platform.x;
+				trace("set offset");
+			}
+			player.x = platform.x + platform.offsetX;
+			trace(platform.offsetX);
+			trace(player.x);
+			trace(platform.x);
+			player.y = platform.y - 32;
+			//set player velocity += platform velocity
+			trace("actually moving player");
+		}
 
 	}
 }
-
