@@ -49,7 +49,9 @@ class Sentry extends Enemy
 		b.shoot(getMidpoint(_point), angle);
 	}
 	
-	// Returns the angle to player
+	/**
+	 * Returns the angle towards the player
+	 */	
 	private function angleTowardPlayer():Float
 	{
 		return getMidpoint(_point).angleBetween(trackedPlayer.getMidpoint(playerMidpoint));
@@ -71,8 +73,7 @@ class Sentry extends Enemy
 		// Increment shotClock
 		shotClock += elapsed;
 		
-		if (shotClock >= 4.0)
-		{
+		if (shotClock >= 4.0) {
 			shotClock = 0;
 			fireBullet(angle);
 		}

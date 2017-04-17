@@ -22,6 +22,8 @@ class Player extends FlxSprite
 	public var xSlowdown:Float = 600;
 	
 	public var onGround:Bool = false;
+	
+	public var star:Bool = false;
 
 	/**
 	 * Intializer

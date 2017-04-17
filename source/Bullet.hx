@@ -13,16 +13,23 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class Bullet extends FlxSprite 
 {
 	private var speed:Int = 225;
-
+	
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		
 		// Initializes a basic graphic for the player
 		makeGraphic(2, 6, FlxColor.RED);
-		
 	}
 	
+	/**
+	 * Shoot Bullet
+	 * 
+	 * Angles the bullet and launches in that direction
+	 * 
+	 * @param	location	where the bullet is launching from
+	 * @param	launchAngle angle to launch the bullet at
+	 */
 	public function shoot(?location:FlxPoint, ?launchAngle:Float):Void
 	{
 		super.reset(location.x - width / 2, location.y - height / 2);
@@ -44,8 +51,7 @@ class Bullet extends FlxSprite
 	public override function update(elapsed:Float):Void
 	{		
 		// Check if bullet hit wall/ground
-		if (isTouching(FlxObject.ANY)) 
-		{
+		if (isTouching(FlxObject.ANY)) {
 			kill();
 		}
 		

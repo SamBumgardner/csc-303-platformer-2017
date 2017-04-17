@@ -18,9 +18,7 @@ class DontTouchMe extends Enemy
 			
 	public var onGround:Bool = false;
 	
-	//private var dHB:Damage_Hit_Box;
-
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
+	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		
@@ -44,30 +42,24 @@ class DontTouchMe extends Enemy
 	 * 
 	 * @param	movementDirection	-1 for moving left, 1 for moving right.
 	 */
-	public function groundMovement(movementDirection:Int)
+	public function groundMovement(movementDirection:Int):Void 
 	{
 		// If horizontalMove is -1, the Enemy should move left.
-		if (movementDirection == -1)
-		{
-			if (velocity.x > 0)
-			{
+		if (movementDirection == -1) {
+			if (velocity.x > 0) {
 				acceleration.x = -xSlowdown + -xAccel;
 			}
-			else
-			{
+			else {
 				acceleration.x = -xAccel;
 			}
 		}
 		
 		// If horizontalMove is 1, the Enemy should move right.
-		else if (movementDirection == 1)
-		{
-			if (velocity.x < 0)
-			{
+		else if (movementDirection == 1) {
+			if (velocity.x < 0) {
 				acceleration.x = xSlowdown + xAccel;
 			}
-			else
-			{
+			else {
 				acceleration.x = xAccel;
 			}
 		}
@@ -75,8 +67,7 @@ class DontTouchMe extends Enemy
 		
 		// Display an error message in the console if an invalid horizontalMove
 		// 	value is detected.
-		else
-		{
+		else {
 			trace("ERROR: An invalid value for horizontalMove (" + 
 				movementDirection + ") was passed into groundMovement()");
 		}
@@ -95,29 +86,24 @@ class DontTouchMe extends Enemy
 	public override function update(elapsed:Float):Void
 	{		
 		// Check if on ground
-		if (isTouching(FlxObject.DOWN))
-		{
+		if (isTouching(FlxObject.DOWN)) {
 			onGround = true;
 		}
 		
 		// Change the movement direction if it runs into a wall
-		if (isTouching(FlxObject.LEFT))
-		{
+		if (isTouching(FlxObject.LEFT)) {
 			groundMovement(1);
 		}
-		if (isTouching(FlxObject.RIGHT))
-		{
+		if (isTouching(FlxObject.RIGHT)) {
 			groundMovement(-1);
 		}
 		
 		// Check if DTM is squashed
-		if (isTouching(FlxObject.UP))
-		{
+		if (isTouching(FlxObject.UP)) {
 			kill();
 		}
 		
 		super.update(elapsed);
-
 	}
 	
 }
