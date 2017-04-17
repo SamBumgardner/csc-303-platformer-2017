@@ -21,7 +21,7 @@ class HeadsUpDisplay extends FlxGroup
 	//This class is a static member of PlayState, and should be called from there.
 	
 	/**
-	 * 
+	 * Creates a HUD, which cointains the score display, coins, and time remaining.
 	 * @param	x	The X coordinate of the top left of the HUD
 	 * @param	y	The Y coordinate of the top left of the HUD
 	 * @param	playerName The name displayed above the score. Will be converted to upper case.
@@ -62,7 +62,8 @@ class HeadsUpDisplay extends FlxGroup
 	}
 	
 	/**
-	 * 
+	 * Changes the displayed time in 3 digit form. If the input newTime is more than 3 digits, will display last 3 digits.
+	 * Update still needs to be called after this to actually update the HUD.
 	 * @param	newTime The time you want displayed on the HUD. Displays last 3 digits of number.
 	 */
 	private function handleTimeUpdate(newTime:Int):Void{
@@ -70,7 +71,6 @@ class HeadsUpDisplay extends FlxGroup
 		var parsedTime:String = Std.string(newTime);
 		var timeString:String = "000";
 		var parsedLength:Int = parsedTime.length;
-		timeString = timeString.substr(0, -parsedLength) + parsedTime;
 		if (timeString.length > parsedLength){
 			timeString = timeString.substr(0, -parsedLength) + parsedTime;
 		}
@@ -80,7 +80,8 @@ class HeadsUpDisplay extends FlxGroup
 		time.text = timeString;
 	}
 	/**
-	 * 
+	 * Changes the displayed coin count. Will be last 2 digits of coin count. Leading zeroes will be added if less than 2 digits.
+	 * Update still needs to be called after this to actually update the HUD.
 	 * @param	newCoinCount the coin count you want displayed on the HUD. Displays last 2 digits of number.
 	 */
 	private function handleCoinsUpdate(newCoinCount:Int){
@@ -88,7 +89,6 @@ class HeadsUpDisplay extends FlxGroup
 		var parsedCoins:String = Std.string(newCoinCount);
 		var coinString:String = "00";
 		var parsedLength:Int = parsedCoins.length;
-		coinString = coinString.substr(0, -parsedLength) + parsedCoins;
 		if (coinString.length > parsedLength){
 			coinString = coinString.substr(0, -parsedLength) + parsedCoins;
 		}
@@ -99,7 +99,8 @@ class HeadsUpDisplay extends FlxGroup
 	}
 	
 	/**
-	 * 
+	 * Updates the displayed score. Will display the last 8 digits of the score. Leading zeroes will be added if less than 8 digits.
+	 * Update still needs to be called after this to actually update the HUD.
 	 * @param	newScore the score you want displayed on the HUD. Displays last 8 digits of number.
 	 */
 	private function handleScoreUpdate(newScore:Int){
@@ -116,7 +117,7 @@ class HeadsUpDisplay extends FlxGroup
 		score.text = scoreString;
 	}
 	/**
-	 * 
+	 * Updates the hud for the new frame.
 	 * @param	elapsed
 	 */
 	
@@ -130,7 +131,7 @@ class HeadsUpDisplay extends FlxGroup
 		score.update(elapsed);
 		time.update(elapsed); 
 		coins.update(elapsed);
-		
+		suer.update(elapsed);
 		
 	}
 }
