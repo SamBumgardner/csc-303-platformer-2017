@@ -131,7 +131,7 @@ class HeadsUpDisplay extends FlxGroup
 		score.update(elapsed);
 		time.update(elapsed); 
 		coins.update(elapsed);
-		suer.update(elapsed);
+		super.update(elapsed);
 		
 	}
 }
