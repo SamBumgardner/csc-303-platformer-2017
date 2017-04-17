@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
-class PlayerFallState extends PlayerGroundState
+class PlayerFallState extends PlayerAirState
 {
   static private var SLOW_DOWN:Int = 150;
 

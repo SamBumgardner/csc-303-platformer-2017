@@ -21,6 +21,11 @@ class PlayerGroundState extends BaseState
       nextState = new PlayerJumpState();
       return true;
     }
+    else if (!player.isTouching(FlxObject.FLOOR))
+    {
+      nextState = new PlayerFallState();
+      return true;
+    }
 
     return super.transition(object);
   }
