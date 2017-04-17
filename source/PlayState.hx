@@ -64,7 +64,6 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		hud.update(elapsed);
 		FlxG.collide(map, player);
-		FlxG.overlap(blockGroup, player, function(b:Block, p:Player) {b.onTouch();} );
-		FlxG.collide(blockGroup, player);
+		FlxG.collide(blockGroup, player, function(b:Block, p:Player) {b.onTouch();} );
 	}
 }

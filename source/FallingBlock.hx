@@ -38,8 +38,7 @@ class FallingBlock extends Block
 	 */
 	override public function onTouch()
 	{
-		color = FlxColor.YELLOW;
-		if (!isFalling)
+		if (isTouching(FlxObject.UP) && (!isFalling))
 		{
 			isFalling = true;
 			//creates a timer that causes the block to fall after fallDelay milliseconds
