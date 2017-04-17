@@ -26,9 +26,9 @@ class FallingBlock extends Block
 	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block breaks when hit from below; defaults to false
 	 */
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, ?Delay:Int=1000) 
+	public function new(?X:Float=0, ?Y:Float=0,?Delay:Int=1000) 
 	{
-		super(X, Y, SimpleGraphic);
+		super(X, Y);
 		fallDelay = Delay;
 		isFalling = false;
 		maxVelocity.y = MAXSPEED;

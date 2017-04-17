@@ -24,9 +24,9 @@ class ItemBlock extends Block
 	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block is breakable; defaults to false
 	 */
-	public function new(?X:Float=0, ?Y:Float=0, Item:String, ?SimpleGraphic:FlxGraphicAsset, ?Breakable:Bool=false) 
+	public function new(?X:Float=0, ?Y:Float=0, Item:String, ?Breakable:Bool=false) 
 	{
-		super(X, Y, SimpleGraphic, Breakable);
+		super(X, Y, Breakable);
 		containedItem = Item;
 		isExpended = false;
 	}

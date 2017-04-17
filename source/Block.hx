@@ -12,6 +12,7 @@ import flixel.util.FlxColor;
 class Block extends FlxSprite 
 {
 	static public var SCALEFACTOR(default, never):Int = 32;
+	static public var IMAGEPATH(default, never):String = "Brick";
 	public var isBreakable:Bool;
 	
 	/**
@@ -22,14 +23,14 @@ class Block extends FlxSprite
 	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block breaks when hit from below; defaults to false
 	 */
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, ?Breakable:Bool=false) 
+	public function new(?X:Float=0, ?Y:Float=0, ?Breakable:Bool=false) 
 	{
-		super(X*SCALEFACTOR, Y*SCALEFACTOR, SimpleGraphic);
-		
-		if (SimpleGraphic == null)
-		{
-			makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.WHITE);
-		}
+		super(X*SCALEFACTOR, Y*SCALEFACTOR);
+		loadGraphic(AssetPaths.Brick__png, false, 32, 32);
+		//if (SimpleGraphic == null)
+		//{
+		//	makeGraphic(SCALEFACTOR, SCALEFACTOR, FlxColor.WHITE);
+		//}
 		
 		immovable = true;
 		isBreakable = Breakable;
