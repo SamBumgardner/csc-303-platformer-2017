@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 
@@ -22,6 +23,8 @@ class Player extends FlxSprite
 	public var xSlowdown:Float = 600;
 	
 	public var onGround:Bool = false;
+	
+	private var step_sound:FlxSound;
 
 	/**
 	 * Intializer
@@ -43,6 +46,9 @@ class Player extends FlxSprite
 		
 		// Sets the starting x max velocity.
 		xMaxSpeed = walkSpeed;
+		
+		//set the sound animation for player movement
+		step_sound = FlxG.sound.load(AssetPaths.step__wav);
 	}
 	
 	/**
@@ -69,6 +75,7 @@ class Player extends FlxSprite
 	 */
 	private function groundMovement(isRunning:Bool, horizontalMove:Int, elapsed:Float):Void
 	{
+		
 		// Change max speed if the player is running
 		if (isRunning)
 		{
@@ -133,6 +140,12 @@ class Player extends FlxSprite
 				}
 			}
 		}
+		
+		if (velocity.x != 0){
+			//play the step sound atfer movement
+			step_sound.play();
+		}	
+		
 		#if debug // Only compile this code into a debug version of the game.
 		
 		// Display an error message in the console if an invalid horizontalMove
