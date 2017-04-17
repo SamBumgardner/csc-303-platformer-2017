@@ -12,6 +12,7 @@ import haxe.Timer;
  */
 class ItemBlock extends Block
 {
+	static public var IMAGE(default, never):FlxGraphicAsset = AssetPaths.Item__png;
 	public var containedItem:String; //placeholder var until we have an item class
 	public var isExpended:Bool; //whether the item has been removed yet
 	
@@ -24,9 +25,13 @@ class ItemBlock extends Block
 	 * @param	SimpleGraphic	Non-animating graphic.
 	 * @param	Breakable	Whether the block is breakable; defaults to false
 	 */
-	public function new(?X:Float=0, ?Y:Float=0, Item:String, ?Breakable:Bool=false) 
+	public function new(?X:Float=0, ?Y:Float=0, Item:String, ?Breakable:Bool=false, ?Graphic:FlxGraphicAsset) 
 	{
-		super(X, Y, Breakable);
+		if (Graphic == null)
+		{
+			Graphic = IMAGE;
+		}
+		super(X, Y, Breakable, Graphic);
 		containedItem = Item;
 		isExpended = false;
 	}
@@ -37,6 +42,6 @@ class ItemBlock extends Block
 	override public function onTouch()
 	{
 		//produce item logic
-		color = FlxColor.PURPLE;
+		loadGraphic(AssetPaths.Empty__png);
 	}
 }
