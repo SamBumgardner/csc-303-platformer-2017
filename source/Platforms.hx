@@ -60,6 +60,7 @@ class Platforms extends FlxSprite
             }
             else {
                 y += 1;
+                velocity.y = 10;
             }
         }
         if (UP) {
@@ -69,6 +70,7 @@ class Platforms extends FlxSprite
             }
             else {
                 y -= 1;
+                velocity.y = -10;
             }
         }
         if (LEFT) {
@@ -78,6 +80,7 @@ class Platforms extends FlxSprite
             }
             else {
                 x -= 1;
+                velocity.x = -10;
             }
         }
         if (RIGHT) {
@@ -87,6 +90,7 @@ class Platforms extends FlxSprite
             }
             else {
                 x += 1;
+                velocity.x = 10;
             }
         }
     }
