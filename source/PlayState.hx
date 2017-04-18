@@ -60,12 +60,13 @@ class PlayState extends FlxState
 		FlxG.collide(map, player);
 
 		// If platform and player are not touching, allow offset to be overwritten
-		if (!FlxG.overlap(player, platform) || FlxG.keys.anyJustPressed([FlxKey.RIGHT, FlxKey.LEFT])) {
+		if (!FlxG.overlap(player, platform)) {
 			platform.sticky = false;
 		}
 
 		if (FlxG.collide(player, platform)) {
 			// Only set offset value if touching platform for "first" time
+			player.acceleration.y = 8000;
 			if (!platform.sticky) {
 				platform.sticky = true;
 				platform.offsetX = player.x - platform.x;
@@ -77,14 +78,16 @@ class PlayState extends FlxState
 				platform.offsetX += player.x - player.last.x;
 			}
 
+			// Allow player to drop through platform if down key pressed
+			if (FlxG.keys.anyPressed([FlxKey.DOWN])) {
+				player.y = platform.y;
+			}
 
-			// Set player x and y to follow platform
+			// Update player x position
 			player.x = platform.x + platform.offsetX;
-			player.y = platform.y - 32;
-			
-
-			player.velocity.x += platform.velocity.x;
-			player.velocity.y = platform.velocity.y;
+		}
+		else {
+			player.acceleration.y = 600;
 		}
 
 	}
