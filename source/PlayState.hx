@@ -26,7 +26,8 @@ class PlayState extends FlxState
 		/*Create the flagpole at the end of the level 
 		 * This will also instantiate the flag
 		*/
-		flagpole = new FlagPole(550, 350);
+		//544, 352
+		flagpole = new FlagPole(544, 352);
 		add(flagpole.totalFlxGrp);
 		
 		

@@ -67,15 +67,15 @@ class FlagPole extends FlxSprite
 	 * @param	flagpole	FlagPole object 
 	 * @return  Void		
 	 */
-	public function win_animation(player:FlxBasic, flagpole:FlxBasic ):Void
+	public function win_animation(player:Player, flagpole:FlagPole ):Void
 	{
+	
 		flag.isLevelOver = true;
-		cast(player, FlxSprite).velocity.x = 0;
-		//subtract 16 for the half of the character image
-		player_x = cast(player, FlxSprite).x + 16; // - pole_width / 2;
-		player_y =  cast(player, FlxSprite).y;
-		cast(player, FlxSprite).path = new FlxPath().start([new FlxPoint(player_x, player_y+16), new FlxPoint(player_x, pole_y_pos+pole_height-16)], 25, FlxPath.FORWARD);
-		
+		FlxG.keys.enabled = false;
+		player.velocity.x = 0;
+		//subtract adding/subtracting 16 for character image offset
+		player.path = new FlxPath().start([new FlxPoint(player.x+16, player.y+16), new FlxPoint(player.x+16, pole_y_pos+pole_height-16)], 25, FlxPath.FORWARD);
+		player.path.onComplete = function(path:FlxPath):Void{FlxG.keys.enabled = true; };
 		
 		flag.flag_animate();
 		win_sound.play();
