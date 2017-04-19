@@ -9,21 +9,22 @@ import flixel.util.FlxColor;
 class PlayState extends FlxState
 {
 	public var GRAVITY(default, never):Float = 600;
-	
+
 	private var map:FlxTilemap;
 	private var player:Player;
 	public static var hud:HeadsUpDisplay;
-	
+
 	override public function create():Void
 	{
 		if (hud == null){
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
 		super.create();
-		
+
 		player = new Player(50, 50);
 		add(player);
-		
+		add(player.hitBoxComponents);
+
 		map = new FlxTilemap();
 		map.loadMapFromArray([
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,

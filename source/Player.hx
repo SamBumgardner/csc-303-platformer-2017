@@ -11,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
 
 /**
  * ...
@@ -28,6 +29,10 @@ import flixel.input.keyboard.FlxKey;
 
 	public var xSlowdown:Float = 600;
 
+  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+  public var topBox:FlxObject;
+  public var btmBox:FlxObject;
+
 	/**
 	 * Intializer
 	 *
@@ -38,6 +43,13 @@ import flixel.input.keyboard.FlxKey;
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
+
+    // Multiple hitbox support
+    hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
+    topBox = new FlxObject(X + 1, Y, width - 2, 3);
+    btmBox = new FlxObject(X + 1, Y + height - 4, width - 2, 3);
+    hitBoxComponents.add(topBox);
+    hitBoxComponents.add(btmBox);
 
 		// Initializes a basic graphic for the player
 		makeGraphic(32, 32, FlxColor.ORANGE);
@@ -78,6 +90,7 @@ import flixel.input.keyboard.FlxKey;
 	{
 		brain.update(this);
 		super.update(elapsed);
+    updateHitBoxes();
 	}
 
   /**
@@ -132,5 +145,17 @@ import flixel.input.keyboard.FlxKey;
   public function isRunning():Bool
   {
     return FlxG.keys.anyPressed([FlxKey.Z]);
+  }
+
+  private function updateHitBoxes():Void
+  {
+    var hitBoxHeight = 3;
+    var hitBoxOffset = 1;
+    var hitBoxWidth = width - hitBoxOffset * 2;
+    var hitBoxX = x + hitBoxOffset;
+
+    topBox.x = btmBox.x = hitBoxX;
+    topBox.y = y + hitBoxOffset;
+    btmBox.y = y + height - hitBoxOffset - hitBoxHeight;
   }
 }
