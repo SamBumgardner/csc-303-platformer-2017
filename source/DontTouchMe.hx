@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
@@ -11,22 +12,23 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class DontTouchMe extends Enemy 
 {
-	public var xAccel:Float = 30;
-	public var xSlowdown:Float = 60;
-	
-	public var xMaxSpeed:Float = 30;
-			
-	public var onGround:Bool = false;
-	
-	public function new(?X:Float = 0, ?Y:Float = 0, ?SimpleGraphic:FlxGraphicAsset) 
-	{
-		super(X, Y, SimpleGraphic);
+	private var position:FlxPoint;
+
+	// Movement variables
+	private var xAccel:Float = 30;
+	private var xSlowdown:Float = 60;	
+	private var xMaxSpeed:Float = 30;
 		
-		// Initializes a basic graphic for the player
-		makeGraphic(32, 32, FlxColor.RED);
+	// Hitboxes
+	public var takeDamageBox:FlxObject;
+	public var giveDamageBox:FlxObject;
+			
+	public function new(?X:Float = 0, ?Y:Float = 0) 
+	{
+		super(X, Y, AssetPaths.DontTouchMe__png);
 				
-		// Set class specific variables
-		name = "DontTouchMe";		
+		name = "DontTouchMe";
+		position = getPosition();
 		
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
@@ -35,6 +37,10 @@ class DontTouchMe extends Enemy
 		// Setup movement
 		maxVelocity.x = xMaxSpeed;
 		groundMovement( -1);
+		
+		// Set hitboxes
+		takeDamageBox = new FlxObject((X + 5), Y, 22, 5);
+		giveDamageBox = new FlxObject((X + 1), (Y + 5), 30, 27);
 	}
 	
 	/**
@@ -46,6 +52,7 @@ class DontTouchMe extends Enemy
 	{
 		// If horizontalMove is -1, the Enemy should move left.
 		if (movementDirection == -1) {
+			flipX = false;
 			if (velocity.x > 0) {
 				acceleration.x = -xSlowdown + -xAccel;
 			}
@@ -56,6 +63,7 @@ class DontTouchMe extends Enemy
 		
 		// If horizontalMove is 1, the Enemy should move right.
 		else if (movementDirection == 1) {
+			flipX = true;
 			if (velocity.x < 0) {
 				acceleration.x = xSlowdown + xAccel;
 			}
@@ -63,17 +71,8 @@ class DontTouchMe extends Enemy
 				acceleration.x = xAccel;
 			}
 		}
-		#if debug // Only compile this code into a debug version of the game.
-		
-		// Display an error message in the console if an invalid horizontalMove
-		// 	value is detected.
-		else {
-			trace("ERROR: An invalid value for horizontalMove (" + 
-				movementDirection + ") was passed into groundMovement()");
-		}
-		
-		#end // End of the conditional compilation section.
 	}
+	
 	
 	/**
 	 * Update function.
@@ -85,11 +84,6 @@ class DontTouchMe extends Enemy
 	 */
 	public override function update(elapsed:Float):Void
 	{		
-		// Check if on ground
-		if (isTouching(FlxObject.DOWN)) {
-			onGround = true;
-		}
-		
 		// Change the movement direction if it runs into a wall
 		if (isTouching(FlxObject.LEFT)) {
 			groundMovement(1);
@@ -97,6 +91,13 @@ class DontTouchMe extends Enemy
 		if (isTouching(FlxObject.RIGHT)) {
 			groundMovement(-1);
 		}
+		
+		// Move hitBox
+		position = getPosition();
+		takeDamageBox.x = position.x + 5;
+		takeDamageBox.y = position.y;
+		giveDamageBox.x = position.x + 1;
+		giveDamageBox.y = position.y + 5;
 		
 		// Check if DTM is squashed
 		if (isTouching(FlxObject.UP)) {

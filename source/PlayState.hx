@@ -22,62 +22,43 @@ class PlayState extends FlxState
 	private var sentry1:Sentry;
 	private var bullets:FlxTypedGroup<Bullet>;
 	
+	
 	/**
-	 * enemyHitPlayer
+	 * dtmHitResolve
+	 * Logic for who takes damage if a player and a DTM overlap
 	 * 
-	 * @param	
+	 * @param	player	A player's character
+	 * @param	dtm		A DontTouchMe enemy
 	 */
-	public function enemyHitPlayer(player:Player, enemy:Enemy):Void
+	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
 	{
-		if (player.star) {
-			//enemy.takeHit();
-			enemy.kill();
-		} else{
-			//player.takeHit();
-			player.kill();
+		if (player.overlaps(dtm.giveDamageBox)) {
+			if (player.star) {
+				dtm.kill();
+			} else {
+				player.kill();
+			}
+		} else if (player.overlaps(dtm.takeDamageBox)) {
+			dtm.kill();
 		}
 	}
 	
 	/**
-	 * playerHitEnemy
+	 * bulletHitPlayer
+	 * Logic for when a bullet overlaps with a player
 	 * 
-	 * @param	
+	 * @param	player	A player's character
+	 * @param	bullet	A bullet sprite
 	 */
-	public function playerHitEnemy(player:Player, enemy:Enemy):Void
-	{
-		//enemy.takeHit();
-		enemy.kill();
-	}
-	
-	/**
-	 * bothTakeHit
-	 * 
-	 * @param	
-	 */
-	public function projectileHitPlayer(player:Player, projectile:FlxObject):Void
+	public function bulletHitPlayer(player:Player, bullet:FlxObject):Void
 	{
 		if (!player.star) {
-			//player.takeHit();
 			player.kill();
-		}		
+		}
 		
-		//projectile.takeHit();
-		projectile.kill();
+		bullet.kill();
 	}
 	
-	/**
-	 * trapHitPlayer
-	 * 
-	 * @param	
-	 */
-	public function trapHitPlayer(player:Player, trap:FlxObject):Void
-	{
-		if (!player.star) {
-			//player.takeHit();
-			player.kill();
-		}
-	}
-
 	
 	override public function create():Void
 	{
@@ -86,11 +67,13 @@ class PlayState extends FlxState
 		player = new Player(50, 50);
 		add(player);
 		
+		// Create and add enemies
 		dtmEnemy1 = new DontTouchMe(400, 200);
 		add(dtmEnemy1);
 		
 		bullets = new FlxTypedGroup<Bullet>(20);
 		add(bullets);
+		
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
 		
@@ -121,11 +104,13 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
+		
+		// Add collision logic for player and enemies
 		FlxG.collide(player, sentry1);
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		
-		FlxG.overlap(player, dtmEnemy1, enemyHitPlayer);		
-		FlxG.overlap(player, bullets, projectileHitPlayer);
+		FlxG.overlap(player, dtmEnemy1, dtmHitResolve);
+		FlxG.overlap(player, bullets, bulletHitPlayer);
 	}
 }

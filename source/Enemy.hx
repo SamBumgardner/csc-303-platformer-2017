@@ -14,14 +14,6 @@ class Enemy extends FlxSprite
 	// name
 	public var name:String = "Enemy";
 	
-	// position
-	
-	// health
-	//public var health:Int = 100;
-	
-	// graphic
-	
-	
 	/**
 	 * Intializer
 	 * 

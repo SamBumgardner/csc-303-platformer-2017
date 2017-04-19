@@ -12,33 +12,27 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class Sentry extends Enemy 
 {
+	// For player tracking
 	private var trackedPlayer:Player;
 	private var playerMidpoint:FlxPoint;
 	
-	// For periodically shooting a bullet
-	private var shotClock:Float;
-	
-	// Group of bullets
+	// For shooting bullets
+	private var shotClock:Float = 0.0;
+	private var reloadTime:Float = 3.5;
 	private var bullets:FlxTypedGroup<Bullet>;
 
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset, bults:FlxTypedGroup<Bullet>, player:Player) 
+	public function new(?X:Float=0, ?Y:Float=0, blts:FlxTypedGroup<Bullet>, player:Player) 
 	{
-		super(X, Y, SimpleGraphic);
+		super(X, Y, AssetPaths.Sentry__png);
 		
-		// Initializes a basic graphic for the player
-		makeGraphic(32, 32, FlxColor.BLUE);
-				
-		// Set class specific variables
 		name = "Sentry";
-		bullets = bults;
 		trackedPlayer = player;
 		playerMidpoint = FlxPoint.get();
-		shotClock = 4.0;
-		
+		bullets = blts;
 	}
 	
 	/**
-	 * Creates and fires a bullet object
+	 * Creates and fires a bullet
 	 * 
 	 * @param	angle The angle at which to fire the bullet.
 	 */
@@ -46,7 +40,7 @@ class Sentry extends Enemy
 	{
 		var midpoint = getMidpoint(_point);
 		var b:Bullet = bullets.recycle(Bullet);
-		b.shoot(getMidpoint(_point), angle);
+		b.shoot(midpoint, angle);
 	}
 	
 	/**
@@ -73,8 +67,9 @@ class Sentry extends Enemy
 		// Increment shotClock
 		shotClock += elapsed;
 		
-		if (shotClock >= 4.0) {
-			shotClock = 0;
+		// Shoot bullet if shotClock time excedes reloadTime
+		if (shotClock >= reloadTime) {
+			shotClock = 0.0;
 			fireBullet(angle);
 		}
 		

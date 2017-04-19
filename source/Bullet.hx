@@ -50,7 +50,7 @@ class Bullet extends FlxSprite
 	 */
 	public override function update(elapsed:Float):Void
 	{		
-		// Check if bullet hit wall/ground
+		// Check if bullet hit any object
 		if (isTouching(FlxObject.ANY)) {
 			kill();
 		}
