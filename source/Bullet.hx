@@ -14,12 +14,10 @@ class Bullet extends FlxSprite
 {
 	private var speed:Int = 225;
 	
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
+	public function new(?X:Float=0, ?Y:Float=0) 
 	{
-		super(X, Y, SimpleGraphic);
-		
-		// Initializes a basic graphic for the player
-		makeGraphic(2, 6, FlxColor.RED);
+		super(X, Y, AssetPaths.cannon_ball__png);
+		// Note: can also use bullet__png as image
 	}
 	
 	/**
