@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
+
 class PlayerGroundState extends BaseState
 {
   public function new()
@@ -98,6 +99,7 @@ class PlayerGroundState extends BaseState
         }
       }
     }
+		
     #if debug // Only compile this code into a debug version of the game.
 
     // Display an error message in the console if an invalid horizontalMove

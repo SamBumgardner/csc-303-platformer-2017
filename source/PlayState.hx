@@ -18,9 +18,9 @@ class PlayState extends FlxState
 
 	override public function create():Void
 	{
-		if (hud == null){
-			hud = new HeadsUpDisplay(0, 0, "MARIO");
-		}
+		//if (hud == null){
+		hud = new HeadsUpDisplay(0, 0, "MARIO");
+		//}
 		super.create();
 		
 		/*Create the flagpole at the end of the level 

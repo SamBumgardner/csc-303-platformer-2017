@@ -9,7 +9,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 
@@ -28,7 +27,6 @@ import flixel.input.keyboard.FlxKey;
 	public var runSpeed:Float = 200;
 
 	public var xSlowdown:Float = 600;
-	private var step_sound:FlxSound;
 
 	/**
 	 * Intializer
@@ -50,9 +48,6 @@ import flixel.input.keyboard.FlxKey;
 
 		// Sets the starting x max velocity.
 		xMaxSpeed = walkSpeed;
-
-		//set the sound animation for player movement
-		step_sound = FlxG.sound.load(AssetPaths.step__wav);
 
 		// Initialize the finite-state machine with initial state
 		brain = new FSM( new PlayerAirState() );

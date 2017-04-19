@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxPath;
@@ -27,6 +28,7 @@ class FlagPole extends FlxSprite
 	private var pole_y_pos:Float;
 	private var player_x:Float;
 	private var player_y:Float;
+	private var win_sound:FlxSound;
 	/**
 	 * Intializer
 	 * 
@@ -36,6 +38,8 @@ class FlagPole extends FlxSprite
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?pole_graphic:FlxGraphicAsset) 
 	{
+		win_sound = FlxG.sound.load(AssetPaths.win__wav);
+		win_sound.looped = true;
 		pole_x_pos = X;
 		pole_y_pos = Y-pole_height;
 		super(pole_x_pos, pole_y_pos, pole_graphic);
@@ -74,5 +78,6 @@ class FlagPole extends FlxSprite
 		
 		
 		flag.flag_animate();
+		win_sound.play();
 	}
 }
