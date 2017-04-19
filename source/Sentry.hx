@@ -21,6 +21,14 @@ class Sentry extends Enemy
 	private var reloadTime:Float = 3.5;
 	private var bullets:FlxTypedGroup<Bullet>;
 
+	/**
+	 * Intializer
+	 *
+	 * @param	X		Starting x coordinate
+	 * @param	Y		Starting y coordinate
+	 * @param	blts	An FlxGroup of bullet objects
+	 * @param	player	The player that the sentry will be tracking and firing at
+	 */
 	public function new(?X:Float=0, ?Y:Float=0, blts:FlxTypedGroup<Bullet>, player:Player) 
 	{
 		super(X, Y, AssetPaths.Sentry__png);

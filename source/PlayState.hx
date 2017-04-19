@@ -23,27 +23,6 @@ class PlayState extends FlxState
 	private var sentry1:Sentry;
 	private var bullets:FlxTypedGroup<Bullet>;
 	
-	
-	/**
-	 * dtmHitResolve
-	 * Logic for who takes damage if a player and a DTM overlap
-	 * 
-	 * @param	player	A player's character
-	 * @param	dtm		A DontTouchMe enemy
-	 */
-	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
-	{
-		if (player.overlaps(dtm.giveDamageBox)) {
-			if (player.star) {
-				dtm.kill();
-			} else {
-				player.kill();
-			}
-		} else if (player.overlaps(dtm.takeDamageBox)) {
-			dtm.kill();
-		}
-	}
-	
 	/**
 	 * bulletHitPlayer
 	 * Logic for when a bullet overlaps with a player
@@ -110,12 +89,13 @@ class PlayState extends FlxState
 		hud.update(elapsed);
 		FlxG.collide(map, player);
 		
+		// Add overlap logic for player and enemies
+		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
+		FlxG.overlap(player, bullets, bulletHitPlayer);
+		
 		// Add collision logic for player and enemies
 		FlxG.collide(player, sentry1);
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
-		
-		FlxG.overlap(player, dtmEnemy1, dtmHitResolve);
-		FlxG.overlap(player, bullets, bulletHitPlayer);
 	}
 }

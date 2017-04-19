@@ -22,7 +22,13 @@ class DontTouchMe extends Enemy
 	// Hitboxes
 	public var takeDamageBox:FlxObject;
 	public var giveDamageBox:FlxObject;
-			
+		
+	/**
+	 * Intializer
+	 *
+	 * @param	X	Starting x coordinate
+	 * @param	Y	Starting y coordinate
+	 */
 	public function new(?X:Float = 0, ?Y:Float = 0) 
 	{
 		super(X, Y, AssetPaths.DontTouchMe__png);
@@ -70,6 +76,26 @@ class DontTouchMe extends Enemy
 			else {
 				acceleration.x = xAccel;
 			}
+		}
+	}
+	
+	/**
+	 * dtmHitResolve
+	 * Logic for who takes damage if a player and a DTM overlap
+	 * 
+	 * @param	player	A player's character
+	 * @param	dtm		A DontTouchMe enemy
+	 */
+	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
+	{
+		if (player.overlaps(dtm.giveDamageBox)) {
+			if (player.star) {
+				dtm.kill();
+			} else {
+				player.kill();
+			}
+		} else if (player.overlaps(dtm.takeDamageBox)) {
+			dtm.kill();
 		}
 	}
 	
