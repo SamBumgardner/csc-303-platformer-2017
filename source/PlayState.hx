@@ -16,9 +16,7 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{
-		if (hud == null){
-			hud = new HeadsUpDisplay(0, 0, "MARIO");
-		}
+		hud = new HeadsUpDisplay(0, 0, "MARIO");
 		super.create();
 		
 		player = new Player(50, 50);
