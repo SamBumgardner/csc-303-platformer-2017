@@ -71,13 +71,10 @@ class PlayState extends FlxState
 				platform.sticky = true;
 				platform.offsetX = player.x - platform.x;
 			}
-
-			// Update offset when player position changes based on keypress
-			if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.RIGHT, FlxKey.A, FlxKey.D]))
-			{
-				platform.offsetX += player.x - player.last.x;
-			}
-
+			
+			// Multiply velocity by elapsed to get the player's movement each frame.
+			platform.offsetX += player.velocity.x * elapsed;
+			
 			// Allow player to drop through platform if down key pressed
 			if (FlxG.keys.anyPressed([FlxKey.DOWN])) {
 				player.y = platform.y;
