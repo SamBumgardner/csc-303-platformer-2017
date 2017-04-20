@@ -44,13 +44,6 @@ import flixel.group.FlxGroup;
 	{
 		super(X, Y, SimpleGraphic);
 
-    // Multiple hitbox support
-    hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
-    topBox = new FlxObject(X + 1, Y, width - 2, 3);
-    btmBox = new FlxObject(X + 1, Y + height - 4, width - 2, 3);
-    hitBoxComponents.add(topBox);
-    hitBoxComponents.add(btmBox);
-
 		// Initializes a basic graphic for the player
 		makeGraphic(32, 32, FlxColor.ORANGE);
 
@@ -63,6 +56,13 @@ import flixel.group.FlxGroup;
 
 		// Initialize the finite-state machine with initial state
 		brain = new FSM( new PlayerAirState() );
+
+    // Multiple hitbox support
+    hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
+    topBox = new FlxObject(X + 1, Y, width - 2, 3);
+    btmBox = new FlxObject(X + 1, Y + height - 4, width - 2, 3);
+    hitBoxComponents.add(topBox);
+    hitBoxComponents.add(btmBox);
 	}
 
 	/**
