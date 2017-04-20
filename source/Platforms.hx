@@ -98,30 +98,33 @@ class Platforms extends FlxSprite
 		if (!FlxG.overlap(player, platform)) {
 			platform.inContact = false;
 		}
+        if (!FlxG.keys.anyPressed([FlxKey.DOWN])) {
+            // If the player is NOT pressing down, allow for collisions between platform and player
+            if (FlxG.collide(player, platform)) {
+               
+                // Only set offset value if touching platform for "first" time
+                player.acceleration.y = heavy;
+                if (!platform.inContact) {
+                    platform.inContact = true;
+                    platform.offsetX = player.x - platform.x;
+                }
+                
+                // Multiply velocity by elapsed to get the player's movement each frame.
+                platform.offsetX += player.velocity.x * elapsed;
 
-		if (FlxG.collide(player, platform)) {
-			// Only set offset value if touching platform for "first" time
-			player.acceleration.y = heavy;
-			if (!platform.inContact) {
-				platform.inContact = true;
-				platform.offsetX = player.x - platform.x;
-			}
-			
-			// Multiply velocity by elapsed to get the player's movement each frame.
-			platform.offsetX += player.velocity.x * elapsed;
-			
-			// Allow player to drop through platform if down key pressed
-			if (FlxG.keys.anyPressed([FlxKey.DOWN])) {
-				player.y = platform.y;
-			}
-
-			// Update player x position
-			player.x = platform.x + platform.offsetX;
-		}
-		else {
-            // Return gravity to normal (in PlayState) as soon as not on platform
-            player.acceleration.y =  cast(FlxG.state, PlayState).GRAVITY;
-		}
+                // Update player x position
+                player.x = platform.x + platform.offsetX;
+            }
+            else {
+                // Return gravity to normal (in PlayState) as soon as not on platform
+                player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
+            }
+        }
+        else {
+            // Reset gravity if player drops down through platform
+            player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
+        }
+		
     }
 
 
