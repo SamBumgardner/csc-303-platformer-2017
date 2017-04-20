@@ -18,6 +18,8 @@ class Platforms extends FlxSprite
     private var DOWN:Bool = true;
     private var LEFT:Bool = false;
     private var RIGHT: Bool = true;
+    private var heavy:Float = 8000; // Declare higher gravity while on platform
+    private var blockSize:Int = 32; //Declare block size to be used in width and height
     //Initialize min and max positioning
     private var minX:Float;
     private var maxX:Float;
@@ -27,12 +29,11 @@ class Platforms extends FlxSprite
     private var startX:Float;
     private var startY:Float;
     private var platformwidth:Int;
-    // private var player:Player;
-    private var tracer:Int = 0;
     public var offsetX:Float = 0;
-    public var sticky:Bool = false;
-    public var newbool:Bool;
-	public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
+    public var inContact:Bool = false;
+    private var platformVelocity:Int = 40;
+
+    public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
 		//set starting positions based on requested dimensions/positions
@@ -42,11 +43,10 @@ class Platforms extends FlxSprite
         maxX = R;
         minY = U;
         maxY = D;
-        platformwidth = 32 * W;
-        // allowCollisions:Int = UP;
+        platformwidth = blockSize * W;
 
 		// Initializes a basic graphic for the player
-		makeGraphic(platformwidth, 32, FlxColor.YELLOW);
+		makeGraphic(platformwidth, blockSize, FlxColor.YELLOW);
 
 	}
 
@@ -59,7 +59,7 @@ class Platforms extends FlxSprite
                 DOWN = false;
             }
             else {
-                velocity.y = 40;
+                velocity.y = platformVelocity;
             }
         }
         if (UP) {
@@ -68,7 +68,7 @@ class Platforms extends FlxSprite
                 DOWN = true;
             }
             else {
-                velocity.y = -40;
+                velocity.y = -platformVelocity;
             }
         }
         if (LEFT) {
@@ -77,7 +77,7 @@ class Platforms extends FlxSprite
                 LEFT = false;
             }
             else {
-                velocity.x = -40;
+                velocity.x = -platformVelocity;
             }
         }
         if (RIGHT) {
@@ -86,36 +86,48 @@ class Platforms extends FlxSprite
                LEFT = true;
             }
             else {
-                velocity.x = 40;
+                velocity.x = platformVelocity;
             }
         }
     }
 
-    //returns offset of player when player jumps on block
-    // public function setOffset(plyr:Player, self):Void {
-    //     //only redefine offset x if the player is JUST NOW starting to touch the block
-    //         offsetX = plyr.x - self.x;
-    //         trace(offsetX);
-    //         trace("booyah");
-        //otherwise just move the player based on         
-    // }
 
-	//returns touches between player and platform - WIP
-	// public function movePlayer(plyr:Player, self):Void {
-	// 	// plyr.x = self.x + offsetX;
-    //     // trace(plyr.x);
-    //     // trace(self.x);
-    //     // plyr.y = self.y;
-    //     // trace("actually moving player");
-    //     //plyr.onGround = true;
-	// }
+    public function platformUpdate(elapsed:Float, player:Player, platform:Platforms):Void
+    {
+        // If platform and player are not touching, allow offset to be overwritten
+		if (!FlxG.overlap(player, platform)) {
+			platform.inContact = false;
+		}
+
+		if (FlxG.collide(player, platform)) {
+			// Only set offset value if touching platform for "first" time
+			player.acceleration.y = heavy;
+			if (!platform.inContact) {
+				platform.inContact = true;
+				platform.offsetX = player.x - platform.x;
+			}
+			
+			// Multiply velocity by elapsed to get the player's movement each frame.
+			platform.offsetX += player.velocity.x * elapsed;
+			
+			// Allow player to drop through platform if down key pressed
+			if (FlxG.keys.anyPressed([FlxKey.DOWN])) {
+				player.y = platform.y;
+			}
+
+			// Update player x position
+			player.x = platform.x + platform.offsetX;
+		}
+		else {
+            // Return gravity to normal (in PlayState) as soon as not on platform
+            player.acceleration.y =  cast(FlxG.state, PlayState).GRAVITY;
+		}
+    }
 
 
     public override function update(elapsed:Float):Void
 	{
         movement();
-        // movePlayer(player);
-        //trace("actually moving player");
 		super.update(elapsed);
 	}
 }

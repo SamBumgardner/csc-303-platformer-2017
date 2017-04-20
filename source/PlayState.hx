@@ -15,7 +15,6 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	public var player:Player;
 	private var platform:Platforms;
-	private var x:Float = 0;
 	public static var hud:HeadsUpDisplay;
 	
 	override public function create():Void
@@ -26,15 +25,13 @@ class PlayState extends FlxState
 		super.create();
 		
 		player = new Player(50, 50);
-		//player.collisonXDrag = true;
 		add(player);
 		
 		//create new moving platform
 		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
 		platform.immovable = platform.solid = true;
-		//platform.collisonXDrag = true;
 		platform.allowCollisions = FlxObject.UP;
-		platform.sticky = false;
+		platform.inContact = false;
 		add(platform);
 
 		map = new FlxTilemap();
@@ -65,33 +62,7 @@ class PlayState extends FlxState
 
 		FlxG.collide(map, player);
 
-		// If platform and player are not touching, allow offset to be overwritten
-		if (!FlxG.overlap(player, platform)) {
-			platform.sticky = false;
-		}
-
-		if (FlxG.collide(player, platform)) {
-			// Only set offset value if touching platform for "first" time
-			player.acceleration.y = 8000;
-			if (!platform.sticky) {
-				platform.sticky = true;
-				platform.offsetX = player.x - platform.x;
-			}
-			
-			// Multiply velocity by elapsed to get the player's movement each frame.
-			platform.offsetX += player.velocity.x * elapsed;
-			
-			// Allow player to drop through platform if down key pressed
-			if (FlxG.keys.anyPressed([FlxKey.DOWN])) {
-				player.y = platform.y;
-			}
-
-			// Update player x position
-			player.x = platform.x + platform.offsetX;
-		}
-		else {
-			player.acceleration.y = 600;
-		}
+		platform.platformUpdate(elapsed, player, platform);
 
 		hud.update(elapsed);
 	}
