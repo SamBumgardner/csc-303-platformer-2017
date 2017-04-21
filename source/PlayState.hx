@@ -14,6 +14,7 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	private var player:Player;
 	private var coins:FlxGroup;
+	public static var hud:HeadsUpDisplay;
 	
 	override public function create():Void
 	{
