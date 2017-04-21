@@ -12,16 +12,17 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class DontTouchMe extends Enemy 
 {
-	private var position:FlxPoint;
-
-	// Movement variables
-	private var xAccel:Float = 30;
-	private var xSlowdown:Float = 60;	
-	private var xMaxSpeed:Float = 30;
+	private var dtmPosition:FlxPoint;
+	private var xSpeed:Float = -30;
 		
 	// Hitboxes
 	public var takeDamageBox:FlxObject;
+	private var tdbXoffset:Float = 5;
+	private var tdbYoffset:Float = 0;
 	public var giveDamageBox:FlxObject;
+	private var gdbXoffset:Float = 2;
+	private var gdbYoffset:Float = 5;
+	
 		
 	/**
 	 * Intializer
@@ -34,49 +35,31 @@ class DontTouchMe extends Enemy
 		super(X, Y, AssetPaths.DontTouchMe__png);
 				
 		name = "DontTouchMe";
-		position = getPosition();
+		dtmPosition = getPosition();
 		
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		maxVelocity.y = acceleration.y;
 		
-		// Setup movement
-		maxVelocity.x = xMaxSpeed;
-		groundMovement( -1);
+		// Initialize X movement
+		velocity.x = xSpeed;
 		
 		// Set hitboxes
-		takeDamageBox = new FlxObject((X + 5), Y, 22, 5);
-		giveDamageBox = new FlxObject((X + 1), (Y + 5), 30, 27);
+		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), 22, 5);
+		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), 30, 27);
 	}
 	
 	/**
-	 * Set the movement direction.
-	 * 
-	 * @param	movementDirection	-1 for moving left, 1 for moving right.
+	 * Turns the enemy around if it runs into an object
 	 */
-	public function groundMovement(movementDirection:Int):Void 
+	public function turnAround():Void
 	{
-		// If horizontalMove is -1, the Enemy should move left.
-		if (movementDirection == -1) {
-			flipX = false;
-			if (velocity.x > 0) {
-				acceleration.x = -xSlowdown + -xAccel;
-			}
-			else {
-				acceleration.x = -xAccel;
-			}
-		}
+		// Reverse the direction of the DontTouchMe's velocity
+		xSpeed *= -1;
+		velocity.x = xSpeed;
 		
-		// If horizontalMove is 1, the Enemy should move right.
-		else if (movementDirection == 1) {
-			flipX = true;
-			if (velocity.x < 0) {
-				acceleration.x = xSlowdown + xAccel;
-			}
-			else {
-				acceleration.x = xAccel;
-			}
-		}
+		// Flip the animation
+		flipX = !flipX;
 	}
 	
 	/**
@@ -109,28 +92,25 @@ class DontTouchMe extends Enemy
 	 * @param	elapsed	Time passed since last call to update in seconds.
 	 */
 	public override function update(elapsed:Float):Void
-	{		
-		// Change the movement direction if it runs into a wall
-		if (isTouching(FlxObject.LEFT)) {
-			groundMovement(1);
-		}
-		if (isTouching(FlxObject.RIGHT)) {
-			groundMovement(-1);
-		}
-		
-		// Move hitBox
-		position = getPosition();
-		takeDamageBox.x = position.x + 5;
-		takeDamageBox.y = position.y;
-		giveDamageBox.x = position.x + 1;
-		giveDamageBox.y = position.y + 5;
-		
+	{
 		// Check if DTM is squashed
 		if (isTouching(FlxObject.UP)) {
 			kill();
 		}
 		
+		// Change the movement direction if it runs into an object
+		if (isTouching(FlxObject.LEFT) || isTouching(FlxObject.RIGHT)) {
+			turnAround();
+		}
+		
 		super.update(elapsed);
+		
+		// Move hitBox
+		dtmPosition = getPosition();
+		takeDamageBox.x = dtmPosition.x + tdbXoffset;
+		takeDamageBox.y = dtmPosition.y + tdbYoffset;
+		giveDamageBox.x = dtmPosition.x + gdbXoffset;
+		giveDamageBox.y = dtmPosition.y + gdbYoffset;		
 	}
 	
 }
