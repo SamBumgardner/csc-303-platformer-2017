@@ -34,7 +34,7 @@ class Platforms extends FlxSprite
     public var inContact:Bool = false;
     private var platformVelocity:Int = 40;
     public var touchingSprites:FlxTypedGroup<PlatformTracker> = new FlxTypedGroup<PlatformTracker>();
-
+    private var countTouching:Int = 0;
 
     public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -94,26 +94,28 @@ class Platforms extends FlxSprite
         }
     }
 
+    // Add or update sprites colliding with platform
     public function platformObjects(elapsed:Float, player:FlxObject, platform:Platforms):Void
     {
         // If there is nothing in the touching platform group, add this object
-        if (touchingSprites.length == 0) {  
-            trace("nothing in Sprite group");
-            platform.offsetX = player.x - platform.x;
-            var obj = new PlatformTracker(player, platform.offsetX);
+        if (countTouching == 0)
+        {  
+            var obj = new PlatformTracker(player, (player.x - platform.x));
             touchingSprites.add(obj);
-            trace(touchingSprites.members[0].returnOffset());
+            countTouching++;
         }
-        else {
+        else
+        {
             inContact = false;
             // Iterate through the members of the group
-            for (i in 0...touchingSprites.length) {
+            for (i in 0...countTouching)
+            {
                 // If this sprite touching the platform has already been touching the platform
                 if (touchingSprites.members[i].returnBase() == player)
                 {
                     // Mark that this sprite has been found and was already in contact
                     inContact = true;
-                    trace(inContact);
+
                     // Multiply velocity by elapsed to get the player's movement each frame.
                     touchingSprites.members[i].trackedOffsetX += player.velocity.x * elapsed;
 
@@ -122,42 +124,35 @@ class Platforms extends FlxSprite
                 }
             }
             // If the end of the group is reached and this object isn't already in contact, add it
-            if (!inContact) {
-                platform.offsetX = player.x - platform.x;
-                var obj = new PlatformTracker(player, platform.offsetX);
+            if (!inContact)
+            {
+                var obj = new PlatformTracker(player, (player.x - platform.x));
                 touchingSprites.add(obj);
+                countTouching++;
             }
         }
-
-
-        // if (!FlxG.keys.anyPressed([FlxKey.DOWN])) {
-        //     // If the player is NOT pressing down, allow for collisions between platform and player
-        //     if (FlxG.collide(player, platform)) {
-               
-        //         // Only set offset value if touching platform for "first" time
-        //         player.acceleration.y = heavy;
-        //         if (!platform.inContact) {
-        //             platform.inContact = true;
-        //             platform.offsetX = player.x - platform.x;
-        //         }
-                
-        //         // Multiply velocity by elapsed to get the player's movement each frame.
-        //         platform.offsetX += player.velocity.x * elapsed;
-
-        //         // Update player x position
-        //         player.x = platform.x + platform.offsetX;
-        //     }
-        //     else {
-        //         // Return gravity to normal (in PlayState) as soon as not on platform
-        //         player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
-        //     }
-        // }
-        // else {
-        //     // Reset gravity if player drops down through platform
-        //     player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
-        // }
-		
     }
+
+    // Remove sprites NOT colliding with platform
+    private function notPlatformObjects(elapsed:Float, sprite:FlxObject, platform:Platforms):Void
+    {
+        // If there are objects touching the platform, make sure it isn't this one
+        if (countTouching != 0)
+        {
+            for (i in 0...countTouching)
+            {
+                // If this object is STILl in the list of sprites touching the platform, remove it
+                if (touchingSprites.members[i].returnBase() == sprite)
+                { 
+                    // Exit loop and Remove from touchingSprites
+                    touchingSprites.remove(touchingSprites.members[i], true);
+                    touchingSprites.update(elapsed);
+                    countTouching--;
+                }
+            }
+        }
+    }
+	
 
 
     public function platformUpdate(elapsed:Float, objects:FlxTypedGroup<FlxObject>, platform:Platforms):Void
@@ -166,6 +161,9 @@ class Platforms extends FlxSprite
         {
             if (FlxG.collide(platform, objects.members[i])) {
                 platformObjects(elapsed, objects.members[i], platform);
+            }
+            else {
+                notPlatformObjects(elapsed, objects.members[i], platform);
             }
         }
        

@@ -17,7 +17,6 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var platform:Platforms;
 	public static var hud:HeadsUpDisplay;
-	//public var sprites = FlxGroup
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
 
 	
@@ -28,13 +27,11 @@ class PlayState extends FlxState
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
 		super.create();
-		
 
 		player = new Player(50, 50);
 		add(player);
+		//Add player (and any other sprites) to group
 		sprites.add(player);
-
-		//Add enemies as they are created
 		
 		//create new moving platform
 		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);

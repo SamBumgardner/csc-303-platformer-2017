@@ -26,7 +26,6 @@ import flixel.input.keyboard.FlxKey;
 
     public function returnOffset():Float
     {
-        trace(trackedOffsetX);
         return trackedOffsetX;
     }
 
