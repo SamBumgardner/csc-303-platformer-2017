@@ -33,6 +33,8 @@ import flixel.group.FlxGroup;
   public var topBox:FlxObject;
   public var btmBox:FlxObject;
 
+  private var hitBoxHeight:Int = 3;
+
 	/**
 	 * Intializer
 	 *
@@ -59,8 +61,8 @@ import flixel.group.FlxGroup;
 
     // Multiple hitbox support
     hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
-    topBox = new FlxObject(X + 1, Y, width - 2, 3);
-    btmBox = new FlxObject(X + 1, Y + height - 4, width - 2, 3);
+    topBox = new FlxObject(X, Y, width, hitBoxHeight);
+    btmBox = new FlxObject(X, Y + height - hitBoxHeight, width, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
 	}
@@ -147,15 +149,14 @@ import flixel.group.FlxGroup;
     return FlxG.keys.anyPressed([FlxKey.Z]);
   }
 
+  /**
+   * This method is called during every Player update cycle
+   * to keep the hitboxes in the same position relative to the player
+   */
   private function updateHitBoxes():Void
   {
-    var hitBoxHeight = 3;
-    var hitBoxOffset = 1;
-    var hitBoxWidth = width - hitBoxOffset * 2;
-    var hitBoxX = x + hitBoxOffset;
-
-    topBox.x = btmBox.x = hitBoxX;
-    topBox.y = y + hitBoxOffset;
-    btmBox.y = y + height - hitBoxOffset - hitBoxHeight;
+    topBox.x = btmBox.x = x;
+    topBox.y = y;
+    btmBox.y = y + height - hitBoxHeight;
   }
 }
