@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
 
 /**
  * ...
@@ -91,40 +92,61 @@ class Platforms extends FlxSprite
         }
     }
 
-
-    public function platformUpdate(elapsed:Float, player:Player, platform:Platforms):Void
+    public function platformObjects(elapsed:Float, player:FlxObject, platform:Platforms):Void
     {
+        trace("made it in objects");
         // If platform and player are not touching, allow offset to be overwritten
-		if (!FlxG.overlap(player, platform)) {
-			platform.inContact = false;
-		}
-        if (!FlxG.keys.anyPressed([FlxKey.DOWN])) {
-            // If the player is NOT pressing down, allow for collisions between platform and player
-            if (FlxG.collide(player, platform)) {
-               
-                // Only set offset value if touching platform for "first" time
-                player.acceleration.y = heavy;
-                if (!platform.inContact) {
-                    platform.inContact = true;
-                    platform.offsetX = player.x - platform.x;
-                }
-                
-                // Multiply velocity by elapsed to get the player's movement each frame.
-                platform.offsetX += player.velocity.x * elapsed;
-
-                // Update player x position
-                player.x = platform.x + platform.offsetX;
-            }
-            else {
-                // Return gravity to normal (in PlayState) as soon as not on platform
-                player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
-            }
+		if (!platform.isTouching(FlxObject.UP)) {
+            platform.inContact = false;
         }
         else {
-            // Reset gravity if player drops down through platform
-            player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
+            if (!platform.inContact) {
+                platform.inContact = true;
+                //add thing to array of things
+            }
         }
+
+
+        // if (!FlxG.keys.anyPressed([FlxKey.DOWN])) {
+        //     // If the player is NOT pressing down, allow for collisions between platform and player
+        //     if (FlxG.collide(player, platform)) {
+               
+        //         // Only set offset value if touching platform for "first" time
+        //         player.acceleration.y = heavy;
+        //         if (!platform.inContact) {
+        //             platform.inContact = true;
+        //             platform.offsetX = player.x - platform.x;
+        //         }
+                
+        //         // Multiply velocity by elapsed to get the player's movement each frame.
+        //         platform.offsetX += player.velocity.x * elapsed;
+
+        //         // Update player x position
+        //         player.x = platform.x + platform.offsetX;
+        //     }
+        //     else {
+        //         // Return gravity to normal (in PlayState) as soon as not on platform
+        //         player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
+        //     }
+        // }
+        // else {
+        //     // Reset gravity if player drops down through platform
+        //     player.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
+        // }
 		
+    }
+
+
+    public function platformUpdate(elapsed:Float, objects:FlxTypedGroup<FlxObject>, platform:Platforms):Void
+    {
+        for (i in 0...objects.length)
+        {
+            if (FlxG.overlap(platform, objects.members[i])) {
+                trace(i);
+                platformObjects(elapsed, objects.members[i], platform);
+            }
+        }
+       
     }
 
 

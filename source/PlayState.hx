@@ -7,6 +7,7 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
 
 class PlayState extends FlxState
 {
@@ -16,16 +17,24 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var platform:Platforms;
 	public static var hud:HeadsUpDisplay;
+	//public var sprites = FlxGroup
+	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
+
 	
 	override public function create():Void
 	{
+
 		if (hud == null){
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
 		super.create();
 		
+
 		player = new Player(50, 50);
 		add(player);
+		sprites.add(player);
+
+		//Add enemies as they are created
 		
 		//create new moving platform
 		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
@@ -62,7 +71,7 @@ class PlayState extends FlxState
 
 		FlxG.collide(map, player);
 
-		platform.platformUpdate(elapsed, player, platform);
+		platform.platformUpdate(elapsed, sprites, platform);
 
 		hud.update(elapsed);
 	}
