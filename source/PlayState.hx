@@ -14,9 +14,13 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	private var player:Player;
 	private var coins:FlxGroup;
+	public static var hud:HeadsUpDisplay;
 	
 	override public function create():Void
 	{
+		if (hud == null){
+			hud = new HeadsUpDisplay(0, 0, "MARIO");
+		}
 		super.create();
 		
 		player = new Player(50, 50);
@@ -50,12 +54,13 @@ class PlayState extends FlxState
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			20, 15, AssetPaths.tiles__png, 32, 32);
 		add(map);
+		add(hud);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
+		hud.update(elapsed);
 		FlxG.collide(map, player);
 		
 		//When player overlaps a coin, the coin is destroyed
