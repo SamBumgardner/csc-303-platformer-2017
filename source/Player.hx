@@ -11,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
 
 /**
  * ...
@@ -27,6 +28,12 @@ import flixel.input.keyboard.FlxKey;
 	public var runSpeed:Float = 200;
 
 	public var xSlowdown:Float = 600;
+
+  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+  public var topBox:FlxObject;
+  public var btmBox:FlxObject;
+
+  private var hitBoxHeight:Int = 3;
 
 	/**
 	 * Intializer
@@ -51,6 +58,13 @@ import flixel.input.keyboard.FlxKey;
 
 		// Initialize the finite-state machine with initial state
 		brain = new FSM( new PlayerAirState() );
+
+    // Multiple hitbox support
+    hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
+    topBox = new FlxObject(X, Y, width, hitBoxHeight);
+    btmBox = new FlxObject(X, Y + height - hitBoxHeight, width, hitBoxHeight);
+    hitBoxComponents.add(topBox);
+    hitBoxComponents.add(btmBox);
 	}
 
 	/**
@@ -78,6 +92,7 @@ import flixel.input.keyboard.FlxKey;
 	{
 		brain.update(this);
 		super.update(elapsed);
+    updateHitBoxes();
 	}
 
   /**
@@ -132,5 +147,16 @@ import flixel.input.keyboard.FlxKey;
   public function isRunning():Bool
   {
     return FlxG.keys.anyPressed([FlxKey.Z]);
+  }
+
+  /**
+   * This method is called during every Player update cycle
+   * to keep the hitboxes in the same position relative to the player
+   */
+  private function updateHitBoxes():Void
+  {
+    topBox.x = btmBox.x = x;
+    topBox.y = y;
+    btmBox.y = y + height - hitBoxHeight;
   }
 }
