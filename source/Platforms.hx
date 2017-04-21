@@ -33,6 +33,8 @@ class Platforms extends FlxSprite
     public var offsetX:Float = 0;
     public var inContact:Bool = false;
     private var platformVelocity:Int = 40;
+    public var touchingSprites:FlxTypedGroup<PlatformTracker> = new FlxTypedGroup<PlatformTracker>();
+
 
     public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -94,15 +96,36 @@ class Platforms extends FlxSprite
 
     public function platformObjects(elapsed:Float, player:FlxObject, platform:Platforms):Void
     {
-        trace("made it in objects");
-        // If platform and player are not touching, allow offset to be overwritten
-		if (!platform.isTouching(FlxObject.UP)) {
-            platform.inContact = false;
+        // If there is nothing in the touching platform group, add this object
+        if (touchingSprites.length == 0) {  
+            trace("nothing in Sprite group");
+            platform.offsetX = player.x - platform.x;
+            var obj = new PlatformTracker(player, platform.offsetX);
+            touchingSprites.add(obj);
+            trace(touchingSprites.members[0].returnOffset());
         }
         else {
-            if (!platform.inContact) {
-                platform.inContact = true;
-                //add thing to array of things
+            inContact = false;
+            // Iterate through the members of the group
+            for (i in 0...touchingSprites.length) {
+                // If this sprite touching the platform has already been touching the platform
+                if (touchingSprites.members[i].returnBase() == player)
+                {
+                    // Mark that this sprite has been found and was already in contact
+                    inContact = true;
+                    trace(inContact);
+                    // Multiply velocity by elapsed to get the player's movement each frame.
+                    touchingSprites.members[i].trackedOffsetX += player.velocity.x * elapsed;
+
+                    // Update player x position
+                    player.x = platform.x + touchingSprites.members[i].returnOffset();
+                }
+            }
+            // If the end of the group is reached and this object isn't already in contact, add it
+            if (!inContact) {
+                platform.offsetX = player.x - platform.x;
+                var obj = new PlatformTracker(player, platform.offsetX);
+                touchingSprites.add(obj);
             }
         }
 
@@ -141,8 +164,7 @@ class Platforms extends FlxSprite
     {
         for (i in 0...objects.length)
         {
-            if (FlxG.overlap(platform, objects.members[i])) {
-                trace(i);
+            if (FlxG.collide(platform, objects.members[i])) {
                 platformObjects(elapsed, objects.members[i], platform);
             }
         }
