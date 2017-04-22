@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
@@ -10,13 +11,11 @@ import flixel.group.FlxGroup;
 class PlayState extends FlxState
 {
 	public var GRAVITY(default, never):Float = 600;
-	
+
 	private var map:FlxTilemap;
 	private var player:Player;
 	public static var hud:HeadsUpDisplay;
-	
-	//group for handling block collisions
-	var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
+	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	
 	override public function create():Void
 	{
@@ -24,10 +23,11 @@ class PlayState extends FlxState
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
 		super.create();
-		
+
 		player = new Player(50, 50);
 		add(player);
-		
+		add(player.hitBoxComponents);
+
 		map = new FlxTilemap();
 		map.loadMapFromArray([
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -50,7 +50,6 @@ class PlayState extends FlxState
 
 		add(hud);
 		
-		//make-a da blockies
 		blockGroup.add(new Block(3, 8, true));
 		blockGroup.add(new Block(4, 8, true));
 		blockGroup.add(new Block(7, 6));
@@ -64,6 +63,12 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		hud.update(elapsed);
 		FlxG.collide(map, player);
-		FlxG.collide(blockGroup, player, function(b:Block, p:Player) {b.onTouch();} );
+		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {
+			if (obj == player.topBox)
+				{b.onTouch("btm"); }
+			else if (obj == player.btmBox)
+				{b.onTouch("top");}
+		} );
+		FlxG.collide(blockGroup, player);
 	}
 }

@@ -39,9 +39,11 @@ class ItemBlock extends Block
 	/**
 	 * Processes hit logic for item block
 	 */
-	override public function onTouch()
+	override public function onTouch(touchedSide:String)
 	{
-		//produce item logic
-		loadGraphic(AssetPaths.Empty__png);
+		if(touchedSide == "btm") {
+			//produce item logic
+			loadGraphic(AssetPaths.Empty__png);
+		}
 	}
 }

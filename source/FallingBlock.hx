@@ -36,14 +36,14 @@ class FallingBlock extends Block
 	/**
 	 * Causes block to fall after a delay when touched from the top
 	 */
-	override public function onTouch()
+	override public function onTouch(touchedSide:String)
 	{
-		if (isTouching(FlxObject.UP) && (!isFalling))
+		if ((touchedSide == "top") && (!isFalling))
 		{
 			isFalling = true;
 			//creates a timer that causes the block to fall after fallDelay milliseconds
 			Timer.delay(function():Void {
-				immovable = false;
+				//immovable = false;
 				acceleration.y = FALLACCEL;
 			}, fallDelay);
 		}
