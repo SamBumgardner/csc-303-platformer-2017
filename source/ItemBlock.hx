@@ -38,6 +38,8 @@ class ItemBlock extends Block
 	
 	/**
 	 * Processes hit logic for item block
+	 * @param	obj	The object overlapping the block
+	 * @param	player	The Player object needed to check which hitbox is overlapping and adjust player y-velocity if needed
 	 */
 	override public function onTouch(obj:FlxObject, player:Player)
 	{

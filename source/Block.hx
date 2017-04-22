@@ -38,6 +38,8 @@ class Block extends FlxSprite
 	
 	/**
 	 * Processes hit logic for normal blocks
+	 * @param	obj	The object overlapping the block
+	 * @param	player	The Player object needed to check which hitbox is overlapping and adjust player y-velocity if needed
 	 */
 	public function onTouch(obj:FlxObject, player:Player)
 	{
