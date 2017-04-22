@@ -14,32 +14,58 @@ import flixel.group.FlxGroup;
  */
 class Platforms extends FlxSprite 
 {
-    //set initial movement
+    /**
+     *  Set the movement variables for the platform
+     *  
+     *  @params UP, DOWN, LEFT, RIGHT are bools used to track which direction the platform is moving
+     *  @param heavy sets the higher gravity on any objects touching the platform
+     *  @param blockSize sets the height/width of the cube used as a graphic for the map,
+     *  and is used to sure the platform is the same height and multiple of width
+     */
+
     private var UP:Bool = false;
     private var DOWN:Bool = true;
     private var LEFT:Bool = false;
     private var RIGHT: Bool = true;
-    private var heavy:Float = 8000; // Declare higher gravity while on platform
-    private var blockSize:Int = 32; //Declare block size to be used in width and height
-    //Initialize min and max positioning
+    private var heavy:Float = 8000;
+    private var blockSize:Int = 32;
+
+    /**
+     *  Set the minimum and maximum X and Y coordinate positioning for the platform
+     */
     private var minX:Float;
     private var maxX:Float;
     private var minY:Float;
     private var maxY:Float;
-    //Set starting position and width of platform
+
+    /**
+     *  Set the starting position and size of platform
+     *  
+     *  @params startX and startY are the coordinates in which the platform spawns on the map
+     *  @param platformwidth is the number of blocks which connect to make the platform
+     *  @param inContact helps check if the object is in the sprite group or already touching the platform
+     *  @param platformVelocity is the velocity of the platform through its path
+     *  @param touchingSprites is a collection of the objects touching the platform
+     *  @param countTouching is a tracker of the number of objects touching the platform,
+     *  since touchingSprites.length wasn't working
+     */
     private var startX:Float;
     private var startY:Float;
     private var platformwidth:Int;
-    public var offsetX:Float = 0;
     public var inContact:Bool = false;
     private var platformVelocity:Int = 40;
     public var touchingSprites:FlxTypedGroup<PlatformTracker> = new FlxTypedGroup<PlatformTracker>();
     private var countTouching:Int = 0;
 
+    
+    /**
+     *  Create object and initialize variables based on PlayState declarations
+     *  
+     *  @param   trackPlayer is used to make the player accessible to the platform class
+     */
     public function new(?X:Float=0, ?Y:Float=0, ?W:Int=0, ?L:Float=0, ?R:Float=0, ?U:Float=0, ?D:Float=0, ?trackPlayer:Player, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
-		//set starting positions based on requested dimensions/positions
         startX = X;
         startY = Y;
         minX = L;
@@ -52,8 +78,13 @@ class Platforms extends FlxSprite
 		makeGraphic(platformwidth, blockSize, FlxColor.YELLOW);
 
 	}
-
-    //Movement as requested by user parameters
+    
+    /**
+     *  Movement as requested by user parameters. When the object hits the maximum position in 
+     *  one direction, it is directed in the other direction. Corresponding booleans are changed
+     *  as well.
+     *  
+     */
     public function movement():Void
     {
 		if (DOWN) {
@@ -94,7 +125,15 @@ class Platforms extends FlxSprite
         }
     }
 
-    // Add or update sprites colliding with platform
+    /**
+     *  Add or update sprites colliding with the platform. Add the sprite to the touching platform group if
+     *  the group is empty. If it is not empty, iterate through until the sprite is either found (in which
+     *  case update its positioning) or add it to the list if it is not already present.
+     *  
+     *  @param   elapsed is the time passed since last update
+     *  @param   player is the sprite object
+     *  @param   platform is the platform which the sprite object is touching
+     */
     public function platformObjects(elapsed:Float, player:FlxObject, platform:Platforms):Void
     {
         // If there is nothing in the touching platform group, add this object
@@ -108,23 +147,16 @@ class Platforms extends FlxSprite
         else
         {
             inContact = false;
-            // Iterate through the members of the group
             for (i in 0...countTouching)
             {
-                // If this sprite touching the platform has already been touching the platform
-                if (touchingSprites.members[i].returnBase() == player)
+                if (touchingSprites.members[i].baseObj == player)
                 {
-                    // Mark that this sprite has been found and was already in contact
                     inContact = true;
-
                     // Multiply velocity by elapsed to get the player's movement each frame.
                     touchingSprites.members[i].trackedOffsetX += player.velocity.x * elapsed;
-
-                    // Update player x position
-                    player.x = platform.x + touchingSprites.members[i].returnOffset();
+                    player.x = platform.x + touchingSprites.members[i].trackedOffsetX;
                 }
             }
-            // If the end of the group is reached and this object isn't already in contact, add it
             if (!inContact)
             {
                 var obj = new PlatformTracker(player, (player.x - platform.x));
@@ -135,24 +167,28 @@ class Platforms extends FlxSprite
         }
     }
 
-    // Remove sprites NOT colliding with platform
+    /**
+     *  Remove sprites NOT colliding with the platform. If objects are touching the platform, check that 
+     *  this sprite is not one of them. If the object is found in the list of sprites touching, 
+     *  remove it from the group and set its y acceleration back to Gravity as declared in PlayState.hx
+     *  
+     *  @param   elapsed is the time passed since last update
+     *  @param   sprite is the sprite object not touching the platform
+     *  @param   platform is the platform not being touched by the sprite
+     *  @param   originalCount is the number of sprites in the group before any changes are made; used to 
+     *  prevent changes to loop duration
+     */
     private function notPlatformObjects(elapsed:Float, sprite:FlxObject, platform:Platforms):Void
     {
-        // If there are objects touching the platform, make sure it isn't this one
         if (countTouching != 0)
         {
-			// Set up an unchanging variable so the loop's duration won't change as the count decreases.
 			var originalCount:Int = countTouching;
-			
             for (i in 0...originalCount)
             {
-				// Use i to count backward through the list indices, necessary when removing objects.
 				var index:Int = originalCount - (1 + i);
-				
-                // If this object is STILl in the list of sprites touching the platform, remove it
-                if (touchingSprites.members[index].returnBase() == sprite)
+                if (touchingSprites.members[index].baseObj == sprite)
                 { 
-                    // Exit loop and Remove from touchingSprites
+                    sprite.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
                     touchingSprites.remove(touchingSprites.members[index], true);
                     countTouching--;
                 }
@@ -161,7 +197,13 @@ class Platforms extends FlxSprite
     }
 	
 
-
+    /**
+     *  Function called on every update in PlayState.hx. Iterates through every sprite object on the map and 
+     *  checks each to see if it is either touching or not touching the platform
+     *  
+     *  @param   objects is the list of all sprites present
+     *  @param   platform is the platform with which sprites are checked for contact
+     */
     public function platformUpdate(elapsed:Float, objects:FlxTypedGroup<FlxObject>, platform:Platforms):Void
     {
         for (i in 0...objects.length)
@@ -176,7 +218,10 @@ class Platforms extends FlxSprite
        
     }
 
-
+    /**
+     *  Call movement function to determine movement of platform and update the platform's position
+     *  
+     */
     public override function update(elapsed:Float):Void
 	{
         movement();
