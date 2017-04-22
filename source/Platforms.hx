@@ -102,6 +102,7 @@ class Platforms extends FlxSprite
         {  
             var obj = new PlatformTracker(player, (player.x - platform.x));
             touchingSprites.add(obj);
+			player.acceleration.y = heavy;
             countTouching++;
         }
         else
@@ -128,6 +129,7 @@ class Platforms extends FlxSprite
             {
                 var obj = new PlatformTracker(player, (player.x - platform.x));
                 touchingSprites.add(obj);
+				player.acceleration.y = heavy;
                 countTouching++;
             }
         }
@@ -139,14 +141,19 @@ class Platforms extends FlxSprite
         // If there are objects touching the platform, make sure it isn't this one
         if (countTouching != 0)
         {
-            for (i in 0...countTouching)
+			// Set up an unchanging variable so the loop's duration won't change as the count decreases.
+			var originalCount:Int = countTouching;
+			
+            for (i in 0...originalCount)
             {
+				// Use i to count backward through the list indices, necessary when removing objects.
+				var index:Int = originalCount - (1 + i);
+				
                 // If this object is STILl in the list of sprites touching the platform, remove it
-                if (touchingSprites.members[i].returnBase() == sprite)
+                if (touchingSprites.members[index].returnBase() == sprite)
                 { 
                     // Exit loop and Remove from touchingSprites
-                    touchingSprites.remove(touchingSprites.members[i], true);
-                    touchingSprites.update(elapsed);
+                    touchingSprites.remove(touchingSprites.members[index], true);
                     countTouching--;
                 }
             }

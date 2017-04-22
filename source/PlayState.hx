@@ -66,8 +66,8 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		FlxG.collide(map, player);
-
+		FlxG.collide(map, sprites);
+		
 		platform.platformUpdate(elapsed, sprites, platform);
 
 		hud.update(elapsed);

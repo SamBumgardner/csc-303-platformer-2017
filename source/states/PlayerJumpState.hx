@@ -30,6 +30,7 @@ class PlayerJumpState extends PlayerAirState
 
   public override function enter(object:FlxObject):Void
   {
+      super.enter(object);
       var player = cast(object, Player);
       player.velocity.y = -JUMP;
   }
