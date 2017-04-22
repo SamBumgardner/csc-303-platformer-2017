@@ -102,6 +102,7 @@ class Platforms extends FlxSprite
         {  
             var obj = new PlatformTracker(player, (player.x - platform.x));
             touchingSprites.add(obj);
+			player.acceleration.y = heavy;
             countTouching++;
         }
         else
@@ -128,6 +129,7 @@ class Platforms extends FlxSprite
             {
                 var obj = new PlatformTracker(player, (player.x - platform.x));
                 touchingSprites.add(obj);
+				player.acceleration.y = heavy;
                 countTouching++;
             }
         }
