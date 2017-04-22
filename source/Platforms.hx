@@ -153,7 +153,6 @@ class Platforms extends FlxSprite
                 if (touchingSprites.members[index].returnBase() == sprite)
                 { 
                     // Exit loop and Remove from touchingSprites
-                    touchingSprites.update(elapsed);
                     touchingSprites.remove(touchingSprites.members[index], true);
                     countTouching--;
                 }
