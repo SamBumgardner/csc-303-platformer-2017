@@ -2,10 +2,13 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
+
 
 class PlayState extends FlxState
 {
@@ -13,6 +16,11 @@ class PlayState extends FlxState
 
 	private var map:FlxTilemap;
 	private var player:Player;
+	private var _grpTrap:FlxTypedGroup<Trap>;
+	private var trap:Trap;
+	private var trap1:Trap;
+	private var trap2:Trap;
+	private var trap3:Trap;
 	public static var hud:HeadsUpDisplay;
 
 	override public function create():Void
@@ -25,6 +33,30 @@ class PlayState extends FlxState
 		player = new Player(50, 50);
 		add(player);
 		add(player.hitBoxComponents);
+
+
+		//Trap group ceration and addition to playstate (Trying to push this into its own build function, WIP)
+		_grpTrap = new FlxTypedGroup<Trap>();
+
+		trap = new Trap(320,256);
+		trap1 = new Trap();
+		trap2 = new Trap();
+		trap3 = new Trap();
+
+		_grpTrap.add(trap);
+		_grpTrap.add(trap1);
+		_grpTrap.add(trap2);
+		_grpTrap.add(trap3);
+
+		add(trap);
+		add(trap1);
+		add(trap2);
+		add(trap3);
+		
+		trap1.barCreate(trap1, trap2, trap3, 320,256);
+		//End trap creation
+
+
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -53,5 +85,6 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		hud.update(elapsed);
 		FlxG.collide(map, player);
+		FlxG.overlap(player, _grpTrap, trap.playerTrapResolve);
 	}
 }
