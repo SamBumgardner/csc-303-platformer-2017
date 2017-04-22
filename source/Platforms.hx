@@ -54,7 +54,7 @@ class Platforms extends FlxSprite
     private var platformwidth:Int;
     public var inContact:Bool = false;
     private var platformVelocity:Int = 40;
-    public var touchingSprites:FlxTypedGroup<PlatformTracker> = new FlxTypedGroup<PlatformTracker>();
+    public var touchingSprites:Array<PlatformTracker> = new Array<PlatformTracker>();
     private var countTouching:Int = 0;
 
     
@@ -140,7 +140,7 @@ class Platforms extends FlxSprite
         if (countTouching == 0)
         {  
             var obj = new PlatformTracker(player, (player.x - platform.x));
-            touchingSprites.add(obj);
+            touchingSprites.push(obj);
 			player.acceleration.y = heavy;
             countTouching++;
         }
@@ -149,18 +149,18 @@ class Platforms extends FlxSprite
             inContact = false;
             for (i in 0...countTouching)
             {
-                if (touchingSprites.members[i].baseObj == player)
+                if (touchingSprites[i].baseObj == player)
                 {
                     inContact = true;
                     // Multiply velocity by elapsed to get the player's movement each frame.
-                    touchingSprites.members[i].trackedOffsetX += player.velocity.x * elapsed;
-                    player.x = platform.x + touchingSprites.members[i].trackedOffsetX;
+                    touchingSprites[i].trackedOffsetX += player.velocity.x * elapsed;
+                    player.x = platform.x + touchingSprites[i].trackedOffsetX;
                 }
             }
             if (!inContact)
             {
                 var obj = new PlatformTracker(player, (player.x - platform.x));
-                touchingSprites.add(obj);
+                touchingSprites.push(obj);
 				player.acceleration.y = heavy;
                 countTouching++;
             }
@@ -186,10 +186,10 @@ class Platforms extends FlxSprite
             for (i in 0...originalCount)
             {
 				var index:Int = originalCount - (1 + i);
-                if (touchingSprites.members[index].baseObj == sprite)
+                if (touchingSprites[index].baseObj == sprite)
                 { 
                     sprite.acceleration.y = cast(FlxG.state, PlayState).GRAVITY;
-                    touchingSprites.remove(touchingSprites.members[index], true);
+                    touchingSprites.remove(touchingSprites[index]);
                     countTouching--;
                 }
             }

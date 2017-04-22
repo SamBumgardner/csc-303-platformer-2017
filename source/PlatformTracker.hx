@@ -12,7 +12,7 @@ import flixel.input.keyboard.FlxKey;
  * @author Jess Geiger
  */
 
- class PlatformTracker extends Player
+ class PlatformTracker
  {
     public var trackedOffsetX:Float;
     public var baseObj:FlxObject;
@@ -27,8 +27,6 @@ import flixel.input.keyboard.FlxKey;
      */
     public function new(?obj:FlxObject, ?offsetX:Float = 0)
 	{
-        super(); 
-
         trackedOffsetX = offsetX;
         baseObj = obj;
     }
