@@ -36,9 +36,9 @@ class FallingBlock extends Block
 	/**
 	 * Causes block to fall after a delay when touched from the top
 	 */
-	override public function onTouch(touchedSide:String)
+	override public function onTouch(obj:FlxObject, player:Player)
 	{
-		if ((touchedSide == "top") && (!isFalling))
+		if ((obj == player.btmBox) && (!isFalling))
 		{
 			isFalling = true;
 			//creates a timer that causes the block to fall after fallDelay milliseconds

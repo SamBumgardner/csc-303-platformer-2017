@@ -39,11 +39,12 @@ class Block extends FlxSprite
 	/**
 	 * Processes hit logic for normal blocks
 	 */
-	public function onTouch(touchedSide:String)
+	public function onTouch(obj:FlxObject, player:Player)
 	{
-		if ((touchedSide == "btm") && isBreakable) //ensure block was hit from below and is breakable
+		if ((obj == player.topBox) && isBreakable) //ensure block was hit from below and is breakable
 		{
 			this.destroy();
+			player.velocity.y = 0;
 		}
 	}
 }

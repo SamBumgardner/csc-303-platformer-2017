@@ -63,12 +63,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		hud.update(elapsed);
 		FlxG.collide(map, player);
-		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {
-			if (obj == player.topBox)
-				{b.onTouch("btm"); }
-			else if (obj == player.btmBox)
-				{b.onTouch("top");}
-		} );
+		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.collide(blockGroup, player);
 	}
 }

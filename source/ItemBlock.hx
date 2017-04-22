@@ -39,11 +39,12 @@ class ItemBlock extends Block
 	/**
 	 * Processes hit logic for item block
 	 */
-	override public function onTouch(touchedSide:String)
+	override public function onTouch(obj:FlxObject, player:Player)
 	{
-		if(touchedSide == "btm") {
+		if (obj == player.topBox) {
 			//produce item logic
 			loadGraphic(AssetPaths.Empty__png);
+			player.velocity.y = 0;
 		}
 	}
 }
