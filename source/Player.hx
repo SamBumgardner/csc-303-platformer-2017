@@ -34,6 +34,7 @@ import flixel.group.FlxGroup;
   public var btmBox:FlxObject;
 
   private var hitBoxHeight:Int = 3;
+  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
 
 	/**
 	 * Intializer
@@ -61,8 +62,8 @@ import flixel.group.FlxGroup;
 
     // Multiple hitbox support
     hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
-    topBox = new FlxObject(X, Y, width, hitBoxHeight);
-    btmBox = new FlxObject(X, Y + height - hitBoxHeight, width, hitBoxHeight);
+    topBox = new FlxObject(X + hitBoxWidthOffset, Y, width - hitBoxWidthOffset*2, hitBoxHeight);
+    btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
 	}
@@ -155,7 +156,7 @@ import flixel.group.FlxGroup;
    */
   private function updateHitBoxes():Void
   {
-    topBox.x = btmBox.x = x;
+    topBox.x = btmBox.x = x + hitBoxWidthOffset;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
