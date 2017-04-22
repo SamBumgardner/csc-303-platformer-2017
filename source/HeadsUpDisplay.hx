@@ -122,16 +122,6 @@ class HeadsUpDisplay extends FlxGroup
 	 */
 	
 	public override function update(elapsed:Float):Void
-	{
-		//UPDATES
-		scoreLabel.update(elapsed);
-		timeLabel.update(elapsed);
-		coinIcon.update(elapsed);
-		coinCross.update(elapsed);
-		score.update(elapsed);
-		time.update(elapsed); 
-		coins.update(elapsed);
-		super.update(elapsed);
-		
+	{	
 	}
 }
