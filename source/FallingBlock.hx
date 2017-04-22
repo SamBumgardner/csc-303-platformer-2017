@@ -43,7 +43,6 @@ class FallingBlock extends Block
 			isFalling = true;
 			//creates a timer that causes the block to fall after fallDelay milliseconds
 			Timer.delay(function():Void {
-				//immovable = false;
 				acceleration.y = FALLACCEL;
 			}, fallDelay);
 		}
