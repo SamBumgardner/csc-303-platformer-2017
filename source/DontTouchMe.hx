@@ -17,9 +17,14 @@ class DontTouchMe extends Enemy
 		
 	// Hitboxes
 	public var takeDamageBox:FlxObject;
+	private var tdbHeight:Float = 22;
+	private var tdbWidth:Float = 5;
 	private var tdbXoffset:Float = 5;
 	private var tdbYoffset:Float = 0;
+	
 	public var giveDamageBox:FlxObject;
+	private var gdbHeight:Float = 30;
+	private var gdbWidth:Float = 27;
 	private var gdbXoffset:Float = 2;
 	private var gdbYoffset:Float = 5;
 	
@@ -45,8 +50,8 @@ class DontTouchMe extends Enemy
 		velocity.x = xSpeed;
 		
 		// Set hitboxes
-		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), 22, 5);
-		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), 30, 27);
+		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), tdbHeight, tdbWidth);
+		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), gdbHeight, gdbWidth);
 	}
 	
 	/**
