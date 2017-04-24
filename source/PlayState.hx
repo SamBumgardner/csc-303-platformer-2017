@@ -6,6 +6,7 @@ import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -15,9 +16,12 @@ class PlayState extends FlxState
 	public var GRAVITY(default, never):Float = 600;
 
 	private var map:FlxTilemap;
-	private var player:Player;
+	public var player:Player;
+	private var platform:Platforms;
 	public static var hud:HeadsUpDisplay;
 	public var _pUp:FlxGroup;
+	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
+
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	
 	// Enemies
@@ -40,9 +44,10 @@ class PlayState extends FlxState
 		
 		bullet.kill();
 	}
-	
+
 	override public function create():Void
 	{
+
 		if (hud == null){
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
@@ -50,6 +55,17 @@ class PlayState extends FlxState
 
 		player = new Player(50, 50);
 		add(player);
+
+		//Add player (and any other sprites) to group
+		sprites.add(player);
+		
+		//create new moving platform
+		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
+		platform.immovable = platform.solid = true;
+		platform.allowCollisions = FlxObject.UP;
+		platform.inContact = false;
+		add(platform);
+
 		add(player.hitBoxComponents);
 		
 		// Create and add enemies
@@ -61,7 +77,6 @@ class PlayState extends FlxState
 		
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
-		
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -100,7 +115,13 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
+
+		FlxG.collide(map, sprites);
+		
+		platform.platformUpdate(elapsed, sprites, platform);
+
 		hud.update(elapsed);
+
 		FlxG.collide(map, player);
 		FlxG.overlap(player, _pUp, getPowerup);
 	}
@@ -128,5 +149,6 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
+
 	}
 }
