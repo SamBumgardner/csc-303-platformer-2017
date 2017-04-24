@@ -51,7 +51,6 @@ import flixel.input.keyboard.FlxKey;
 
 		// Initialize the finite-state machine with initial state
 		brain = new FSM( new PlayerAirState() );
-
 	}
 
 	/**
