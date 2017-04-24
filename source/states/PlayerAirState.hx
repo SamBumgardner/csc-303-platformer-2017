@@ -11,6 +11,11 @@ class PlayerAirState extends BaseState
     super();
   }
 
+  public override function enter(object:FlxObject):Void
+  {
+	object.acceleration.y = (cast FlxG.state).GRAVITY;
+  }
+  
   private override function transition(object:FlxObject):Bool
   {
     var player = cast(object, Player);
@@ -86,10 +91,5 @@ class PlayerAirState extends BaseState
     }
 
     #end // End of the conditional compilation section.
-  }
-
-  private override function exit(object:FlxObject):Void
-  {
-    object.acceleration.y = (cast FlxG.state).GRAVITY;
   }
 }
