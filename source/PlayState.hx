@@ -16,11 +16,7 @@ class PlayState extends FlxState
 
 	private var map:FlxTilemap;
 	private var player:Player;
-	private var _grpTrap:FlxTypedGroup<Trap>;
 	private var trap:Trap;
-	private var trap1:Trap;
-	private var trap2:Trap;
-	private var trap3:Trap;
 	public static var hud:HeadsUpDisplay;
 
 	override public function create():Void
@@ -35,26 +31,17 @@ class PlayState extends FlxState
 		add(player.hitBoxComponents);
 
 
-		//Trap group ceration and addition to playstate (Trying to push this into its own build function, WIP)
-		_grpTrap = new FlxTypedGroup<Trap>();
-
+		//Create a new Trap
 		trap = new Trap(320,256);
-		trap1 = new Trap();
-		trap2 = new Trap();
-		trap3 = new Trap();
-
-		_grpTrap.add(trap);
-		_grpTrap.add(trap1);
-		_grpTrap.add(trap2);
-		_grpTrap.add(trap3);
-
-		add(trap);
-		add(trap1);
-		add(trap2);
-		add(trap3);
 		
-		trap1.barCreate(trap1, trap2, trap3, 320,256);
-		//End trap creation
+		//Building the Trap and its subsections by adding them to their own FlxGroup
+		trap.buildTrap(trap);
+
+		//Adding the whole Trap, subsections and all to the playstate
+		add(trap._grpBarTrap);	
+
+		//Placing the trap into the playstate centered at specified location (x, y)
+		trap.placeTrap(trap._grpBarTrap, 320, 256);
 
 
 
@@ -85,6 +72,6 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		hud.update(elapsed);
 		FlxG.collide(map, player);
-		FlxG.overlap(player, _grpTrap, trap.playerTrapResolve);
+		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 	}
 }
