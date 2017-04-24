@@ -24,9 +24,10 @@ class PlayState extends FlxState
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	
 	// Enemies
-	private var dtmEnemy1:DontTouchMe;
-	private var sentry1:Sentry;
-	private var bullets:FlxTypedGroup<Bullet>;
+	private var turt1:Turtle;
+	// private var dtmEnemy1:DontTouchMe;
+	// private var sentry1:Sentry;
+	// private var bullets:FlxTypedGroup<Bullet>;
 	
 	/**
 	 * bulletHitPlayer
@@ -69,14 +70,16 @@ class PlayState extends FlxState
 		add(player.hitBoxComponents);
 		
 		// Create and add enemies
-		dtmEnemy1 = new DontTouchMe(400, 200);
-		add(dtmEnemy1);
+		turt1 = new Turtle(400, 200);
+		add(turt1);
+		// dtmEnemy1 = new DontTouchMe(400, 200);
+		// add(dtmEnemy1);
 		
-		bullets = new FlxTypedGroup<Bullet>(20);
-		add(bullets);
+		// bullets = new FlxTypedGroup<Bullet>(20);
+		// add(bullets);
 		
-		sentry1 = new Sentry(320, 32, bullets, player);
-		add(sentry1);
+		// sentry1 = new Sentry(320, 32, bullets, player);
+		// add(sentry1);
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -122,15 +125,16 @@ class PlayState extends FlxState
 		
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
-		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
-		FlxG.overlap(player, bullets, bulletHitPlayer);
+		// FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
+		// FlxG.overlap(player, bullets, bulletHitPlayer);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
-		FlxG.collide(player, sentry1);
-		FlxG.collide(map, dtmEnemy1);
-		FlxG.collide(map, bullets);
-		FlxG.collide(blockGroup, bullets);
+		FlxG.collide(map, turt1);
+		// FlxG.collide(player, sentry1);
+		// FlxG.collide(map, dtmEnemy1);
+		// FlxG.collide(map, bullets);
+		// FlxG.collide(blockGroup, bullets);
 
 	}
 }

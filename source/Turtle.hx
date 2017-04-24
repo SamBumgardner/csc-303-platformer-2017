@@ -3,18 +3,17 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.math.FlxPoint;
-import flixel.util.FlxColor;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
  * ...
  * @author Keith Cissell
  */
-class DontTouchMe extends Enemy 
+class Turtle extends Enemy 
 {
-	private var dtmPosition:FlxPoint;
+	private var turtPosition:FlxPoint;
 	private var xSpeed:Float = -30;
-		
+	
 	// Hitboxes
 	public var takeDamageBox:FlxObject;
 	private var tdbHeight:Float = 22;
@@ -27,31 +26,21 @@ class DontTouchMe extends Enemy
 	private var gdbWidth:Float = 27;
 	private var gdbXoffset:Float = 2;
 	private var gdbYoffset:Float = 5;
-	
-		
+
 	/**
 	 * Intializer
 	 *
 	 * @param	X	Starting x coordinate
 	 * @param	Y	Starting y coordinate
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0) 
+	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
-		super(X, Y, AssetPaths.DontTouchMe__png);
-				
-		name = "DontTouchMe";
-		dtmPosition = getPosition();
+		super(X, Y, SimpleGraphic);
 		
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		maxVelocity.y = acceleration.y;
 		
-		// Initialize X movement
-		velocity.x = xSpeed;
-		
-		// Set hitboxes
-		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), tdbHeight, tdbWidth);
-		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), gdbHeight, gdbWidth);
 	}
 	
 	/**
@@ -68,25 +57,33 @@ class DontTouchMe extends Enemy
 	}
 	
 	/**
-	 * dtmHitResolve
+	 * turtHitResolve
 	 * Logic for who takes damage if a player and a DTM overlap
 	 * 
 	 * @param	player	A player's character
-	 * @param	dtm		A DontTouchMe enemy
+	 * @param	dtm		A Turtle enemy
 	 */
-	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
+	public function turtHitResolve(player:Player, turt:Turtle):Void
 	{
-		if (player.overlaps(dtm.giveDamageBox)) {
+		if (player.overlaps(turt.giveDamageBox)) {
 			if (player.star) {
-				dtm.kill();
+				turt.kill();
 			} else {
 				player.kill();
 			}
-		} else if (player.overlaps(dtm.takeDamageBox)) {
-			dtm.kill();
+		} else if (player.overlaps(turt.takeDamageBox)) {
+			turt.kill();
 		}
 	}
 	
+	/**
+	 * kill
+	 * extends the kill function to drop a shell when the turtle is killed
+	 */
+	public override function kill():Void
+	{
+		super.kill();
+	}
 	
 	/**
 	 * Update function.
@@ -111,11 +108,11 @@ class DontTouchMe extends Enemy
 		super.update(elapsed);
 		
 		// Move hitBox
-		dtmPosition = getPosition();
-		takeDamageBox.x = dtmPosition.x + tdbXoffset;
-		takeDamageBox.y = dtmPosition.y + tdbYoffset;
-		giveDamageBox.x = dtmPosition.x + gdbXoffset;
-		giveDamageBox.y = dtmPosition.y + gdbYoffset;
+		turtPosition = getPosition();
+		takeDamageBox.x = turtPosition.x + tdbXoffset;
+		takeDamageBox.y = turtPosition.y + tdbYoffset;
+		giveDamageBox.x = turtPosition.x + gdbXoffset;
+		giveDamageBox.y = turtPosition.y + gdbYoffset;
 	}
 	
 }
