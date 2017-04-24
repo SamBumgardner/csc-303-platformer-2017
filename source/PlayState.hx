@@ -14,6 +14,8 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	private var player:Player;
 	private var flagpole:FlagPole;
+	private var flag_x_loc:Int = 17;
+	private var flag_y_loc:Int = 11;
 	public static var hud:HeadsUpDisplay;
 
 	override public function create():Void
@@ -25,9 +27,10 @@ class PlayState extends FlxState
 		
 		/*Create the flagpole at the end of the level 
 		 * This will also instantiate the flag
+		 * flag_x_loc is the number of blocks to the right where we want the flag
+		 * flag_y_loc is the number of blocks down we want the flag
 		*/
-		//544, 352
-		flagpole = new FlagPole(544, 352);
+		flagpole = new FlagPole(32*flag_x_loc, 32*flag_y_loc);
 		add(flagpole.totalFlxGrp);
 		
 		
@@ -71,11 +74,11 @@ class PlayState extends FlxState
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
 		} else {
 			// time (seconds), callback, loops
-			new FlxTimer().start(10, myCallback, 1);
+			new FlxTimer().start(10, resetLevel, 1);
 		}
 	}
 	
-	private function myCallback(Timer:FlxTimer):Void
+	private function resetLevel(Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
 	}

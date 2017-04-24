@@ -72,6 +72,7 @@ class FlagPole extends FlxSprite
 	
 		flag.isLevelOver = true;
 		FlxG.keys.enabled = false;
+		FlxG.keys.reset();
 		player.velocity.x = 0;
 		//subtract adding/subtracting 16 for character image offset
 		player.path = new FlxPath().start([new FlxPoint(player.x+16, player.y+16), new FlxPoint(player.x+16, pole_y_pos+pole_height-16)], 25, FlxPath.FORWARD);

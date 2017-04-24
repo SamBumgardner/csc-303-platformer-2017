@@ -99,7 +99,6 @@ class PlayerGroundState extends BaseState
         }
       }
     }
-		
     #if debug // Only compile this code into a debug version of the game.
 
     // Display an error message in the console if an invalid horizontalMove

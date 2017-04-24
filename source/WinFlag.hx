@@ -27,7 +27,7 @@ class WinFlag extends FlxSprite
 	 * @param	Y	Starting y coordinate
 	 * @param	flag_graphic	animating flag graphic. Nothing fancy (optional)
 	 */
-	public function new(?X:Float = 0, ?Y:Float = 0, ?height:Float, ?flag_graphic:FlxGraphicAsset) 
+	public function new(?X:Float = 0, ?Y:Float = 0, ?height:Float) 
 	{
 		super(X - graphic_width, Y, flag_graphic);
 		
@@ -50,16 +50,13 @@ class WinFlag extends FlxSprite
 	 */
 	public function flag_animate():Void
 	{
-		//this.x -= graphic_width/2; // move it to the other side of the pole
-		//angle = 180; //we need to mirror reverse the image the image
 		velocity.y = 25;
 	}
 	
 	public override function update(elapsed:Float):Void
 	{
         if (isLevelOver){
-			//if (y > (y + flag_height - graphic_height)){ //this will evaluate false no matter what?
-			if (y > flag_distance){ // but this will function correctly
+			if (y > flag_distance){ 
 				velocity.y = 0;
 			}
 		}
