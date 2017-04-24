@@ -29,7 +29,7 @@ class WinFlag extends FlxSprite
 	 */
 	public function new(?X:Float = 0, ?Y:Float = 0, ?height:Float) 
 	{
-		super(X - graphic_width, Y, flag_graphic);
+		super(X - graphic_width, Y);
 		
 		flag_height = height;
 		flag_distance = height + Y - graphic_height;

@@ -31,7 +31,8 @@ class PlayState extends FlxState
 		 * flag_y_loc is the number of blocks down we want the flag
 		*/
 		flagpole = new FlagPole(32*flag_x_loc, 32*flag_y_loc);
-		add(flagpole.totalFlxGrp);
+		add(flagpole);
+		add(flagpole.flag);
 		
 		player = new Player(50, 50);		
 		add(player);

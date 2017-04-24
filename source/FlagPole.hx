@@ -4,7 +4,6 @@ import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.system.FlxSound;
@@ -18,10 +17,7 @@ import flixel.util.FlxPath;
  */
 class FlagPole extends FlxSprite 
 {
-	
-	public var totalFlxGrp:FlxGroup;
-	
-	private var flag:WinFlag;
+	public var flag:WinFlag;
 	private var pole_height:Int = 210;
 	private var pole_width:Int = 5;
 	private var pole_x_pos:Float;
@@ -46,10 +42,6 @@ class FlagPole extends FlxSprite
 		
 		//Win flag with a height of 10 and width of 30
 		flag = new WinFlag(pole_x_pos, pole_y_pos, pole_height);
-		
-		totalFlxGrp = new FlxGroup();
-		totalFlxGrp.add(flag);
-		totalFlxGrp.add(this);
 		
 		// Initializes a basic graphic for the flagpole
 		makeGraphic(pole_width, pole_height, FlxColor.GRAY);
