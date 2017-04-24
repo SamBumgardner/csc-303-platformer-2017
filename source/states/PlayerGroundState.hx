@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.input.keyboard.FlxKey;
 
-
 class PlayerGroundState extends BaseState
 {
   public function new()
