@@ -33,9 +33,6 @@ class PlayState extends FlxState
 		flagpole = new FlagPole(32*flag_x_loc, 32*flag_y_loc);
 		add(flagpole.totalFlxGrp);
 		
-		
-		
-		
 		player = new Player(50, 50);		
 		add(player);
 		
@@ -58,9 +55,7 @@ class PlayState extends FlxState
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			20, 15, AssetPaths.tiles__png, 32, 32);
 		add(map);
-
 		add(hud);
-
 	}
 
 	override public function update(elapsed:Float):Void
