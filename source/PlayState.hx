@@ -17,6 +17,7 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 
 	public var player:Player;
+	private var flagpole:FlagPole;
 	private var platform:Platforms;
   	private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
@@ -118,7 +119,7 @@ class PlayState extends FlxState
 		blockGroup.add(new FallingBlock(9, 6));
 		add(blockGroup);
 	}
-
+	
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
@@ -146,6 +147,10 @@ class PlayState extends FlxState
    		if (!flagpole.level_over()){
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
 		} else {
+			//kill all enemies and bullets on screen. Dactivate cannons
+			bullets.forEachAlive(function(bullet:Bullet){bullet.kill(); });
+			dtmEnemy1.kill();
+			sentry1.active = false;
 			// time (seconds), callback, loops
 			new FlxTimer().start(10, resetLevel, 1);
 		}

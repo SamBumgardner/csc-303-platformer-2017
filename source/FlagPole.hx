@@ -61,14 +61,13 @@ class FlagPole extends FlxSprite
 	 */
 	public function win_animation(player:Player, flagpole:FlagPole ):Void
 	{
-	
 		flag.isLevelOver = true;
 		FlxG.keys.enabled = false;
 		FlxG.keys.reset();
 		player.velocity.x = 0;
 		//subtract adding/subtracting 16 for character image offset
 		player.path = new FlxPath().start([new FlxPoint(player.x+16, player.y+16), new FlxPoint(player.x+16, pole_y_pos+pole_height-16)], 25, FlxPath.FORWARD);
-		player.path.onComplete = function(path:FlxPath):Void{FlxG.keys.enabled = true; };
+		player.path.onComplete = function(path:FlxPath):Void{FlxG.keys.enabled = true;};
 		
 		flag.flag_animate();
 		win_sound.play();
