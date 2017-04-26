@@ -172,6 +172,7 @@ import flixel.group.FlxGroup;
 	if (color == FlxColor.YELLOW) {
 		yellowCoinCount++;
 	}
+  }
     
   /**
    * This method is called during every Player update cycle
