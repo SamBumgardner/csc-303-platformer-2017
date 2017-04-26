@@ -23,12 +23,15 @@ class ReactiveBGMusicTrack
 	private var mixes: Map<String, ReactiveBGMusicTrackSetting>;
 	private var track:FlxSound;
 	private var trackType:Enum<ReactiveBGMusicTrackType>;
-	private var currentMix:ReactiveBGMusicTrackSetting
-	private var TimeInSongOffset:Float //how long to delay the playing of this track
-	private var TimeInTrackOffset:Float //the startpoint to play in the file
-	private var loopPoint:Float //the time to loop back to in the song
-	private var endPoint:Float 
-	private var requiresGlobalLooping:Bool
+	private var currentMix:ReactiveBGMusicTrackSetting;
+	private var TimeInSongOffset:Float; //how long to delay the playing of this track
+	private var TimeInTrackOffset:Float; //the startpoint to play in the file
+	private var loopPoint:Float; //the time to loop back to in the song
+	private var endPoint:Float ;
+	private var requiresGlobalLooping:Bool;
+	private var startTimer:FlxTimer;
+	private var started:Bool;
+	private var timeLeftAtPause:Float;
 	
 	/**
 	 * 
@@ -38,16 +41,19 @@ class ReactiveBGMusicTrack
 	 * @param	inTrackLoopPoint		When looping what point to return to.
 	 * @param	inTrackEndPoint			The point in the file where it should stop playing
 	 * @param	needsGlobalLooping		Does the ReactiveBGMusic class need to handle the looping for this track?
+	 * @param	typeOfTrack				What kind of track is this?
 	 */
-	public function new(EmbeddedTrack:EmbeddedSound, OffsetInSong:Float = 0, OffsetInTrack:Float = 0, inTrackLoopPoint:Float = 0, inTrackEndPoint:Float = 0, needsGlobalLooping:Float) 
+	public function new(EmbeddedTrack:EmbeddedSound, OffsetInSong:Float = 0, OffsetInTrack:Float = 0, inTrackLoopPoint:Float = 0, inTrackEndPoint:Float = 0, needsGlobalLooping:Float, typeOfTrack:ReactiveBGMusicTrackType) 
 	{
+		started = false;
+		timeLeftAtPause = 0;
 		needsGlobalLooping = requiresGlobalLooping;
 		TimeInSongOffset = OffsetInSong;
 		TimeInTrackOffset = OffsetInTrack;
 		loopPoint = inTrackLoopPoint;
 		endPoint = inTrackEndPoint;
 		track = loadEmbedded(EmbeddedTrack, !requiresGlobalLooping, false);
-
+		trackType = typeOfTrack;
 		
 	}
 	/**
@@ -79,15 +85,16 @@ class ReactiveBGMusicTrack
 		//stop sound if already playing
 		track.stop()
 		//start a timer and tell it to start playing at the end of the timer
-		var time = new FlxTimer();
-		time.onComplete = onCompletePlayTimer;
-		time.start(offset);
+		startTimer = new FlxTimer();
+		startTimer.onComplete = onCompletePlayTimer;
+		startTimer.start(offset);
 		
 	}
 	
 	public function onCompletePlayTimer(Timer:FlxTimer)
 	{
 		track.play(false, 0.0, endPoint);
+		started = true;
 	}
 	
 	
@@ -96,15 +103,40 @@ class ReactiveBGMusicTrack
 		//stop sound if already playing
 		track.stop()
 		//start a timer and tell it to start playing at the end of the timer
-				var time = new FlxTimer();
-		time.onComplete = onCompletePlayTimer;
+		startTimer = new FlxTimer();
+		startTimer.onComplete = onCompletePlayTimer;
 		var effectiveOffset = offset - globalSongLoopPoint;
-		if(effectiveOffset > 0){
-		time.start(offset - globalSongLoopPoint);
+		if (effectiveOffset > 0)
+		{
+			startTimer.start(offset - globalSongLoopPoint);
+			started = false;
 		}
-		else{
+		else
+		{
 			track.play(false, -effectiveOffset, endPoint);
 		}
+	}
+	
+	public function pause(){
+		if (!started){
+			timeLeftAtPause = startTimer.timeLeft;
+			startTimer.destroy();
+		}
+		else{
+			timeLeftAtPause = 0;
+		}
+		track.pause();
+	}
+	
+	public function resmume(){
+		startTimer = new FlxTimer();
+		startTimer.onComplete = onCompletePlayTimer;
+		startTimer.start(timeLeftAtPause);
+	}
+	
+	private onCompleteResumeTimer(Timer:FlxTimer){
+		track.resume();
+		started = true;
 	}
 	
 
