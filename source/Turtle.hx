@@ -26,6 +26,9 @@ class Turtle extends Enemy
 	private var gdbWidth:Float = 27;
 	private var gdbXoffset:Float = 2;
 	private var gdbYoffset:Float = 5;
+	
+	// Is turtle in it's shell
+	public var shelled:Bool = false;
 
 	/**
 	 * Intializer
@@ -33,14 +36,21 @@ class Turtle extends Enemy
 	 * @param	X	Starting x coordinate
 	 * @param	Y	Starting y coordinate
 	 */
-	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
+	public function new(?X:Float=0, ?Y:Float=0) 
 	{
-		super(X, Y, SimpleGraphic);
+		super(X, Y, AssetPaths.Turtle__png);
 		
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		maxVelocity.y = acceleration.y;
 		
+		// Initialize X movement
+		velocity.x = xSpeed;
+		
+		// Set hitboxes
+		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), tdbHeight, tdbWidth);
+		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), gdbHeight, gdbWidth);
+				
 	}
 	
 	/**
@@ -82,6 +92,8 @@ class Turtle extends Enemy
 	 */
 	public override function kill():Void
 	{
+		// Drop shell
+		//add(shell);
 		super.kill();
 	}
 	

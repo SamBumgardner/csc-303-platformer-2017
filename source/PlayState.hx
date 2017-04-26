@@ -72,6 +72,7 @@ class PlayState extends FlxState
 		// Create and add enemies
 		turt1 = new Turtle(400, 200);
 		add(turt1);
+		
 		// dtmEnemy1 = new DontTouchMe(400, 200);
 		// add(dtmEnemy1);
 		
@@ -124,14 +125,14 @@ class PlayState extends FlxState
 		FlxG.collide(map, player);
 		
 		// Add overlap logic
-		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
+		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player); } );
+		FlxG.overlap(player, turt1, turt1.turtHitResolve);
 		// FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
 		// FlxG.overlap(player, bullets, bulletHitPlayer);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
 		FlxG.collide(map, turt1);
-		// FlxG.collide(player, sentry1);
 		// FlxG.collide(map, dtmEnemy1);
 		// FlxG.collide(map, bullets);
 		// FlxG.collide(blockGroup, bullets);
