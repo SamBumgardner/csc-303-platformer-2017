@@ -11,6 +11,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxGroup;
 
 /**
  * ...
@@ -31,6 +32,18 @@ import flixel.input.keyboard.FlxKey;
 	public var yellowCoinCount:Float = 0;
 	public var redCoinCount:Float = 0;
 
+  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+  public var topBox:FlxObject;
+  public var btmBox:FlxObject;
+
+  private var hitBoxHeight:Int = 3;
+  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
+
+  
+  // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
+  public var star:Bool = false;
+  
+  
 	/**
 	 * Intializer
 	 *
@@ -54,6 +67,13 @@ import flixel.input.keyboard.FlxKey;
 
 		// Initialize the finite-state machine with initial state
 		brain = new FSM( new PlayerAirState() );
+
+    // Multiple hitbox support
+    hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
+    topBox = new FlxObject(X + hitBoxWidthOffset, Y, width - hitBoxWidthOffset*2, hitBoxHeight);
+    btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
+    hitBoxComponents.add(topBox);
+    hitBoxComponents.add(btmBox);
 	}
 
 	/**
@@ -81,6 +101,7 @@ import flixel.input.keyboard.FlxKey;
 	{
 		brain.update(this);
 		super.update(elapsed);
+    updateHitBoxes();
 	}
 
   /**
@@ -136,7 +157,7 @@ import flixel.input.keyboard.FlxKey;
   {
     return FlxG.keys.anyPressed([FlxKey.Z]);
   }
-  
+   
   /**
    * When the coin gets collected, the update function in the playstate will call collectCoin.
    * collectCoin will then call this function based on the color of the coin collected.
@@ -151,5 +172,15 @@ import flixel.input.keyboard.FlxKey;
 	if (color == FlxColor.YELLOW) {
 		yellowCoinCount++;
 	}
+    
+  /**
+   * This method is called during every Player update cycle
+   * to keep the hitboxes in the same position relative to the player
+   */
+  private function updateHitBoxes():Void
+  {
+    topBox.x = btmBox.x = x + hitBoxWidthOffset;
+    topBox.y = y;
+    btmBox.y = y + height - hitBoxHeight;
   }
 }
