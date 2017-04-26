@@ -29,8 +29,8 @@ import flixel.group.FlxGroup;
 
 	public var xSlowdown:Float = 600;
 	
-	public var yellowCoinCount:Float = 0;
-	public var redCoinCount:Float = 0;
+	public var coinCount:Int = 0;
+	public var scoreTotal:Int = 0;
 
   public var hitBoxComponents:FlxTypedGroup<FlxObject>;
   public var topBox:FlxObject;
@@ -167,11 +167,14 @@ import flixel.group.FlxGroup;
   public function scoreCoin(color:FlxColor):Void 
   {
 	if (color == FlxColor.RED) {
-		redCoinCount++;
+		coinCount += 5;
+		scoreTotal += 500;
 	}
 	if (color == FlxColor.YELLOW) {
-		yellowCoinCount++;
+		coinCount += 1;
+		scoreTotal += 100;
 	}
+  }
     
   /**
    * This method is called during every Player update cycle
