@@ -5,36 +5,37 @@ package;
  * @author Samuel Faulkner
  */
 
-import flixel.util.FlxColor;
+import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
  
-class Coin
+class Coin extends FlxSprite
 {
+	public var coinColor:FlxColor;
+	
 	/**
 	 * 
 	 * @param	X	X-coordinate of the coin
 	 * @param	Y	Y-coordinate of the coin
-	 * @param	red	Bool value that tells creator if coin is red or yellow
+	 * @param	color	String value telling if coin is yellow or red
 	 * @return
 	 */
-	static public function createCoin(X:Float=0, Y:Float=0, red:Bool=false):FlxSprite 
+	public function new(X:Float=0, Y:Float=0, color:String)
 	{
-		var coin:FlxSprite = new FlxSprite(X * 32, Y * 32);
-		if (red == true)
-			coin.makeGraphic(8, 8, FlxColor.RED);
-		else
-			coin.makeGraphic(8, 8, FlxColor.YELLOW);
-		return coin;
+		super(X * 32, Y * 32);
+		if (color == "red")
+		{
+			coinColor = FlxColor.RED;
+		}
+		if (color == "yellow") 	
+		{
+			coinColor = FlxColor.YELLOW;
+		}
+		makeGraphic(8, 8, coinColor);
 	}
 	
-	/**
-	 * 
-	 * @param	player	Player object
-	 * @param	coin	Coin object
-	 */
-	static public function getCoin(player:Player, coin:FlxSprite):Void
+	override public function kill():Void
 	{
-		coin.kill();
+		super.kill();
 	}
-	
 }

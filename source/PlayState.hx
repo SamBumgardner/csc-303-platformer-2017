@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
@@ -14,7 +15,6 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	private var player:Player;
 	private var coins:FlxGroup;
-	public static var hud:HeadsUpDisplay;
 	
 	override public function create():Void
 	{
@@ -25,11 +25,8 @@ class PlayState extends FlxState
 		
 		//Coins are added to a group, coin group added to playstate
 		coins = new FlxGroup();
-		coins.add(Coin.createCoin(8, 8, true));
-		coins.add(Coin.createCoin(13, 8, true));
-		coins.add(Coin.createCoin(12, 8, false));
-		coins.add(Coin.createCoin(10, 8, false));
-		coins.add(Coin.createCoin(15, 8, false));
+		coins.add(new Coin(8, 8, "red"));
+		coins.add(new Coin(9, 8, "yellow"));
 		add(coins);
 		
 		map = new FlxTilemap();
@@ -60,6 +57,17 @@ class PlayState extends FlxState
 		FlxG.collide(map, player);
 		
 		//When player overlaps a coin, the coin is destroyed
-		FlxG.overlap(player, coins, Coin.getCoin);
+		FlxG.overlap(player, coins, collectCoin);
+	}
+	
+	/**
+	 * 
+	 * @param	p Player object collecting coin
+	 * @param	c Coin object getting collected
+	 */
+	private function collectCoin(p:Player, c:Coin):Void
+	{
+		p.scoreCoin(c.coinColor);
+		c.kill();
 	}
 }
