@@ -28,6 +28,9 @@ import flixel.group.FlxGroup;
 	public var runSpeed:Float = 200;
 
 	public var xSlowdown:Float = 600;
+	
+	public var yellowCoinCount:Float = 0;
+	public var redCoinCount:Float = 0;
 
   public var hitBoxComponents:FlxTypedGroup<FlxObject>;
   public var topBox:FlxObject;
@@ -154,7 +157,23 @@ import flixel.group.FlxGroup;
   {
     return FlxG.keys.anyPressed([FlxKey.Z]);
   }
-
+   
+  /**
+   * When the coin gets collected, the update function in the playstate will call collectCoin.
+   * collectCoin will then call this function based on the color of the coin collected.
+   * Depending on the coin collected, then the respective total will be incremented.
+   * @param	color The color of the coin being collected
+   */
+  public function scoreCoin(color:FlxColor):Void 
+  {
+	if (color == FlxColor.RED) {
+		redCoinCount++;
+	}
+	if (color == FlxColor.YELLOW) {
+		yellowCoinCount++;
+	}
+  }
+    
   /**
    * This method is called during every Player update cycle
    * to keep the hitboxes in the same position relative to the player
