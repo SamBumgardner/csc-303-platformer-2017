@@ -1,11 +1,13 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
@@ -17,15 +19,15 @@ class PlayState extends FlxState
 
 	private var map:FlxTilemap;
 	public var player:Player;
+	private var flagpole:FlagPole;
 	private var platform:Platforms;
+	private var coins:FlxGroup;
+	private var flag_x_loc:Int = 17;
+	private var flag_y_loc:Int = 11;
 	public static var hud:HeadsUpDisplay;
-<<<<<<< HEAD
-	public var _pUp:FlxGroup;	
-=======
 	public var _pUp:FlxGroup;
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
 
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	private var mushroom:PowerUp;
 	
@@ -51,24 +53,24 @@ class PlayState extends FlxState
 		
 		bullet.kill();
 	}
-<<<<<<< HEAD
-	
-
 	
 	override public function create():Void
 	{
+
 		if (hud == null)
 		{
-=======
-
-	override public function create():Void
-	{
-
-		if (hud == null){
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
 		}
 		super.create();
+    
+    		/*Create the flagpole at the end of the level 
+		 * This will also instantiate the flag
+		 * flag_x_loc is the number of blocks to the right where we want the flag
+		 * flag_y_loc is the number of blocks down we want the flag
+		*/
+		flagpole = new FlagPole(32*flag_x_loc, 32*flag_y_loc);
+		add(flagpole);
+		add(flagpole.flag);
 
 		player = new Player(50, 50);
 		add(player);
@@ -85,6 +87,12 @@ class PlayState extends FlxState
 
 		add(player.hitBoxComponents);
 		
+		//Coins are added to a group, coin group added to playstate
+		coins = new FlxGroup();
+		coins.add(new Coin(8, 8, "red"));
+		coins.add(new Coin(9, 8, "yellow"));
+		add(coins);
+		
 		// Create and add enemies
 		dtmEnemy1 = new DontTouchMe(400, 200);
 		add(dtmEnemy1);
@@ -94,12 +102,9 @@ class PlayState extends FlxState
 		
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
-<<<<<<< HEAD
 		
 		mushroom = new PowerUp(25, 25);
 		add(mushroom);
-=======
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -120,18 +125,13 @@ class PlayState extends FlxState
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			20, 15, AssetPaths.tiles__png, 32, 32);
 		add(map);
-
 		add(hud);
-<<<<<<< HEAD
 		
 		_pUp = new FlxGroup();
-		createPowerUp(25, 25);
-=======
-    
+		createPowerUp(25, 25);    
 		_pUp = new FlxGroup();
 		createPowerUp(25, 25);
 		createPowerUp(40,60);
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
 		add(_pUp);	
 		blockGroup.add(new Block(3, 8, true));
 		blockGroup.add(new Block(4, 8, true));
@@ -144,7 +144,11 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-
+		
+		FlxG.collide(map, player);
+		
+		//When player overlaps a coin, the coin is destroyed
+		FlxG.overlap(player, coins, collectCoin);
 		FlxG.collide(map, sprites);
 		
 		platform.platformUpdate(elapsed, sprites, platform);
@@ -153,7 +157,6 @@ class PlayState extends FlxState
 
 		FlxG.collide(map, player);
 		FlxG.overlap(player, _pUp, getPowerup);
-<<<<<<< HEAD
 				// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
@@ -165,8 +168,6 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
-=======
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
 	}
 	
 	public function createPowerUp (x:Int, y:Int): Void
@@ -179,24 +180,22 @@ class PlayState extends FlxState
 	private function getPowerup(Player:FlxObject, PowerUp:FlxObject):Void
 	{
 		trace("PowerUp Collected");
-<<<<<<< HEAD
-		PowerUp.kill();	
-=======
 		PowerUp.kill();
-		
-		// Add overlap logic
-		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
-		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
-		FlxG.overlap(player, bullets, bulletHitPlayer);
-		
-		// Add collision logic
-		FlxG.collide(blockGroup, player);
-		FlxG.collide(player, sentry1);
-		FlxG.collide(map, dtmEnemy1);
-		FlxG.collide(map, bullets);
-		FlxG.collide(blockGroup, bullets);
-
->>>>>>> 50fecc21a6da50785d4c5cebfbc65f97da209f56
+	}
+  
+  	/**
+	 * 
+	 * @param	p Player object collecting coin
+	 * @param	c Coin object getting collected
+	 */
+	private function collectCoin(p:Player, c:Coin):Void
+	{
+		p.scoreCoin(c.coinColor);
+		c.kill();
 	}
 
+	private function resetLevel(Timer:FlxTimer):Void
+	{
+		FlxG.resetState();
+	}
 }
