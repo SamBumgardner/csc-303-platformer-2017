@@ -28,13 +28,22 @@ import flixel.group.FlxGroup;
 	public var runSpeed:Float = 200;
 
 	public var xSlowdown:Float = 600;
+	
+	public var yellowCoinCount:Float = 0;
+	public var redCoinCount:Float = 0;
 
   public var hitBoxComponents:FlxTypedGroup<FlxObject>;
   public var topBox:FlxObject;
   public var btmBox:FlxObject;
 
   private var hitBoxHeight:Int = 3;
+  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
 
+  
+  // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
+  public var star:Bool = false;
+  
+  
 	/**
 	 * Intializer
 	 *
@@ -61,8 +70,8 @@ import flixel.group.FlxGroup;
 
     // Multiple hitbox support
     hitBoxComponents = new FlxTypedGroup<FlxObject>(2);
-    topBox = new FlxObject(X, Y, width, hitBoxHeight);
-    btmBox = new FlxObject(X, Y + height - hitBoxHeight, width, hitBoxHeight);
+    topBox = new FlxObject(X + hitBoxWidthOffset, Y, width - hitBoxWidthOffset*2, hitBoxHeight);
+    btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
 	}
@@ -148,14 +157,30 @@ import flixel.group.FlxGroup;
   {
     return FlxG.keys.anyPressed([FlxKey.Z]);
   }
-
+   
+  /**
+   * When the coin gets collected, the update function in the playstate will call collectCoin.
+   * collectCoin will then call this function based on the color of the coin collected.
+   * Depending on the coin collected, then the respective total will be incremented.
+   * @param	color The color of the coin being collected
+   */
+  public function scoreCoin(color:FlxColor):Void 
+  {
+	if (color == FlxColor.RED) {
+		redCoinCount++;
+	}
+	if (color == FlxColor.YELLOW) {
+		yellowCoinCount++;
+	}
+  }
+    
   /**
    * This method is called during every Player update cycle
    * to keep the hitboxes in the same position relative to the player
    */
   private function updateHitBoxes():Void
   {
-    topBox.x = btmBox.x = x;
+    topBox.x = btmBox.x = x + hitBoxWidthOffset;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
