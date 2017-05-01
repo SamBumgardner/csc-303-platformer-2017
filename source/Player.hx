@@ -38,7 +38,7 @@ import flixel.group.FlxGroup;
 
   private var hitBoxHeight:Int = 3;
   private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
-
+	
   
   // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
   public var star:Bool = false;
@@ -101,7 +101,7 @@ import flixel.group.FlxGroup;
 	{
 		brain.update(this);
 		super.update(elapsed);
-    updateHitBoxes();
+		updateHitBoxes();
 	}
 
   /**

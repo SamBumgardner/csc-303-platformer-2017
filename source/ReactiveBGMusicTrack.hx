@@ -4,25 +4,16 @@ package;
  * ...
  * @author Dillon Woollums
  */
+import flixel.system.FlxAssets;
+import flixel.system.FlxSound;
+import flixel.util.FlxTimer;
 
- enum ReactiveBGMusicTrackType
- {
-	Rhythm;
-	Lead;
-	Bass;
-	PercussionBass;
-	PercussionMid;
-	PercussionTreb;
-	GeneralPercussion;
-	Effects;
-	
- }
  
 class ReactiveBGMusicTrack 
 {
 	private var mixes: Map<String, ReactiveBGMusicTrackSetting>;
 	private var track:FlxSound;
-	private var trackType:Enum<ReactiveBGMusicTrackType>;
+	private var trackType:ReactiveBGMusicTrackType;
 	private var currentMix:ReactiveBGMusicTrackSetting;
 	private var TimeInSongOffset:Float; //how long to delay the playing of this track
 	private var TimeInTrackOffset:Float; //the startpoint to play in the file
@@ -43,8 +34,11 @@ class ReactiveBGMusicTrack
 	 * @param	needsGlobalLooping		Does the ReactiveBGMusic class need to handle the looping for this track?
 	 * @param	typeOfTrack				What kind of track is this?
 	 */
-	public function new(EmbeddedTrack:EmbeddedSound, OffsetInSong:Float = 0, OffsetInTrack:Float = 0, inTrackLoopPoint:Float = 0, inTrackEndPoint:Float = 0, needsGlobalLooping:Float, typeOfTrack:ReactiveBGMusicTrackType) 
+	public function new(EmbeddedTrack:FlxSoundAsset, OffsetInSong:Float = 0, OffsetInTrack:Float = 0, inTrackLoopPoint:Float = 0, inTrackEndPoint:Float = 0, needsGlobalLooping:Bool, typeOfTrack:ReactiveBGMusicTrackType) 
 	{
+		#if debug
+			trace("Instantiating ReactiveBGMusicTrack");
+		#end
 		started = false;
 		timeLeftAtPause = 0;
 		needsGlobalLooping = requiresGlobalLooping;
@@ -52,8 +46,10 @@ class ReactiveBGMusicTrack
 		TimeInTrackOffset = OffsetInTrack;
 		loopPoint = inTrackLoopPoint;
 		endPoint = inTrackEndPoint;
-		track = loadEmbedded(EmbeddedTrack, !requiresGlobalLooping, false);
+		track = new FlxSound();
+		track.loadEmbedded(EmbeddedTrack, !requiresGlobalLooping, false);
 		trackType = typeOfTrack;
+		mixes = new Map<String, ReactiveBGMusicTrackSetting>();
 		
 	}
 	/**
@@ -63,36 +59,54 @@ class ReactiveBGMusicTrack
 	 * @param	pan		panning of the track [0,1]
 	 * @param	timeOffset	the amount of time into the other tracks this track starts playing
 	 */
-	public function addMix(name:String, volume:Float,  pan:Float, timeOffset)
+	public function addMix(name:String, volume:Float,  pan:Float)
 	{
-		mixes.set(name, new ReactiveBGMusicTrackSetting(volume, pan); 
+		#if debug
+			trace("Adding mix to track:" + name);
+		#end
+		mixes.set(name, new ReactiveBGMusicTrackSetting(volume, pan)); 
 	}
 	
 	public function setMix(name:String)
 	{
+		#if debug
+			trace("Setting mix on track to:" + name);
+		#end
 		var volume:Float = mixes[name].getTrackVolume();
-		if (volume => track.volume){
+		if (volume >= track.volume){
 			track.fadeIn(0.5, track.volume, volume);
 		}
 		else{
-			track.fadeOut(0.5, track.Volume, volume);
+			track.fadeOut(0.5, volume);
 		}
 		track.pan = mixes[name].getTrackPanning();
 	}
 	
 	public function play()
 	{
+		#if debug
+			trace("Got signal to play track.");
+		#end
 		//stop sound if already playing
-		track.stop()
+		track.stop();
 		//start a timer and tell it to start playing at the end of the timer
-		startTimer = new FlxTimer();
-		startTimer.onComplete = onCompletePlayTimer;
-		startTimer.start(offset);
+		if (TimeInSongOffset != 0){
+			startTimer = new FlxTimer();
+			startTimer.onComplete = onCompletePlayTimer;
+			startTimer.start(TimeInSongOffset);
+		}
+		else{
+			onCompletePlayTimer(new FlxTimer());
+		}
+
 		
 	}
 	
 	public function onCompletePlayTimer(Timer:FlxTimer)
 	{
+		#if debug
+			trace("Playing track.");
+		#end
 		track.play(false, 0.0, endPoint);
 		started = true;
 	}
@@ -100,15 +114,18 @@ class ReactiveBGMusicTrack
 	
 	public function playFromLoop(globalSongLoopPoint:Float)
 	{
+		#if debug
+			trace("Got signal to play track from loop.");
+		#end
 		//stop sound if already playing
-		track.stop()
+		track.stop();
 		//start a timer and tell it to start playing at the end of the timer
 		startTimer = new FlxTimer();
 		startTimer.onComplete = onCompletePlayTimer;
-		var effectiveOffset = offset - globalSongLoopPoint;
+		var effectiveOffset = TimeInSongOffset - globalSongLoopPoint;
 		if (effectiveOffset > 0)
 		{
-			startTimer.start(offset - globalSongLoopPoint);
+			startTimer.start(TimeInSongOffset - globalSongLoopPoint);
 			started = false;
 		}
 		else
@@ -118,6 +135,9 @@ class ReactiveBGMusicTrack
 	}
 	
 	public function pause(){
+		#if debug
+			trace("Pausing track.");
+		#end
 		if (!started){
 			timeLeftAtPause = startTimer.timeLeft;
 			startTimer.destroy();
@@ -128,15 +148,33 @@ class ReactiveBGMusicTrack
 		track.pause();
 	}
 	
-	public function resmume(){
+	public function resume(){
+		#if debug
+			trace("Got signal to resume track.");
+		#end
 		startTimer = new FlxTimer();
 		startTimer.onComplete = onCompletePlayTimer;
 		startTimer.start(timeLeftAtPause);
 	}
 	
-	private onCompleteResumeTimer(Timer:FlxTimer){
+	public function stop(){
+		#if debug
+			trace("Stopping track.");
+		#end
+		track.stop();
+	}
+	
+	private function onCompleteResumeTimer(Timer:FlxTimer){
+		#if debug
+			trace("Resuming track.");
+		#end
 		track.resume();
 		started = true;
+	}
+	
+	public function destroy(){
+		track.stop();
+		track.destroy();
 	}
 	
 
