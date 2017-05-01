@@ -4,12 +4,15 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
+
 
 class PlayState extends FlxState
 {
@@ -19,9 +22,11 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var flagpole:FlagPole;
 	private var platform:Platforms;
-	private var coins:FlxGroup;
-	private var flag_x_loc:Int = 17;
+	private var trap:Trap;
+ 	private var coins:FlxGroup;
+  private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
+
 	public static var hud:HeadsUpDisplay;
 
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
@@ -98,6 +103,21 @@ class PlayState extends FlxState
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
 
+
+		//Create a new Trap
+		trap = new Trap(320,256);
+		
+		//Building the Trap and its subsections by adding them to their own FlxGroup
+		trap.buildTrap(trap);
+
+		//Adding the whole Trap, subsections and all to the playstate
+		add(trap._grpBarTrap);	
+
+		//Placing the trap into the playstate centered at specified location (x, y)
+		trap.placeTrap(trap._grpBarTrap, 320, 256);
+
+
+
 		map = new FlxTilemap();
 		map.loadMapFromArray([
 			1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -142,11 +162,12 @@ class PlayState extends FlxState
 		hud.update(elapsed);
 
 		FlxG.collide(map, player);
-		
+
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
+		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
