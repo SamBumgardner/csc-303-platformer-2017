@@ -14,21 +14,9 @@ class Turtle extends Enemy
 	private var turtPosition:FlxPoint;
 	private var xSpeed:Float = -30;
 	
-	// Hitboxes
-	public var takeDamageBox:FlxObject;
-	private var tdbHeight:Float = 22;
-	private var tdbWidth:Float = 5;
-	private var tdbXoffset:Float = 5;
-	private var tdbYoffset:Float = 0;
 	
-	public var giveDamageBox:FlxObject;
-	private var gdbHeight:Float = 30;
-	private var gdbWidth:Float = 27;
-	private var gdbXoffset:Float = 2;
-	private var gdbYoffset:Float = 5;
-	
-	// Is turtle in it's shell
-	public var shelled:Bool = false;
+	// Is turtle in its shell?
+	public var hiding:Bool = false;
 
 	/**
 	 * Intializer
@@ -47,10 +35,11 @@ class Turtle extends Enemy
 		// Initialize X movement
 		velocity.x = xSpeed;
 		
-		// Set hitboxes
-		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), tdbHeight, tdbWidth);
-		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), gdbHeight, gdbWidth);
-				
+		// Add walking animation
+		loadGraphic(AssetPaths.Turtle__png, true, 18, 30);
+		animation.add("walk", [0], 1);
+		
+		animation.play("walk");
 	}
 	
 	/**
@@ -75,26 +64,38 @@ class Turtle extends Enemy
 	 */
 	public function turtHitResolve(player:Player, turt:Turtle):Void
 	{
-		if (player.overlaps(turt.giveDamageBox)) {
-			if (player.star) {
-				turt.kill();
-			} else {
-				player.kill();
+		if (hiding) {
+			FlxG.collide(player, turt);
+			if (player.star) { turt.kill(); }
+		} else {
+			if (turt.overlaps(player.topBox)) {
+				if (player.star) {
+					turt.kill();
+				} else {
+					player.kill();
+				}
+			} else if (turt.overlaps(player.btmBox)) {
+				turt.hide();
+				player.bounce();
 			}
-		} else if (player.overlaps(turt.takeDamageBox)) {
-			turt.kill();
 		}
 	}
 	
 	/**
-	 * kill
-	 * extends the kill function to drop a shell when the turtle is killed
+	 * hide
+	 * Turtle retreats into its shell
 	 */
-	public override function kill():Void
+	public function hide():Void
 	{
-		// Drop shell
-		//add(shell);
-		super.kill();
+		// Go into shell
+		hiding = true;
+		velocity.x = 0;
+		xSpeed *= 5;
+		
+		// Add shell animation
+		loadGraphic(AssetPaths.Shell__png, true, 19,  12);
+		animation.add("hide", [0], 1);		
+		animation.play("hide");
 	}
 	
 	/**
@@ -107,9 +108,13 @@ class Turtle extends Enemy
 	 */
 	public override function update(elapsed:Float):Void
 	{
-		// Check if DTM is squashed
+		// Check if DTM is hit from above
 		if (isTouching(FlxObject.UP)) {
-			kill();
+			if (hiding) {
+				velocity.x = 0;
+			} else {
+				hide();
+			}
 		}
 		
 		// Change the movement direction if it runs into an object
@@ -118,13 +123,6 @@ class Turtle extends Enemy
 		}
 		
 		super.update(elapsed);
-		
-		// Move hitBox
-		turtPosition = getPosition();
-		takeDamageBox.x = turtPosition.x + tdbXoffset;
-		takeDamageBox.y = turtPosition.y + tdbYoffset;
-		giveDamageBox.x = turtPosition.x + gdbXoffset;
-		giveDamageBox.y = turtPosition.y + gdbYoffset;
 	}
 	
 }
