@@ -4,12 +4,24 @@ package;
  * ...
  * @author Dillon Woollums
  */
-class ReactiveBGPlatforming 
+class ReactiveBGPlatforming extends ReactiveBGMusic
 {
 
-	public function create() 
-	{
-		
+	
+	public function runningFast(){
+		setMix("RunningFast");
+	}
+	
+	public function youWin(){
+		setMix("YouWin");
+	}
+	
+	public function nearTurret(){
+		setMix("NearTurret");
+	}
+	
+	public function normal(){
+		setMix("Normal");
 	}
 	
 }

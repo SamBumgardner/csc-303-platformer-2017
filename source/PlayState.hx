@@ -40,7 +40,7 @@ class PlayState extends FlxState
 	private var bullets:FlxTypedGroup<Bullet>;
 	
 	//Music
-	private var music:ReactiveBGMusic;
+	private var music:ReactiveBGPlatforming;
 	
 	/**
 	 * bulletHitPlayer
@@ -225,7 +225,7 @@ class PlayState extends FlxState
 		FlxG.resetState();
 	}
 	
-	private function setUpBackgroundMusic():ReactiveBGMusic
+	private function setUpBackgroundMusic():ReactiveBGPlatforming
 	{
 		//Set up bass track and mixes
 		#if debug
@@ -299,7 +299,7 @@ class PlayState extends FlxState
 		
 		
 		//set up track object
-		var song:ReactiveBGMusic = new ReactiveBGMusic(false);
+		var song:ReactiveBGPlatforming = new ReactiveBGPlatforming(false);
 		song.addTrack(bassTrack);
 		song.addTrack(effectsTrack);
 		song.addTrack(genesisKitTrack);
@@ -313,23 +313,23 @@ class PlayState extends FlxState
 	public function decideMusicMix(){
 			if (flagpole.level_over()){
 				if( music.currentMix != "YouWin")
-				music.setMix("YouWin");
+				music.youWin();
 			}
 			else{
 				if (player.getPosition().distanceTo(sentry1.getPosition()) <= 150){
 					if (music.currentMix != "NearTurret"){
-						music.setMix("NearTurret");
+						music.nearTurret();
 					}
 				}
 				else{
 					if (music.currentMix != "RunningFast"){
 						if (player.maxVelocity.x== player.runSpeed && Math.abs(player.velocity.x) >= player.walkSpeed){
-							music.setMix("RunningFast");
+							music.runningFast();
 						}
 					}
 					if (music.currentMix != "Normal"){
 						if (Math.abs(player.velocity.x) <= player.walkSpeed){
-							music.setMix("Normal");
+							music.normal();
 						}
 					}
 				}

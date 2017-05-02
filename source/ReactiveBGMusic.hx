@@ -22,6 +22,11 @@ class ReactiveBGMusic
 	 */
 	public function new(globalLooping:Bool) 
 	{
+		create(globalLooping);
+		
+	}
+	
+	public function create(globalLooping:Bool){
 		#if debug
 			trace("Instantiating ReactiveBGMusic Object.");
 		#end
@@ -29,7 +34,6 @@ class ReactiveBGMusic
 		needsGlobalLooping = globalLooping;
 		tracks = new List<ReactiveBGMusicTrack>();
 		currentMix = "";
-		
 	}
 	
 	public function play()
