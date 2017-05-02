@@ -162,7 +162,7 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		
 		FlxG.collide(map, player);
-		
+		decideMusicMix();
 		//When player overlaps a coin, the coin is destroyed
 		FlxG.overlap(player, coins, collectCoin);
 		FlxG.collide(map, sprites);
@@ -187,34 +187,25 @@ class PlayState extends FlxState
 		FlxG.collide(blockGroup, bullets);
     
    		if (!flagpole.level_over()){
+			//check for the goal being reached
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
+			//allow for music changes
+			//trigger music change on speed if neccessary
+
+			
 		} else {
 			//kill all enemies and bullets on screen. Dactivate cannons
 			bullets.forEachAlive(function(bullet:Bullet){bullet.kill(); });
 			dtmEnemy1.kill();
 			sentry1.active = false;
 			// time (seconds), callback, loops
-			if (music.currentMix != "YouWin"){
-				music.setMix("YouWin");
-			}
+
 			
 			
 			new FlxTimer().start(10, resetLevel, 1);
 		}
 		
-		//trigger music change on speed if neccessary
 
-		if (Math.abs(playerLastVelocity.x) < player.walkSpeed){
-			if (Math.abs(player.velocity.x) > player.walkSpeed){
-				music.setMix("RunningFast");
-			}
-		}
-		else{
-			if (Math.abs(player.velocity.x) < player.walkSpeed){
-				music.setMix("Normal");
-			}
-		}
-		playerLastVelocity = player.velocity;
 		
 	}
   
@@ -243,6 +234,7 @@ class PlayState extends FlxState
 		var bassTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneBass"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Bass);
 		bassTrack.addMix("Normal", 0.9, 0.5);
 		bassTrack.addMix("RunningFast", 0.97, 0.7);
+		bassTrack.addMix("NearTurret", 0.2, 0.5);
 		bassTrack.addMix("YouWin", 1, 1);
 		
 		//Set up effects track and mixes
@@ -252,6 +244,7 @@ class PlayState extends FlxState
 		var effectsTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneEffects"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Effects);
 		effectsTrack.addMix("Normal", 0.9, 0.5);
 		effectsTrack.addMix("RunningFast", .9, 0.5);
+		effectsTrack.addMix("NearTurret", 0.2, 0.5);
 		effectsTrack.addMix("YouWin", 0, 0.5);
 		
 		//Set up GenesisKit track and mixes
@@ -261,6 +254,7 @@ class PlayState extends FlxState
 		var genesisKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneGenesisKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
 		genesisKitTrack.addMix("Normal", 0, 0.5);
 		genesisKitTrack.addMix("RunningFast", 1, 0.5);
+		genesisKitTrack.addMix("NearTurret", 0, 0.5);
 		genesisKitTrack.addMix("YouWin", 1, 0.5);
 		
 		//Set up MetalKit track and mixes
@@ -270,6 +264,7 @@ class PlayState extends FlxState
 		var metalKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneMetalKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
 		metalKitTrack.addMix("Normal", .9, 0.5);
 		metalKitTrack.addMix("RunningFast", 0.4, 0.5);
+		metalKitTrack.addMix("NearTurret", 0.5, 0.5);
 		metalKitTrack.addMix("YouWin", 0, 0.5);
 		
 		//Set up Lead track and mixes
@@ -277,8 +272,9 @@ class PlayState extends FlxState
 			trace("setting up lead track");
 		#end
 		var leadTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneLead"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Lead);
-		leadTrack.addMix("Normal", 1, 0.5);
-		leadTrack.addMix("RunningFast", 0.95, 0.5);
+		leadTrack.addMix("Normal", .8, 0.5);
+		leadTrack.addMix("RunningFast", 0.99, 0.5);
+		leadTrack.addMix("NearTurret", 0.5, 0.5);
 		leadTrack.addMix("YouWin", 0, 0.5);
 		
 		//Set up Rhythm track and mixes
@@ -287,7 +283,8 @@ class PlayState extends FlxState
 		#end
 		var rhythmTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
 		rhythmTrack.addMix("Normal", 1, 0.5);
-		rhythmTrack.addMix("RunningFast", 0.95, 0.3);
+		rhythmTrack.addMix("RunningFast", 0.99, 0.3);
+		rhythmTrack.addMix("NearTurret", 0.7, 0.5);
 		rhythmTrack.addMix("YouWin", 0.4, 0.0);
 		
 		//Set up Rhythm 2 track and mixes
@@ -296,7 +293,8 @@ class PlayState extends FlxState
 		#end
 		var rhythm2Track:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm2"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
 		rhythm2Track.addMix("Normal", 1, 0.5);
-		rhythm2Track.addMix("RunningFast", 0.95, 0.3);
+		rhythm2Track.addMix("RunningFast", 0.99, 0.3);
+		rhythm2Track.addMix("NearTurret", 0.5, 0.5);
 		rhythm2Track.addMix("YouWin", 0.5, 0.0);
 		
 		
@@ -310,6 +308,33 @@ class PlayState extends FlxState
 		song.addTrack(rhythm2Track);
 		song.setMix("Normal");
 		return song;
+	}
+	
+	public function decideMusicMix(){
+			if (flagpole.level_over()){
+				if( music.currentMix != "YouWin")
+				music.setMix("YouWin");
+			}
+			else{
+				if (player.getPosition().distanceTo(sentry1.getPosition()) <= 150){
+					if (music.currentMix != "NearTurret"){
+						music.setMix("NearTurret");
+					}
+				}
+				else{
+					if (music.currentMix != "RunningFast"){
+						if (player.maxVelocity.x== player.runSpeed && Math.abs(player.velocity.x) >= player.walkSpeed){
+							music.setMix("RunningFast");
+						}
+					}
+					if (music.currentMix != "Normal"){
+						if (Math.abs(player.velocity.x) <= player.walkSpeed){
+							music.setMix("Normal");
+						}
+					}
+				}
+
+			}
 	}
 	
 	

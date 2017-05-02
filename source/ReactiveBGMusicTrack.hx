@@ -72,14 +72,19 @@ class ReactiveBGMusicTrack
 		#if debug
 			trace("Setting mix on track to:" + name);
 		#end
-		var volume:Float = mixes[name].getTrackVolume();
-		if (volume >= track.volume){
-			track.fadeIn(0.5, track.volume, volume);
+		var newVolume:Float;
+		var newPanning:Float;
+		if (mixes.exists(name)){
+			var volume:Float = mixes[name].getTrackVolume();
+			if (volume >= track.volume){
+				track.fadeIn(0.2, track.volume, volume);
+			}
+			else{
+				track.fadeOut(0.2, volume);
+			}
+			track.pan = mixes[name].getTrackPanning();
 		}
-		else{
-			track.fadeOut(0.5, volume);
-		}
-		track.pan = mixes[name].getTrackPanning();
+		
 	}
 	
 	public function play()
