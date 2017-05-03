@@ -4,7 +4,7 @@ package;
  * ...
  * @author Dillon Woollums
  */
-import flixel.input.gamepad
+import flixel.input.gamepad;
 
 class ReconfigurableController 
 {
