@@ -24,7 +24,7 @@ class PlayState extends FlxState
 	private var platform:Platforms;
 	private var trap:Trap;
  	private var coins:FlxGroup;
-  	private var flag_x_loc:Int = 17;
+  private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
 
 	public static var hud:HeadsUpDisplay;
@@ -90,6 +90,7 @@ class PlayState extends FlxState
 		coins = new FlxGroup();
 		coins.add(new Coin(8, 8, "red"));
 		coins.add(new Coin(9, 8, "yellow"));
+		coins.add(new Coin(9, 9, "yellow"));
 		add(coins);
 		
 		// Create and add enemies
@@ -195,6 +196,8 @@ class PlayState extends FlxState
 	private function collectCoin(p:Player, c:Coin):Void
 	{
 		p.scoreCoin(c.coinColor);
+		hud.handleScoreUpdate(p.scoreTotal);
+		hud.handleCoinsUpdate(p.coinCount);
 		c.kill();
   }
 
