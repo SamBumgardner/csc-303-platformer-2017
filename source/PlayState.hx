@@ -125,15 +125,15 @@ class PlayState extends FlxState
 		
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player); } );
-		FlxG.overlap(player, turt1, turt1.turtHitResolve);
-		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
+		FlxG.overlap(player, turt1, turt1.playerHitResolve);
+		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.playerHitResolve);
+		FlxG.overlap(dtmEnemy1, turt1, turt1.enemyHitResolve);
 		// FlxG.overlap(player, bullets, bulletHitPlayer);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
 		FlxG.collide(map, turt1);
 		FlxG.collide(map, dtmEnemy1);
-		FlxG.collide(dtmEnemy1, turt1);
 		// FlxG.collide(map, bullets);
 		// FlxG.collide(blockGroup, bullets);
 

@@ -57,16 +57,17 @@ class Turtle extends Enemy
 	
 	/**
 	 * turtHitResolve
-	 * Logic for who takes damage if a player and a DTM overlap
+	 * Logic for who takes damage if a player and a Turtle overlap
 	 * 
 	 * @param	player	A player's character
 	 * @param	dtm		A Turtle enemy
 	 */
-	public function turtHitResolve(player:Player, turt:Turtle):Void
+	public function playerHitResolve(player:Player, turt:Turtle):Void
 	{
 		if (hiding) {
 			FlxG.collide(player, turt);
 			if (player.star) { turt.kill(); }
+			//else { player.kill(); }
 		} else {
 			if (turt.overlaps(player.topBox)) {
 				if (player.star) {
@@ -78,6 +79,22 @@ class Turtle extends Enemy
 				turt.hide();
 				player.bounce();
 			}
+		}
+	}
+	
+	/**
+	 * enemyHitResolve
+	 * Logic for who takes damage if an enemy and a Turtle overlap
+	 * 
+	 * @param	enemy	A player's character
+	 * @param	dtm		A Turtle enemy
+	 */
+	public function enemyHitResolve(enemy:Enemy, turt:Turtle):Void
+	{
+		if (hiding) {
+			if (velocity.x != 0) { enemy.kill(); }
+		} else {
+			FlxG.collide(enemy, turt);
 		}
 	}
 	

@@ -51,13 +51,13 @@ class DontTouchMe extends Enemy
 	}
 	
 	/**
-	 * dtmHitResolve
+	 * playerHitResolve
 	 * Logic for who takes damage if a player and a DTM overlap
 	 * 
 	 * @param	player	A player's character
 	 * @param	dtm		A DontTouchMe enemy
 	 */
-	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
+	public function playerHitResolve(player:Player, dtm:DontTouchMe):Void
 	{
 		if (dtm.overlaps(player.topBox)) {
 			if (player.star) {
