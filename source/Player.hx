@@ -1,5 +1,6 @@
 package;
 
+import haxe.Timer;
 import states.FSM;
 import states.BaseState;
 import states.PlayerGroundState;
@@ -19,7 +20,7 @@ import flixel.group.FlxGroup;
  */
  class Player extends FlxSprite
  {
-  public var brain:FSM;
+	public var brain:FSM;
 
 	public var xAccel:Float = 400;
 	public var xMaxSpeed(default, set):Float;
@@ -32,16 +33,19 @@ import flixel.group.FlxGroup;
 	public var yellowCoinCount:Float = 0;
 	public var redCoinCount:Float = 0;
 
-  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
-  public var topBox:FlxObject;
-  public var btmBox:FlxObject;
-
-  private var hitBoxHeight:Int = 3;
-  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
-
+	public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+	public var topBox:FlxObject;
+	public var btmBox:FlxObject;
+	public var canTakeDamage:Bool = true;
+  
+	private var hitBoxHeight:Int = 3;
+	private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
   
   // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
-  public var star:Bool = false;
+	public var star:Bool = false;
+	
+	public var invincibleTimer:Float = 0;
+	public var hurtInvincibility:Float = 2;
   
   
 	/**
@@ -101,7 +105,16 @@ import flixel.group.FlxGroup;
 	{
 		brain.update(this);
 		super.update(elapsed);
-    updateHitBoxes();
+		updateHitBoxes();
+		if (invincibleTimer > 0)
+		{
+			invincibleTimer -= elapsed;
+		}
+		else if (invincibleTimer <= 0)
+		{
+			invincibleTimer = 0;
+			canTakeDamage = true;
+		}
 	}
 
   /**
@@ -183,5 +196,16 @@ import flixel.group.FlxGroup;
     topBox.x = btmBox.x = x + hitBoxWidthOffset;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
+  }
+  
+  override public function hurt(damage:Float)
+  {
+	  if (canTakeDamage)
+	  {
+		 super.hurt(damage); 
+		 canTakeDamage = false;
+		 invincibleTimer = hurtInvincibility;
+	  }
+	  
   }
 }
