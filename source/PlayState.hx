@@ -29,7 +29,7 @@ class PlayState extends FlxState
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
 
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
-	private var mushroom:PowerUp;
+	private var mushroom:PowerupMushroom;
 	
 	// Enemies
 	private var dtmEnemy1:DontTouchMe;
@@ -48,7 +48,7 @@ class PlayState extends FlxState
 	{
 		if (!player.star) 
 		{
-			player.kill();
+			player.hurt(1);
 		}
 		
 		bullet.kill();
@@ -99,12 +99,14 @@ class PlayState extends FlxState
 		
 		bullets = new FlxTypedGroup<Bullet>(20);
 		add(bullets);
-		
+	
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
 		
-		mushroom = new PowerUp(25, 25);
-		add(mushroom);
+		_pUp = new FlxGroup();
+		mushroom = new PowerupMushroom(40, 40);
+		_pUp.add(mushroom); 
+		add(_pUp);
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -127,12 +129,6 @@ class PlayState extends FlxState
 		add(map);
 		add(hud);
 		
-		_pUp = new FlxGroup();
-		createPowerUp(25, 25);    
-		_pUp = new FlxGroup();
-		createPowerUp(25, 25);
-		createPowerUp(40,60);
-		add(_pUp);	
 		blockGroup.add(new Block(3, 8, true));
 		blockGroup.add(new Block(4, 8, true));
 		blockGroup.add(new Block(7, 6));
@@ -156,7 +152,7 @@ class PlayState extends FlxState
 		hud.update(elapsed);
 
 		FlxG.collide(map, player);
-		FlxG.overlap(player, _pUp, getPowerup);
+		FlxG.overlap(player, _pUp, mushroom.getPowerup);
 				// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
@@ -168,19 +164,8 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
-	}
-	
-	public function createPowerUp (x:Int, y:Int): Void
-	{	
-		var powerup:FlxSprite = new FlxSprite(x*8 + 3, y*8 + 2);
-		powerup.makeGraphic(32,32, FlxColor.YELLOW);
-		_pUp.add(powerup);
-	}
-	
-	private function getPowerup(Player:FlxObject, PowerUp:FlxObject):Void
-	{
-		trace("PowerUp Collected");
-		PowerUp.kill();
+		FlxG.collide(map, _pUp);
+		FlxG.collide(map, mushroom);
 	}
   
   	/**
