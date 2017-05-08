@@ -38,7 +38,7 @@ import flixel.group.FlxGroup;
 
   private var hitBoxHeight:Int = 3;
   private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
-	
+  private var controller:ReconfigurableController;
   
   // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
   public var star:Bool = false;
@@ -54,7 +54,7 @@ import flixel.group.FlxGroup;
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
-
+		controller = new ReconfigurableController();
 		// Initializes a basic graphic for the player
 		makeGraphic(32, 32, FlxColor.ORANGE);
 
@@ -114,11 +114,11 @@ import flixel.group.FlxGroup;
   {
     var step:Int = 0;
 
-    if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
+    if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]) || controller.isLeft() )
     {
       step--;
     }
-    if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
+    if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]) || controller.isRight() )
     {
       step++;
     }
@@ -133,7 +133,7 @@ import flixel.group.FlxGroup;
    */
   public function isJumping():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
+    return FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]) || controller.isJumping();
   }
 
   /**
@@ -155,7 +155,7 @@ import flixel.group.FlxGroup;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z]) || controller.isRunning();
   }
    
   /**
