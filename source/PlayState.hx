@@ -35,6 +35,7 @@ class PlayState extends FlxState
 	
 	// Enemies
 	private var turt1:Turtle;
+	private var turt2:FlyingTurtle;
 	private var dtmEnemy1:DontTouchMe;
 	// private var sentry1:Sentry;
 	// private var bullets:FlxTypedGroup<Bullet>;
@@ -80,11 +81,11 @@ class PlayState extends FlxState
 		add(player.hitBoxComponents);
 		
 		//create new moving platform
-		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
-		platform.immovable = platform.solid = true;
-		platform.allowCollisions = FlxObject.UP;
-		platform.inContact = false;
-		add(platform);
+		//platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
+		//platform.immovable = platform.solid = true;
+		//platform.allowCollisions = FlxObject.UP;
+		//platform.inContact = false;
+		//add(platform);
 		
 		//Coins are added to a group, coin group added to playstate
 		//coins = new FlxGroup();
@@ -94,8 +95,11 @@ class PlayState extends FlxState
 		//add(coins);
 		
 		// Create and add enemies
-		turt1 = new Turtle(400, 200);
-		add(turt1);
+		//turt1 = new FlyingTurtle(400, 200);
+		//add(turt1);
+		
+		turt2 = new FlyingTurtle(400, 150);
+		add(turt2);
 		
 		dtmEnemy1 = new DontTouchMe(550, 200);
 		add(dtmEnemy1);
@@ -160,7 +164,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player, coins, collectCoin);
 		FlxG.collide(map, sprites);
 		
-		platform.platformUpdate(elapsed, sprites, platform);
+		//platform.platformUpdate(elapsed, sprites, platform);
 
 		hud.update(elapsed);
 
@@ -168,15 +172,18 @@ class PlayState extends FlxState
 
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
-		FlxG.overlap(player, turt1, turt1.playerHitResolve);
+		//FlxG.overlap(player, turt1, turt1.playerHitResolve);
+		FlxG.overlap(player, turt2, turt2.playerHitResolve);
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.playerHitResolve);
-		FlxG.overlap(dtmEnemy1, turt1, turt1.enemyHitResolve);
+		//FlxG.overlap(dtmEnemy1, turt1, turt1.enemyHitResolve);
+		FlxG.overlap(dtmEnemy1, turt2, turt2.enemyHitResolve);
 		// FlxG.overlap(player, bullets, bulletHitPlayer);
 		//FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
-		FlxG.collide(map, turt1);
+		//FlxG.collide(map, turt1);
+		FlxG.collide(map, turt2);
 		FlxG.collide(map, dtmEnemy1);
 		// FlxG.collide(map, bullets);
 		// FlxG.collide(blockGroup, bullets);

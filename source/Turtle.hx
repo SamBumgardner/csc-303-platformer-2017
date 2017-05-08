@@ -23,10 +23,11 @@ class Turtle extends Enemy
 	 *
 	 * @param	X	Starting x coordinate
 	 * @param	Y	Starting y coordinate
+	 * @param	graphic	an image used for the turtle
 	 */
-	public function new(?X:Float=0, ?Y:Float=0) 
+	public function new(?X:Float=0, ?Y:Float=0, ?graphic = AssetPaths.Turtle__png) 
 	{
-		super(X, Y, AssetPaths.Turtle__png);
+		super(X, Y, graphic);
 		
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
@@ -45,7 +46,7 @@ class Turtle extends Enemy
 	/**
 	 * Turns the enemy around if it runs into an object
 	 */
-	public function turnAround():Void
+	private function turnAround():Void
 	{
 		// Reverse the direction of the DontTouchMe's velocity
 		xSpeed *= -1;
@@ -96,6 +97,11 @@ class Turtle extends Enemy
 		} else {
 			FlxG.collide(enemy, turt);
 		}
+	}
+	
+	public function fall() 
+	{
+		
 	}
 	
 	/**
