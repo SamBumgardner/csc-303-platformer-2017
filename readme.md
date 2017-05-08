@@ -1,4 +1,4 @@
-# Final Project Proposal
+#Dillon Woollums Final Project Proposal
 
 ## Feature branch name:
 ControlAndSound

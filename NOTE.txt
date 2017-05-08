@@ -1,0 +1,1 @@
+Depending on your configuration you may need to deploy the config folder in the root folder of the installation/build.
