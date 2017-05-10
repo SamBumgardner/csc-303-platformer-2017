@@ -12,20 +12,22 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class FlyingTurtle extends Turtle 
 {
 	private var hoverHieght:Float;
-	
 	private var flying:Bool = true;
+	private var vulnerable:Bool = false;
 
+	
 	/**
 	 * Intializer
 	 *
-	 * @param	X	Starting x coordinate
-	 * @param	Y	Starting y coordinate
+	 * @param	X		Starting x coordinate
+	 * @param	Y		Starting y coordinate
 	 * @param	graphic	an image used for the turtle
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?graphic = AssetPaths.FlyingTurtle__png) 
 	{
 		super(X, Y, graphic);
 		
+		// Set flying height
 		hoverHieght = Y;
 		
 		// Lower Y acceleration variable while flying
@@ -33,21 +35,20 @@ class FlyingTurtle extends Turtle
 		
 		// Add flying animation
 		loadGraphic(AssetPaths.FlyingTurtle__png, true, 26, 30);
-		animation.add("fly", [0], 1);
-		
+		animation.add("fly", [0], 1);		
 		animation.play("fly");
 	}
 	
 	/**
-	 * turtHitResolve
+	 * playerHitResolve
 	 * Logic for who takes damage if a player and a Turtle overlap
 	 * 
 	 * @param	player	A player's character
-	 * @param	dtm		A Turtle enemy
+	 * @param	turt	A Turtle enemy
 	 */
 	override public function playerHitResolve(player:Player, turt:Turtle):Void
 	{
-		if (flying) {
+		if (flying) {	// The turtle is flying in the air
 			if (turt.overlaps(player.topBox)) {
 				if (player.star) {
 					turt.kill();
@@ -58,11 +59,15 @@ class FlyingTurtle extends Turtle
 				turt.fall();
 				player.bounce();
 			}
-		} else {
+		} else if (vulnerable) {	// The player is walking
 			super.playerHitResolve(player, turt);
 		}
 	}
 	
+	/**
+	 * fall
+	 * The turtle looses its wings and becomes a normal turtle
+	 */
 	override public function fall():Void
 	{
 		flying = false;
@@ -75,9 +80,25 @@ class FlyingTurtle extends Turtle
 		// Reset Y acceleration
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		super.fall();
+		
+		// Set a half second delay before the walking turtle can be "hit" again
+		haxe.Timer.delay(makeVulnerable, 500);
 	}
 	
-	public function flapWings()
+	/**
+	 * makeVulnerable
+	 * Change the state of the turtles vulnerability to true
+	 */
+	private function makeVulnerable()
+	{
+		vulnerable = true;
+	}
+	
+	/**
+	 * flapWings
+	 * Gives the turtle an upward boost of velocity
+	 */
+	private function flapWings()
 	{
 		velocity.y = -150;
 	}

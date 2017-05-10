@@ -188,10 +188,10 @@ import flixel.group.FlxGroup;
   }
 
   /**
-   * Causes the player to bounce into the air
+   * Causes the player to bounce upwards
    */
   public function bounce():Void
   {
-	  
+	  velocity.y = -270;
   }
  }

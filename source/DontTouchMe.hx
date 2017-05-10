@@ -67,6 +67,7 @@ class DontTouchMe extends Enemy
 			}
 		} else if (dtm.overlaps(player.btmBox)) {
 			dtm.kill();
+			player.bounce();
 		}
 	}
 	

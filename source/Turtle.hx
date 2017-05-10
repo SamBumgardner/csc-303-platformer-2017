@@ -13,16 +13,14 @@ class Turtle extends Enemy
 {
 	private var turtPosition:FlxPoint;
 	private var xSpeed:Float = -30;
-	
-	
-	// Is turtle in its shell?
 	public var hiding:Bool = false;
+	
 
 	/**
 	 * Intializer
 	 *
-	 * @param	X	Starting x coordinate
-	 * @param	Y	Starting y coordinate
+	 * @param	X		Starting x coordinate
+	 * @param	Y		Starting y coordinate
 	 * @param	graphic	an image used for the turtle
 	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?graphic = AssetPaths.Turtle__png) 
@@ -44,11 +42,12 @@ class Turtle extends Enemy
 	}
 	
 	/**
-	 * Turns the enemy around if it runs into an object
+	 * turnAround
+	 * Turns the turtle around if it runs into an object
 	 */
 	private function turnAround():Void
 	{
-		// Reverse the direction of the DontTouchMe's velocity
+		// Reverse the direction of the Turtle's velocity
 		xSpeed *= -1;
 		velocity.x = xSpeed;
 		
@@ -57,19 +56,22 @@ class Turtle extends Enemy
 	}
 	
 	/**
-	 * turtHitResolve
+	 * playerHitResolve
 	 * Logic for who takes damage if a player and a Turtle overlap
 	 * 
 	 * @param	player	A player's character
-	 * @param	dtm		A Turtle enemy
+	 * @param	turt	A Turtle enemy
 	 */
 	public function playerHitResolve(player:Player, turt:Turtle):Void
 	{
-		if (hiding) {
-			FlxG.collide(player, turt);
-			if (player.star) { turt.kill(); }
-			//else { player.kill(); }
-		} else {
+		if (hiding) {	// Turtle is in it's shell
+			if (player.star) { 
+				turt.kill(); 
+			} else {
+				// let player kick the shell around
+				FlxG.collide(player, turt);
+			}
+		} else {	// Turtle is walking around
 			if (turt.overlaps(player.topBox)) {
 				if (player.star) {
 					turt.kill();
@@ -87,8 +89,8 @@ class Turtle extends Enemy
 	 * enemyHitResolve
 	 * Logic for who takes damage if an enemy and a Turtle overlap
 	 * 
-	 * @param	enemy	A player's character
-	 * @param	dtm		A Turtle enemy
+	 * @param	enemy	Another enemy in the game
+	 * @param	turt	A Turtle enemy
 	 */
 	public function enemyHitResolve(enemy:Enemy, turt:Turtle):Void
 	{
@@ -99,10 +101,11 @@ class Turtle extends Enemy
 		}
 	}
 	
-	public function fall() 
-	{
-		
-	}
+	/**
+	 * fall
+	 * Empty function declaration for use in child classes
+	 */
+	public function fall() {}
 	
 	/**
 	 * hide
@@ -110,7 +113,6 @@ class Turtle extends Enemy
 	 */
 	public function hide():Void
 	{
-		// Go into shell
 		hiding = true;
 		velocity.x = 0;
 		xSpeed *= 5;
