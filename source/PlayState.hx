@@ -30,6 +30,7 @@ class PlayState extends FlxState
 
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
 	private var mushroom:PowerupMushroom;
+	private var fireflower:FireFlower;
 	
 	// Enemies
 	private var dtmEnemy1:DontTouchMe;
@@ -105,7 +106,9 @@ class PlayState extends FlxState
 		
 		_pUp = new FlxGroup();
 		mushroom = new PowerupMushroom(40, 40);
-		_pUp.add(mushroom); 
+		_pUp.add(mushroom);
+		fireflower = new FireFlower(32, 19);
+		_pUp.add(fireflower);
 		add(_pUp);
 
 		map = new FlxTilemap();
@@ -152,7 +155,8 @@ class PlayState extends FlxState
 		hud.update(elapsed);
 
 		FlxG.collide(map, player);
-		FlxG.overlap(player, _pUp, mushroom.getPowerup);
+		FlxG.overlap(player, mushroom, mushroom.getPowerup);
+		FlxG.overlap(player, fireflower, fireflower.getPowerup);  
 				// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
@@ -164,6 +168,7 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
+		FlxG.collide(_pUp, blockGroup);
 		FlxG.collide(map, _pUp);
 		FlxG.collide(map, mushroom);
 	}

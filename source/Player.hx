@@ -46,6 +46,7 @@ import flixel.group.FlxGroup;
 	
 	public var invincibleTimer:Float = 0;
 	public var hurtInvincibility:Float = 2;
+	public var hasFlower:Bool = false;
   
   
 	/**
@@ -115,6 +116,15 @@ import flixel.group.FlxGroup;
 			invincibleTimer = 0;
 			canTakeDamage = true;
 		}
+		
+		if (hasFlower)
+		{
+			if (FlxG.keys.anyJustPressed([FlxKey.SPACE, FlxKey.ENTER]))
+			{
+				new Fireball(X, Y);
+				trace("Fire");
+			}
+		}
 	}
 
   /**
@@ -123,6 +133,12 @@ import flixel.group.FlxGroup;
    *
    * @return scalar value of the players next horizontal move
    */
+  
+	public function launchFireball(X:Float, Y:Float)
+	{
+		new Fireball(X, Y);
+		trace("Fire");
+	}
   public function pollForHorizontalMove():Int
   {
     var step:Int = 0;
