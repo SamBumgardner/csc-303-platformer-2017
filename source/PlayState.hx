@@ -111,11 +111,17 @@ class PlayState extends FlxState
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
 		
+		// Creates a group to hold all powerups, used for collision detection
 		_pUp = new FlxGroup();
+		// Instatiate the mushroom
 		mushroom = new PowerupMushroom(40, 40);
+		// Add the mushroom to the powerup group
 		_pUp.add(mushroom);
+		// Instantiate the fire flower
 		fireflower = new FireFlower(32, 19);
+		// Add the fire flower to the group
 		_pUp.add(fireflower);
+		// Add the powerups to the level
 		add(_pUp);
 
 

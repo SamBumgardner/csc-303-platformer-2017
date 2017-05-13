@@ -107,12 +107,15 @@ import flixel.group.FlxGroup;
 		brain.update(this);
 		super.update(elapsed);
 		updateHitBoxes();
+		// Implements an invincibilty timer to make the player temprarily invulnerable for a time after being hurt
 		if (invincibleTimer > 0)
 		{
+			// If there is still time left on the timer, continue counting down
 			invincibleTimer -= elapsed;
 		}
 		else if (invincibleTimer <= 0)
 		{
+			// When the timer runs out, the player is able to take damage again.
 			invincibleTimer = 0;
 			canTakeDamage = true;
 		}
@@ -134,11 +137,6 @@ import flixel.group.FlxGroup;
    * @return scalar value of the players next horizontal move
    */
   
-	public function launchFireball(X:Float, Y:Float)
-	{
-		new Fireball(X, Y);
-		trace("Fire");
-	}
   public function pollForHorizontalMove():Int
   {
     var step:Int = 0;
@@ -218,10 +216,14 @@ import flixel.group.FlxGroup;
   
   override public function hurt(damage:Float)
   {
+	  //overrides the parent "hurt" function to use the implement invincibilty timer
 	  if (canTakeDamage)
 	  {
-		 super.hurt(damage); 
+		  // Damages player
+		 super.hurt(damage);
+		 // Makes player invulnerable
 		 canTakeDamage = false;
+		 // Starts the invicibility timer
 		 invincibleTimer = hurtInvincibility;
 	  }
 	  
