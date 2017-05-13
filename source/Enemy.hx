@@ -39,6 +39,8 @@ class Enemy extends FlxSprite
 	public override function update(elapsed:Float):Void
 	{		
 		super.update(elapsed);	
+		if (x > 670)
+		x = -30;
 	}
 	
 }

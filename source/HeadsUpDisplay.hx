@@ -84,7 +84,7 @@ class HeadsUpDisplay extends FlxGroup
 	 * Update still needs to be called after this to actually update the HUD.
 	 * @param	newCoinCount the coin count you want displayed on the HUD. Displays last 2 digits of number.
 	 */
-	private function handleCoinsUpdate(newCoinCount:Int){
+	public function handleCoinsUpdate(newCoinCount:Int){
 		//trim number down to last 2 digits if over 2 digits
 		var parsedCoins:String = Std.string(newCoinCount);
 		var coinString:String = "00";
@@ -103,7 +103,7 @@ class HeadsUpDisplay extends FlxGroup
 	 * Update still needs to be called after this to actually update the HUD.
 	 * @param	newScore the score you want displayed on the HUD. Displays last 8 digits of number.
 	 */
-	private function handleScoreUpdate(newScore:Int){
+	public function handleScoreUpdate(newScore:Int){
 		//trim number down to last 8 digits if over 8 digits
 		var parsedScore:String = Std.string(newScore);
 		var scoreString:String = "00000000";

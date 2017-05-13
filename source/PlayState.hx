@@ -4,6 +4,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.graphics.FlxGraphic;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
@@ -13,6 +15,7 @@ import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 
+
 class PlayState extends FlxState
 {
 	public var GRAVITY(default, never):Float = 600;
@@ -21,9 +24,12 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var flagpole:FlagPole;
 	private var platform:Platforms;
-	private var coins:FlxGroup;
-	private var flag_x_loc:Int = 17;
+
+	private var trap:Trap;
+ 	private var coins:FlxGroup;
+  private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
+
 	public static var hud:HeadsUpDisplay;
 	public var _pUp:FlxGroup;
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
@@ -92,6 +98,7 @@ class PlayState extends FlxState
 		coins = new FlxGroup();
 		coins.add(new Coin(8, 8, "red"));
 		coins.add(new Coin(9, 8, "yellow"));
+		coins.add(new Coin(9, 9, "yellow"));
 		add(coins);
 		
 		// Create and add enemies
@@ -110,6 +117,21 @@ class PlayState extends FlxState
 		fireflower = new FireFlower(32, 19);
 		_pUp.add(fireflower);
 		add(_pUp);
+
+
+		//Create a new Trap
+		trap = new Trap(320,256);
+		
+		//Building the Trap and its subsections by adding them to their own FlxGroup
+		trap.buildTrap(trap);
+
+		//Adding the whole Trap, subsections and all to the playstate
+		add(trap._grpBarTrap);	
+
+		//Placing the trap into the playstate centered at specified location (x, y)
+		trap.placeTrap(trap._grpBarTrap, 320, 256);
+
+
 
 		map = new FlxTilemap();
 		map.loadMapFromArray([
@@ -155,12 +177,15 @@ class PlayState extends FlxState
 		hud.update(elapsed);
 
 		FlxG.collide(map, player);
+
 		FlxG.overlap(player, mushroom, mushroom.getPowerup);
 		FlxG.overlap(player, fireflower, fireflower.getPowerup);  
 				// Add overlap logic
+
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
+		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
@@ -181,6 +206,8 @@ class PlayState extends FlxState
 	private function collectCoin(p:Player, c:Coin):Void
 	{
 		p.scoreCoin(c.coinColor);
+		hud.handleScoreUpdate(p.scoreTotal);
+		hud.handleCoinsUpdate(p.coinCount);
 		c.kill();
 	}
 
