@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 import states.FSM;
 import states.BaseState;
 import states.PlayerGroundState;
@@ -31,6 +32,11 @@ import flixel.group.FlxGroup;
 	
 	public var coinCount:Int = 0;
 	public var scoreTotal:Int = 0;
+	
+	public var item_bag:Array<Item>;
+	public var weilding:Bool = false;
+	public var equipped_item:Item;
+	public var attacking:Bool = false;
 
   public var hitBoxComponents:FlxTypedGroup<FlxObject>;
   public var topBox:FlxObject;
@@ -116,15 +122,33 @@ import flixel.group.FlxGroup;
 
     if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
     {
-      step--;
+		facing = FlxObject.LEFT;
+		step--;
     }
     if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
     {
-      step++;
+		facing = FlxObject.RIGHT;
+		step++;
     }
+	if (FlxG.keys.anyPressed([FlxKey.SPACE]))
+	{
+		if (weilding && !attacking){ 
+			attacking = true;
+			equipped_item.attack_state();
+		}
+	}
+	if (FlxG.keys.anyPressed([FlxKey.G]))
+	{	//'g' keypress to drop the currently equipped item
+		if(weilding && !attacking){
+			equipped_item.drop_item();
+			weilding = false;
+			equipped_item = null;
+		}
+	}
 
     return step;
   }
+  
 
   /**
    * Convenience method for checking if a jump is being requested.
@@ -186,4 +210,31 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
+  
+  //Override player.kill to reset the level after 3 seconds
+  override public function kill():Void 
+  {
+	  super.kill();
+	  new FlxTimer().start(3, resetLevel, 1);
+  }
+  private function resetLevel(Timer:FlxTimer):Void
+	{
+		FlxG.resetState();
+	}
+	
+	/**
+	 * Method to pickup items. If the player is not holding anything
+	 * and the item is weildable, equip the item. Otherwise add it to his bag.
+   */
+	public function pickup_item(player:Player, item:Item):Void {
+		if (!weilding && item.weildable){
+			//if not weilding anything and the item is weildable
+			//... set weilding to true and equip
+			weilding = true;
+			equipped_item = item;
+			item.equip(this);
+		} 
+		
+		
+	}
 }
