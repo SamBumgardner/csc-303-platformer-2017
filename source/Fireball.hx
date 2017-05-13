@@ -12,6 +12,7 @@ class Fireball extends FlxSprite
 	{
 		trace("Behold, Fire");
 		super(X, Y, AssetPaths.fireball__png);
+		velocity.x = 300;
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -19,7 +20,5 @@ class Fireball extends FlxSprite
 		super.update(elapsed);
 		if (!isOnScreen())
 			kill();
-		else
-			velocity.x = 300;
 	}
 }

@@ -17,11 +17,11 @@ class FireFlower extends PowerUp
 		acceleration.y = (cast FlxG.state).GRAVITY;
 	}
 	
-	public function getPowerup(Player:FlxObject, PowerUp:FlxObject):Void
+	public function getPowerup(player:FlxObject, powerUp:FlxObject):Void
 	{
-		Player.health = 3;
-		Player.hasFlower = true;
-		PowerUp.kill();
+		player.health = 3;
+		(cast player).hasFlower = true;
+		powerUp.kill();
 	}
 	
 }

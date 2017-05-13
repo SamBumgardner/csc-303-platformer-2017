@@ -121,7 +121,7 @@ import flixel.group.FlxGroup;
 		{
 			if (FlxG.keys.anyJustPressed([FlxKey.SPACE, FlxKey.ENTER]))
 			{
-				new Fireball(X, Y);
+				new Fireball(x, y);
 				trace("Fire");
 			}
 		}
