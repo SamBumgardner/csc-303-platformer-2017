@@ -101,7 +101,7 @@ import flixel.group.FlxGroup;
 	{
 		brain.update(this);
 		super.update(elapsed);
-    updateHitBoxes();
+		updateHitBoxes();
 	}
 
   /**
@@ -155,7 +155,7 @@ import flixel.group.FlxGroup;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
   }
    
   /**
@@ -186,4 +186,12 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
-}
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
