@@ -74,7 +74,7 @@ class DontTouchMe extends Enemy
 	 * @param	player	A player's character
 	 * @param	dtm		A DontTouchMe enemy
 	 */
-	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
+	static public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
 	{
 		if (player.overlaps(dtm.giveDamageBox)) {
 			if (player.star) {

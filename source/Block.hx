@@ -30,7 +30,7 @@ class Block extends FlxSprite
 		{
 			Graphic = IMAGE;
 		}
-		super(X*SCALEFACTOR, Y*SCALEFACTOR, Graphic);
+		super(X, Y, Graphic);
 		
 		immovable = true;
 		isBreakable = Breakable;
