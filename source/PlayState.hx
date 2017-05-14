@@ -111,7 +111,7 @@ class PlayState extends FlxState
 		trap.buildTrap(trap);
 
 		//Adding the whole Trap, subsections and all to the playstate
-		add(trap._grpBarTrap);	
+		add(trap._grpBarTrap);
 
 		//Placing the trap into the playstate centered at specified location (x, y)
 		trap.placeTrap(trap._grpBarTrap, 320, 256);
@@ -165,7 +165,7 @@ class PlayState extends FlxState
 
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
-		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.dtmHitResolve);
+		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.playerHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
 		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		
