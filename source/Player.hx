@@ -156,6 +156,7 @@ import flixel.group.FlxGroup;
   public function isRunning():Bool
   {
     return FlxG.keys.anyPressed([FlxKey.Z]) || controller.isRunning();
+
   }
    
   /**
@@ -186,4 +187,12 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
-}
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
