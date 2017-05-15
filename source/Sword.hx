@@ -13,7 +13,7 @@ class Sword extends Item
 {
 	
 	
-	public var hitbox:FrameAnimationManager;
+	public var hitbox:HitboxAnimationManager;
 	
 	 
 	/**
@@ -32,7 +32,7 @@ class Sword extends Item
 		var yOffsets:Array<Float> = [ -frameHeight / 6, -frameHeight / 8, 0, frameHeight/6, frameHeight / 4];
 		var angles:Array<Float> = [40, 60, 80, 100, 120];
 		var frameLength:Array<Int> = [3, 6, 9, 12, 15 ];
-		hitbox = new FrameAnimationManager(xOffsets, yOffsets, angles, frameLength, this, SimpleGraphic, true);
+		hitbox = new HitboxAnimationManager(xOffsets, yOffsets, angles, frameLength, this, SimpleGraphic, true);
 		
 	}
 	

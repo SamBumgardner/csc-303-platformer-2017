@@ -219,17 +219,18 @@ import flixel.group.FlxGroup;
 	  super.kill();
 	  new FlxTimer().start(2, resetLevel, 1); //This helps speed things up for debugging
   }
+  
   private function resetLevel(Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
 	}
-	
+
 	/**
 	 * Method to pickup items. If the player is not holding anything
 	 * and the item is weildable, equip the item. Otherwise add it to his bag.
 	 * If player is not weilding anything and the item is weildable
 	 *	set weilding to true and equip
-   */
+	*/
 	public function pickup_item(player:Player, item:Item):Void {
 		if (!weilding && item.weildable){
 			if(!item.justDropped){
@@ -239,7 +240,7 @@ import flixel.group.FlxGroup;
 			}
 		} 
 	}
-	
+
 	/**
 	 * Method to drop the currently equipped item
 	 * 
