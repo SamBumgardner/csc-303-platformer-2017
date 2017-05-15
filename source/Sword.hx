@@ -2,10 +2,8 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.math.FlxPoint;
+import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxPath;
 
 /**
  * SWORDS!!!!!!
@@ -15,7 +13,7 @@ class Sword extends Item
 {
 	
 	
-	public var blade_hitbox:FlxObject;
+	public var hitbox:FrameAnimationManager;
 	
 	 
 	/**
@@ -28,75 +26,59 @@ class Sword extends Item
 	{
 		super(X, Y, SimpleGraphic);
 		weildable = true;
-		//frameHeight -6 for the sword grip offset.
-		blade_hitbox = new FlxObject(X, Y, frameWidth, frameHeight - 6);
-
+		
+		//Create hitbox parameters and create the Frame animation manager
+		var xOffsets:Array<Float> = [frameWidth / 4, frameWidth / 2, frameWidth , frameWidth*1.3, frameWidth*1.3];
+		var yOffsets:Array<Float> = [ -frameHeight / 6, -frameHeight / 8, 0, frameHeight/6, frameHeight / 4];
+		var angles:Array<Float> = [40, 60, 80, 100, 120];
+		var frameLength:Array<Int> = [3, 6, 9, 12, 15 ];
+		hitbox = new FrameAnimationManager(xOffsets, yOffsets, angles, frameLength, this, SimpleGraphic, true);
 		
 	}
 	
+	
+	/**
+	 * Override update functio
+	 * reset the weapon if the hitbox is done animating, but the player is still in the attack state
+	 */
 	public override function update(elapsed:Float):Void
 	{       
 		super.update(elapsed);
-		if(equipped){
-			update_sword_hitbox();
-		}
-	}
-	
-	public function update_sword_hitbox(){
-		blade_hitbox.x = x;
-		blade_hitbox.y = y;
-	}
-	
-	public function hit_enemy(sword:Sword, enemy:DontTouchMe){
-		if(equipped){
-			if (player_trace.attacking){
-				enemy.kill();
+		if (equipped){
+			facing = player_trace.facing;
+			if (hitbox.animating == false && player_trace.attacking){
+				reset_weapon();
 			}
 		}
-		
 	}
 	
+	/**
+	 * playstate collide function. If it hits the enemy, kill them. 
+	 * It is assumed the player is attacking when this is used
+	 * @param	sword
+	 * @param	enemy
+	 */
+	public function hit_enemy(sword:Sword, enemy:DontTouchMe){
+		if (equipped){
+			enemy.kill();
+		}	
+	}
+	
+	/**
+	 * Begin attack state animations
+	 */
 	public override function attack_state(){
 		super.attack_state();
-		if (player_trace.facing == FlxObject.LEFT) {
-			FlxTween.angle(this, 360, 270, .5, {
-			onComplete: reset_weapon,
-			type: FlxTween.ONESHOT
-		});
-		} 
-		else {
-			swing(270, 275, 0, 1);
-			/*FlxTween.angle(this, 0, 90, .5, {
-			onComplete: reset_weapon,
-			type: FlxTween.ONESHOT
-		});*/
-		}
+		hitbox.animating = true;
 	}
 	
-	private function swing(startAngle:Float, endAngle:Float, iteration:Int, direction:Int){
-		if (iteration < 10){
-			this.path = new FlxPath().start([new FlxPoint(player_trace.x, player_trace.y), new FlxPoint(player_trace.x+50, player_trace.y+50)], 1, FlxPath.FORWARD);
-			trace(iteration);
-			/*var radius = 16;
-			var angle1:Float = startAngle * Math.PI / 180;
-			trace(angle1);
-			var angle2:Float = endAngle * Math.PI / 180;
-			var startX:Float = (player_trace.x+player_trace.frameWidth)+radius * Math.cos(angle1);
-			var startY:Float = (player_trace.y+player_trace.frameHeight)+radius* Math.sin(angle1);
-			var endX:Float = (player_trace.x+player_trace.frameWidth)+radius* Math.cos(angle2);
-			var endY:Float = (player_trace.y+player_trace.frameHeight)+radius * Math.sin(angle2);
-			this.path = new FlxPath().start([new FlxPoint(startX, startY), new FlxPoint(endX, endY)], .017, FlxPath.FORWARD);
-			this.path.onComplete = function(path:FlxPath):Void{trace("Path complete");  swing(endAngle, endAngle+5, iteration + 1, 1); };*/
-		} else {
-			reset_weapon();
-		}
-		
-	}
-	
-	private function reset_weapon(?tween:FlxTween){
-	  angle = 0;
+	/**
+	 * Reset the weapon to its original state. 
+	 * Reset to player to a regular state and allow keys again
+	 * @param	tween
+	 */
+	private function reset_weapon(){
 	  player_trace.attacking = false;
 	  FlxG.keys.enabled = true;
-	  item_activated = false;
   }
 }
