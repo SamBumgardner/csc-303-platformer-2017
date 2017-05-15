@@ -106,6 +106,8 @@ class PlayState extends FlxState
 
 		sword = new Sword(4*32, 3*32, AssetPaths.sword__png);
 		add(sword);
+		add(sword.hitbox);
+		add(sword.hitbox.hitboxFrames);
 
 		//Create a new Trap
 		trap = new Trap(320,256);
@@ -172,7 +174,7 @@ class PlayState extends FlxState
 		FlxG.overlap(player, bullets, bulletHitPlayer);
 		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		FlxG.overlap(player, sword, player.pickup_item);
-		FlxG.overlap(sword, dtmEnemy1, sword.hit_enemy);
+		FlxG.overlap(sword.hitbox.hitboxFrames, dtmEnemy1, sword.hit_enemy);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
@@ -213,5 +215,6 @@ class PlayState extends FlxState
 	private function resetLevel(Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
+		FlxG.keys.enabled = true;
 	}
 }
