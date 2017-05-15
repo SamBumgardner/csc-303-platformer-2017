@@ -12,6 +12,12 @@ class PowerupMushroom extends PowerUp
 {
 	private var xSpeed:Float = 50;
 
+	/**
+	 * Initializes the graphic for the powerup, and adds acceleration and gravity
+	 * @param	X - x coordinate of the powerup
+	 * @param	Y - y coordinate of the powerup
+	 * @param	SimpleGraphic - graphic to hold the visual elements of the powerup
+	 */
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		// Instantiate the powerup
@@ -22,6 +28,11 @@ class PowerupMushroom extends PowerUp
 		velocity.x = xSpeed;
 	}
 	
+	/**
+	 * Executes when the player comes in contact with this powerup, collecting it.
+	 * @param	Player - player game object
+	 * @param	PowerUp - powerup game object
+	 */
 	public function getPowerup(Player:FlxObject, PowerUp:FlxObject):Void
 	{
 		// Gives the player 2 units of health, and kills the powerup when it is collected
@@ -40,6 +51,9 @@ class PowerupMushroom extends PowerUp
 		
 	}
 	
+	/**
+	 * Changes the powerup's direction when it hits a wall
+	 */
 	public function turnAround():Void
 	{
 		// Reverse the direction of the DontTouchMe's velocity

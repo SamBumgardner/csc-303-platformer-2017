@@ -7,6 +7,7 @@ import flixel.FlxG;
 /**
  * ...
  * @author Caleb Breslin
+ * Initializes graphic for the powerup
  */
 class PowerUp extends FlxSprite 
 {

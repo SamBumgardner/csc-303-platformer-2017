@@ -13,6 +13,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.TweenOptions;
 
 /**
  * ...
@@ -21,6 +23,7 @@ import flixel.group.FlxGroup;
  class Player extends FlxSprite
  {
 	public var brain:FSM;
+	public var player:FlxSprite;
 
 	public var xAccel:Float = 400;
 	public var xMaxSpeed(default, set):Float;
@@ -47,6 +50,7 @@ import flixel.group.FlxGroup;
 	public var invincibleTimer:Float = 0;
 	public var hurtInvincibility:Float = 2;
 	public var hasFlower:Bool = false;
+	public var tween:FlxTween;
   
   
 	/**
@@ -61,7 +65,7 @@ import flixel.group.FlxGroup;
 		super(X, Y, SimpleGraphic);
 
 		// Initializes a basic graphic for the player
-		makeGraphic(32, 32, FlxColor.ORANGE);
+		player = makeGraphic(32, 32, FlxColor.ORANGE);
 
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
@@ -115,7 +119,7 @@ import flixel.group.FlxGroup;
 		}
 		else if (invincibleTimer <= 0)
 		{
-			// When the timer runs out, the player is able to take damage again.
+			// When the timer runs out, the player is able to take damage again
 			invincibleTimer = 0;
 			canTakeDamage = true;
 		}
@@ -214,9 +218,13 @@ import flixel.group.FlxGroup;
     btmBox.y = y + height - hitBoxHeight;
   }
   
+  /**
+   * Overrides the parent "hurt" function to use the implement invincibilty timer
+   * @param	damage - the amount of damage dealth by whatever enemy or object caused the damamge
+   */
   override public function hurt(damage:Float)
   {
-	  //overrides the parent "hurt" function to use the implement invincibilty timer
+	  var options:TweenOptions = { type: FlxTween.PINGPONG};
 	  if (canTakeDamage)
 	  {
 		  // Damages player
@@ -225,7 +233,7 @@ import flixel.group.FlxGroup;
 		 canTakeDamage = false;
 		 // Starts the invicibility timer
 		 invincibleTimer = hurtInvincibility;
-	  }
-	  
-  }
+		//tween = FlxTween.color(player, .1, FlxColor.ORANGE, FlxColor.TRANSPARENT, options);
+	  }  
+  } 
 }
