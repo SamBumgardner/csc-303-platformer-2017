@@ -74,6 +74,10 @@ import flixel.group.FlxGroup;
     btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
+<<<<<<< HEAD
+=======
+	
+>>>>>>> c7a4e3fe091f90b5a07b6a9408224741346ff6fc
 	FlxG.state.add(hitBoxComponents);
 	}
 

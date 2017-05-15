@@ -218,6 +218,10 @@ class PlayState extends FlxState
 
 		hud.update(elapsed);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> c7a4e3fe091f90b5a07b6a9408224741346ff6fc
 		// Add overlap logic
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmGroup, DontTouchMe.dtmHitResolve);
