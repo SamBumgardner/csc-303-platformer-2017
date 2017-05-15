@@ -14,19 +14,6 @@ class DontTouchMe extends Enemy
 {
 	private var dtmPosition:FlxPoint;
 	private var xSpeed:Float = -30;
-		
-	// Hitboxes
-	public var takeDamageBox:FlxObject;
-	private var tdbHeight:Float = 22;
-	private var tdbWidth:Float = 5;
-	private var tdbXoffset:Float = 5;
-	private var tdbYoffset:Float = 0;
-	
-	public var giveDamageBox:FlxObject;
-	private var gdbHeight:Float = 30;
-	private var gdbWidth:Float = 27;
-	private var gdbXoffset:Float = 2;
-	private var gdbYoffset:Float = 5;
 	
 		
 	/**
@@ -48,10 +35,6 @@ class DontTouchMe extends Enemy
 		
 		// Initialize X movement
 		velocity.x = xSpeed;
-		
-		// Set hitboxes
-		takeDamageBox = new FlxObject((X + tdbXoffset), (Y + tdbYoffset), tdbHeight, tdbWidth);
-		giveDamageBox = new FlxObject((X + gdbXoffset), (Y + gdbYoffset), gdbHeight, gdbWidth);
 	}
 	
 	/**
@@ -68,22 +51,23 @@ class DontTouchMe extends Enemy
 	}
 	
 	/**
-	 * dtmHitResolve
+	 * playerHitResolve
 	 * Logic for who takes damage if a player and a DTM overlap
 	 * 
 	 * @param	player	A player's character
 	 * @param	dtm		A DontTouchMe enemy
 	 */
-	public function dtmHitResolve(player:Player, dtm:DontTouchMe):Void
+	public function playerHitResolve(player:Player, dtm:DontTouchMe):Void
 	{
-		if (player.overlaps(dtm.giveDamageBox)) {
+		if (dtm.overlaps(player.topBox)) {
 			if (player.star) {
 				dtm.kill();
 			} else {
 				player.hurt(1);
 			}
-		} else if (player.overlaps(dtm.takeDamageBox)) {
+		} else if (dtm.overlaps(player.btmBox)) {
 			dtm.kill();
+			player.bounce();
 		}
 	}
 	
@@ -109,13 +93,6 @@ class DontTouchMe extends Enemy
 		}
 		
 		super.update(elapsed);
-		
-		// Move hitBox
-		dtmPosition = getPosition();
-		takeDamageBox.x = dtmPosition.x + tdbXoffset;
-		takeDamageBox.y = dtmPosition.y + tdbYoffset;
-		giveDamageBox.x = dtmPosition.x + gdbXoffset;
-		giveDamageBox.y = dtmPosition.y + gdbYoffset;		
 	}
 	
 }

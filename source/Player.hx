@@ -128,6 +128,7 @@ import flixel.group.FlxGroup;
 				trace("Fire");
 			}
 		}
+
 	}
 
   /**
@@ -182,7 +183,7 @@ import flixel.group.FlxGroup;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
   }
    
   /**
@@ -213,7 +214,7 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
-  
+
   override public function hurt(damage:Float)
   {
 	  //overrides the parent "hurt" function to use the implement invincibilty timer
@@ -228,4 +229,13 @@ import flixel.group.FlxGroup;
 	  }
 	  
   }
-}
+
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
