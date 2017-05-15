@@ -33,7 +33,6 @@ import flixel.group.FlxGroup;
 	public var coinCount:Int = 0;
 	public var scoreTotal:Int = 0;
 	
-	public var item_bag:Array<Item>;
 	public var weilding:Bool = false;
 	public var equipped_item:Item;
 	public var attacking:Bool = false;
@@ -107,7 +106,7 @@ import flixel.group.FlxGroup;
 	{
 		brain.update(this);
 		super.update(elapsed);
-    updateHitBoxes();
+		updateHitBoxes();
 	}
 
   /**
@@ -130,6 +129,7 @@ import flixel.group.FlxGroup;
 		facing = FlxObject.RIGHT;
 		step++;
     }
+	//Attack key while weilding an item
 	if (FlxG.keys.anyPressed([FlxKey.SPACE]))
 	{
 		if (weilding && !attacking){ 
@@ -137,12 +137,11 @@ import flixel.group.FlxGroup;
 			equipped_item.attack_state();
 		}
 	}
+	//'g' keypress to drop the currently equipped item
 	if (FlxG.keys.anyPressed([FlxKey.G]))
-	{	//'g' keypress to drop the currently equipped item
+	{
 		if(weilding && !attacking){
-			equipped_item.drop_item();
-			weilding = false;
-			equipped_item = null;
+			dropCurrentEquip();
 		}
 	}
 
@@ -211,11 +210,14 @@ import flixel.group.FlxGroup;
     btmBox.y = y + height - hitBoxHeight;
   }
   
-  //Override player.kill to reset the level after 3 seconds
+  //Override player.kill to drop any weilded items
   override public function kill():Void 
   {
+	  if (weilding){
+		dropCurrentEquip();
+	  }
 	  super.kill();
-	  new FlxTimer().start(3, resetLevel, 1);
+	  new FlxTimer().start(2, resetLevel, 1); //This helps speed things up for debugging
   }
   private function resetLevel(Timer:FlxTimer):Void
 	{
@@ -225,16 +227,26 @@ import flixel.group.FlxGroup;
 	/**
 	 * Method to pickup items. If the player is not holding anything
 	 * and the item is weildable, equip the item. Otherwise add it to his bag.
+	 * If player is not weilding anything and the item is weildable
+	 *	set weilding to true and equip
    */
 	public function pickup_item(player:Player, item:Item):Void {
 		if (!weilding && item.weildable){
-			//if not weilding anything and the item is weildable
-			//... set weilding to true and equip
-			weilding = true;
-			equipped_item = item;
-			item.equip(this);
+			if(!item.justDropped){
+				weilding = true;
+				equipped_item = item;
+				item.equip(this);
+			}
 		} 
-		
-		
+	}
+	
+	/**
+	 * Method to drop the currently equipped item
+	 * 
+	 */
+	private function dropCurrentEquip(){
+		equipped_item.drop_item();
+		weilding = false;
+		equipped_item = null;
 	}
 }
