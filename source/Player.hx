@@ -178,7 +178,7 @@ import flixel.group.FlxGroup;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
   }
    
   /**
@@ -209,7 +209,7 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
-  
+
   //Override player.kill to drop any weilded items
   override public function kill():Void 
   {
@@ -251,3 +251,13 @@ import flixel.group.FlxGroup;
 		equipped_item = null;
 	}
 }
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
+
