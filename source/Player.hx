@@ -222,7 +222,6 @@ import flixel.tweens.FlxTween.TweenOptions;
    * Overrides the parent "hurt" function to use the implement invincibilty timer
    * @param	damage - the amount of damage dealth by whatever enemy or object caused the damamge
    */
-  
   override public function hurt(damage:Float)
   {
 	  var options:TweenOptions = { type: FlxTween.PINGPONG};
