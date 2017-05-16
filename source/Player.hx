@@ -15,6 +15,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.TweenOptions;
+import flixel.effects.FlxFlicker;
 
 /**
  * ...
@@ -51,6 +52,7 @@ import flixel.tweens.FlxTween.TweenOptions;
 	public var hurtInvincibility:Float = 2;
 	public var hasFlower:Bool = false;
 	public var tween:FlxTween;
+	public var flicker:FlxFlicker;
   
   
 	/**
@@ -233,7 +235,7 @@ import flixel.tweens.FlxTween.TweenOptions;
 		 canTakeDamage = false;
 		 // Starts the invicibility timer
 		 invincibleTimer = hurtInvincibility;
-		//tween = FlxTween.color(player, .1, FlxColor.ORANGE, FlxColor.TRANSPARENT, options);
+		FlxFlicker.flicker(player, 2, .1);
 	  }  
   } 
 
