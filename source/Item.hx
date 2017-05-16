@@ -70,17 +70,10 @@ class Item extends FlxSprite
 		Timer.delay(function(){ justDropped = false; }, 1000);
 	}
 	
-	
 	/**
-	 * Functionality for keypress event to attack if an item is currently being 
-	 * weilded. Disables user input to put them in the 'attacking state', but 
-	 * still keeps their current velocity and acceleration
+	 * Begin attack state animations
+	 * Used in weapon subclasses
 	 */
-	public function attack_state(){
-		FlxG.keys.reset();
-		FlxG.keys.enabled = false;
-	}
-	
-
+	public function attack(){}
 	
 }

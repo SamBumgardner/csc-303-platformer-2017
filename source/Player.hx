@@ -133,8 +133,8 @@ import flixel.group.FlxGroup;
 	if (FlxG.keys.anyPressed([FlxKey.SPACE]))
 	{
 		if (weilding && !attacking){ 
-			attacking = true;
-			equipped_item.attack_state();
+			attacking = attack_state();
+			equipped_item.attack();
 		}
 	}
 	//'g' keypress to drop the currently equipped item
@@ -245,12 +245,22 @@ import flixel.group.FlxGroup;
 	 * Method to drop the currently equipped item
 	 * 
 	 */
-	private function dropCurrentEquip(){
+	private function dropCurrentEquip():Void{
 		equipped_item.drop_item();
 		weilding = false;
 		equipped_item = null;
 	}
-}
+	
+	/**
+	 * Functionality for keypress event to attack if an item is currently being 
+	 * weilded. Disables user input to put them in the 'attacking state', but 
+	 * still keeps their current velocity and acceleration
+	 */
+	public function attack_state():Bool{
+		FlxG.keys.reset();
+		FlxG.keys.enabled = false;
+		return true;
+	}
 
   /**
    * Causes the player to bounce upwards

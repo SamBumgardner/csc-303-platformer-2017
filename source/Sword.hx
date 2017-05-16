@@ -67,8 +67,7 @@ class Sword extends Item
 	/**
 	 * Begin attack state animations
 	 */
-	public override function attack_state(){
-		super.attack_state();
+	public override function attack(){
 		hitbox.animating = true;
 	}
 	
