@@ -217,13 +217,8 @@ import flixel.group.FlxGroup;
 		dropCurrentEquip();
 	  }
 	  super.kill();
-	  new FlxTimer().start(2, resetLevel, 1); //This helps speed things up for debugging
+	  new FlxTimer().start(2, (cast (FlxG.state, PlayState)).resetLevel, 1); //This helps speed things up for debugging
   }
-  
-  private function resetLevel(Timer:FlxTimer):Void
-	{
-		FlxG.resetState();
-	}
 
 	/**
 	 * Method to pickup items. If the player is not holding anything
@@ -257,7 +252,6 @@ import flixel.group.FlxGroup;
 	 * still keeps their current velocity and acceleration
 	 */
 	public function attack_state():Bool{
-		FlxG.keys.reset();
 		FlxG.keys.enabled = false;
 		return true;
 	}

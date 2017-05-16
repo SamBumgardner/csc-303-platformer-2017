@@ -58,7 +58,7 @@ class Sword extends Item
 	 * @param	sword
 	 * @param	enemy
 	 */
-	public function hit_enemy(sword:Sword, enemy:DontTouchMe){
+	public function hit_enemy(sword:Sword, enemy:Enemy){
 		if (equipped){
 			enemy.kill();
 		}	
