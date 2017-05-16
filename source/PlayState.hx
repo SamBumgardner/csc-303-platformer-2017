@@ -33,7 +33,7 @@ class PlayState extends FlxState
 	public static var hud:HeadsUpDisplay;
 
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
-
+	public var trapGroup:FlxTypedGroup<Trap> = new FlxTypedGroup<Trap>();
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>();
 	
 	// Enemies
@@ -63,7 +63,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 
-		//create new moving platform
+		////create new moving platform
 		//platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
 		//platform.immovable = platform.solid = true;
 		//platform.allowCollisions = FlxObject.UP;
@@ -169,7 +169,7 @@ class PlayState extends FlxState
 		{
 			trap = new Trap(x, y);
 			add(trap);
-			sprites.add(trap);
+			trapGroup.add(trap);
 		}
 		
 		else if (entityName == "FireBar")
@@ -178,11 +178,12 @@ class PlayState extends FlxState
 			trap.buildTrap(trap);
 			add(trap._grpBarTrap);
 			trap.placeTrap(trap._grpBarTrap, x, y);
+			trapGroup.add(trap);
 		}
 		
 		else if (entityName == "Platform")
 		{
-			platform =  new Platforms(x, y, 4, 50, 50, 50, 50, player);
+			platform =  new Platforms(x, y, 4, 0, 0, 50, 50, player);
 			platform.immovable = platform.solid = true;
 			platform.allowCollisions = FlxObject.UP;
 			platform.inContact = false;
@@ -209,30 +210,25 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-		//When player overlaps a coin, the coin is destroyed
-		FlxG.overlap(player, coins, collectCoin);
-		FlxG.collide(_mGround, sprites);
-		
+				
 		platform.platformUpdate(elapsed, sprites, platform);
 
 		hud.update(elapsed);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c7a4e3fe091f90b5a07b6a9408224741346ff6fc
 		// Add overlap logic
+		FlxG.overlap(player, coins, collectCoin);
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmGroup, DontTouchMe.dtmHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
-		FlxG.overlap(player, trap, trap.playerTrapResolve);
+		FlxG.overlap(player, trapGroup, trap.playerTrapResolve);
+		//FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
 		FlxG.collide(player, sentry1);
 		FlxG.collide(_mGround, bullets);
 		FlxG.collide(blockGroup, bullets);
+		FlxG.collide(_mGround, sprites);
     
    		if (!flagpole.level_over()){
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
