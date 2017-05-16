@@ -186,7 +186,7 @@ import flixel.tweens.FlxTween.TweenOptions;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
   }
    
   /**
@@ -222,6 +222,7 @@ import flixel.tweens.FlxTween.TweenOptions;
    * Overrides the parent "hurt" function to use the implement invincibilty timer
    * @param	damage - the amount of damage dealth by whatever enemy or object caused the damamge
    */
+  
   override public function hurt(damage:Float)
   {
 	  var options:TweenOptions = { type: FlxTween.PINGPONG};
@@ -236,4 +237,12 @@ import flixel.tweens.FlxTween.TweenOptions;
 		//tween = FlxTween.color(player, .1, FlxColor.ORANGE, FlxColor.TRANSPARENT, options);
 	  }  
   } 
-}
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
