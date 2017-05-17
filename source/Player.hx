@@ -74,6 +74,8 @@ import flixel.group.FlxGroup;
     btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
+
+	FlxG.state.add(hitBoxComponents);
 	}
 
 	/**
@@ -101,7 +103,7 @@ import flixel.group.FlxGroup;
 	{
 		brain.update(this);
 		super.update(elapsed);
-    updateHitBoxes();
+		updateHitBoxes();
 	}
 
   /**
@@ -155,7 +157,7 @@ import flixel.group.FlxGroup;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z]);
+    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
   }
    
   /**
@@ -175,7 +177,7 @@ import flixel.group.FlxGroup;
 		scoreTotal += 100;
 	}
   }
-    
+
   /**
    * This method is called during every Player update cycle
    * to keep the hitboxes in the same position relative to the player
@@ -186,4 +188,12 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
-}
+
+  /**
+   * Causes the player to bounce upwards
+   */
+  public function bounce():Void
+  {
+	  velocity.y = -270;
+  }
+ }
