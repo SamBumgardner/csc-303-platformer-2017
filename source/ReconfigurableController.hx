@@ -98,6 +98,7 @@ class ReconfigurableController
 			left = "DPAD_LEFT";
 			up = "DPAD_UP";
 			down = "DPAD_DOWN";
+			attack = "RIGHT_SHOULDER";
 			
 		}
 		
