@@ -165,7 +165,7 @@ import flixel.effects.FlxFlicker;
 		step++;
     }
 	//Attack key while weilding an item
-	if (FlxG.keys.anyJustReleased([FlxKey.SPACE]))
+	if (FlxG.keys.anyJustReleased([FlxKey.SPACE]) || controller.isAttacking())
 	{
 		if (weilding && !attacking){
 			attacking = true;

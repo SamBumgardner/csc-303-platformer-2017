@@ -17,6 +17,7 @@ typedef ControlConfig = {
 	var right:String;
 	var up:String;
 	var down:String;
+	var attack:String;
 }
 
 class ReconfigurableController 
@@ -29,6 +30,7 @@ class ReconfigurableController
 	private var up:String;
 	private var down:String;
 	private var gamepadExists:Bool;
+	private var attack:String;
 	
 	public function new() 
 	{
@@ -86,6 +88,7 @@ class ReconfigurableController
 			left = config.left;
 			up = config.up;
 			down = config.down;
+			attack = config.attack;
 		}
 		else{
 			trace("CONTROL CONFIG DOES NOT EXIST AT:"+FileSystem.absolutePath(fname));
@@ -124,5 +127,7 @@ class ReconfigurableController
 		return getButton(down);
 	}
 	
-	
+	public function isAttacking(){
+		return getButton(attack);
+	}
 }
