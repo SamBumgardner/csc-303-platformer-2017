@@ -15,6 +15,8 @@ import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.system.FlxAssets;
+import flixel.math.FlxPoint;
 
 
 class PlayState extends FlxState
@@ -44,6 +46,9 @@ class PlayState extends FlxState
 	private var mushroom:PowerupMushroom;
 	private var fireflower:FireFlower;
 	
+	//music
+	private var music:ReactiveBGPlatforming;
+	
 	// Enemies
 	private var dtmEnemy:DontTouchMe;
 	private var dtmGroup:FlxTypedGroup<DontTouchMe> = new FlxTypedGroup<DontTouchMe>();
@@ -58,7 +63,7 @@ class PlayState extends FlxState
 	{
 
 		hud = new HeadsUpDisplay(0, 0, "MARIO");
-		
+		music = setUpBackgroundMusic();
 		//Loading the map created in Ogmo Editor
 		_map = new FlxOgmoLoader(AssetPaths.CSC303_Level__oel);
 		_mGround = _map.loadTilemap(AssetPaths.overworld__png, 16, 16, "Overworld");
@@ -85,6 +90,7 @@ class PlayState extends FlxState
 		
 		hud = new HeadsUpDisplay(0, 0, "MARIO");
 		add(hud);
+		music.play();
 	}
 	
 	/**
@@ -289,7 +295,7 @@ class PlayState extends FlxState
 			FlxG.collide(_mGround, sword);
 			FlxG.collide(blockGroup, sword);
 		}
-    
+		decideMusicMix();
    		if (!flagpole.level_over()){
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
 		} else {
@@ -339,4 +345,114 @@ class PlayState extends FlxState
 	{
 		FlxG.resetState();
 	}
+	    private function setUpBackgroundMusic():ReactiveBGPlatforming
+    {
+        //Set up bass track and mixes
+        #if debug
+            trace("setting up bass track");
+        #end
+        var bassTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneBass"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Bass);
+        bassTrack.addMix("Normal", 0.9, 0.5);
+        bassTrack.addMix("RunningFast", 0.97, 0.7);
+        bassTrack.addMix("NearTurret", 0.2, 0.5);
+        bassTrack.addMix("YouWin", 1, 1);
+        
+        //Set up effects track and mixes
+        #if debug
+            trace("setting up effects track");
+        #end
+        var effectsTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneEffects"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Effects);
+        effectsTrack.addMix("Normal", 0.9, 0.5);
+        effectsTrack.addMix("RunningFast", .9, 0.5);
+        effectsTrack.addMix("NearTurret", 0.2, 0.5);
+        effectsTrack.addMix("YouWin", 0, 0.5);
+        
+        //Set up GenesisKit track and mixes
+        #if debug
+            trace("setting up genesis track");
+        #end
+        var genesisKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneGenesisKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
+        genesisKitTrack.addMix("Normal", 0, 0.5);
+        genesisKitTrack.addMix("RunningFast", 1, 0.5);
+        genesisKitTrack.addMix("NearTurret", 0, 0.5);
+        genesisKitTrack.addMix("YouWin", 1, 0.5);
+        
+        //Set up MetalKit track and mixes
+        #if debug
+            trace("setting up metalKit track");
+        #end
+        var metalKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneMetalKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
+        metalKitTrack.addMix("Normal", .9, 0.5);
+        metalKitTrack.addMix("RunningFast", 0.4, 0.5);
+        metalKitTrack.addMix("NearTurret", 0.5, 0.5);
+        metalKitTrack.addMix("YouWin", 0, 0.5);
+        
+        //Set up Lead track and mixes
+        #if debug
+            trace("setting up lead track");
+        #end
+        var leadTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneLead"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Lead);
+        leadTrack.addMix("Normal", .8, 0.5);
+        leadTrack.addMix("RunningFast", 0.99, 0.5);
+        leadTrack.addMix("NearTurret", 0.5, 0.5);
+        leadTrack.addMix("YouWin", 0, 0.5);
+        
+        //Set up Rhythm track and mixes
+        #if debug
+            trace("setting up rhythm track");
+        #end
+        var rhythmTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
+        rhythmTrack.addMix("Normal", 1, 0.5);
+        rhythmTrack.addMix("RunningFast", 0.99, 0.3);
+        rhythmTrack.addMix("NearTurret", 0.7, 0.5);
+        rhythmTrack.addMix("YouWin", 0.4, 0.0);
+        
+        //Set up Rhythm 2 track and mixes
+        #if debug
+            trace("setting up rhythm2 track");
+        #end
+        var rhythm2Track:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm2"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
+        rhythm2Track.addMix("Normal", 1, 0.5);
+        rhythm2Track.addMix("RunningFast", 0.99, 0.3);
+        rhythm2Track.addMix("NearTurret", 0.5, 0.5);
+        rhythm2Track.addMix("YouWin", 0.5, 0.0);
+        
+        
+        //set up track object
+        var song:ReactiveBGPlatforming = new ReactiveBGPlatforming(false);
+        song.addTrack(bassTrack);
+        song.addTrack(effectsTrack);
+        song.addTrack(genesisKitTrack);
+        song.addTrack(metalKitTrack);
+        song.addTrack(rhythmTrack);
+        song.addTrack(rhythm2Track);
+        song.setMix("Normal");
+        return song;
+    }
+    
+    public function decideMusicMix(){
+            if (flagpole.level_over()){
+                if( music.currentMix != "YouWin")
+                music.youWin();
+            }
+            else{
+                if (music.currentMix != "RunningFast"){
+					if (player.maxVelocity.x== player.runSpeed && Math.abs(player.velocity.x) >= player.walkSpeed){
+                        music.runningFast();
+                    }
+                }
+                if (music.currentMix != "Normal"){
+                    if (Math.abs(player.velocity.x) <= player.walkSpeed){
+                        music.normal();
+
+					}
+
+				}
+		}
+	} 
+    
+    override public function destroy(){
+        super.destroy();
+        music.destroy();
+    }
 }
