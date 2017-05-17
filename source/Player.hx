@@ -1,6 +1,7 @@
 package;
 
 import flixel.util.FlxTimer;
+import haxe.Timer;
 import states.FSM;
 import states.BaseState;
 import states.PlayerGroundState;
@@ -13,6 +14,9 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.TweenOptions;
+import flixel.effects.FlxFlicker;
 
 /**
  * ...
@@ -20,7 +24,8 @@ import flixel.group.FlxGroup;
  */
  class Player extends FlxSprite
  {
-  public var brain:FSM;
+	public var brain:FSM;
+	public var player:FlxSprite;
 
 	public var xAccel:Float = 400;
 	public var xMaxSpeed(default, set):Float;
@@ -37,16 +42,22 @@ import flixel.group.FlxGroup;
 	public var equipped_item:Item;
 	public var attacking:Bool = false;
 
-  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
-  public var topBox:FlxObject;
-  public var btmBox:FlxObject;
-
-  private var hitBoxHeight:Int = 3;
-  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
-
+	public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+	public var topBox:FlxObject;
+	public var btmBox:FlxObject;
+	public var canTakeDamage:Bool = true;
+  
+	private var hitBoxHeight:Int = 3;
+	private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
   
   // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
-  public var star:Bool = false;
+	public var star:Bool = false;
+	
+	public var invincibleTimer:Float = 0;
+	public var hurtInvincibility:Float = 2;
+	public var hasFlower:Bool = false;
+	public var tween:FlxTween;
+	public var flicker:FlxFlicker;
   
   
 	/**
@@ -61,7 +72,7 @@ import flixel.group.FlxGroup;
 		super(X, Y, SimpleGraphic);
 
 		// Initializes a basic graphic for the player
-		makeGraphic(32, 32, FlxColor.ORANGE);
+		player = makeGraphic(32, 32, FlxColor.ORANGE);
 
 		// Initialize gravity. Assumes the currentState has GRAVITY property.
 		acceleration.y = (cast FlxG.state).GRAVITY;
@@ -107,6 +118,27 @@ import flixel.group.FlxGroup;
 		brain.update(this);
 		super.update(elapsed);
 		updateHitBoxes();
+		// Implements an invincibilty timer to make the player temprarily invulnerable for a time after being hurt
+		if (invincibleTimer > 0)
+		{
+			// If there is still time left on the timer, continue counting down
+			invincibleTimer -= elapsed;
+		}
+		else if (invincibleTimer <= 0)
+		{
+			// When the timer runs out, the player is able to take damage again
+			invincibleTimer = 0;
+			canTakeDamage = true;
+		}
+		
+		if (hasFlower)
+		{
+			if (FlxG.keys.anyJustPressed([FlxKey.SPACE, FlxKey.ENTER]))
+			{
+				new Fireball(x, y);
+				trace("Fire");
+			}
+		}
 	}
 
   /**
@@ -115,6 +147,7 @@ import flixel.group.FlxGroup;
    *
    * @return scalar value of the players next horizontal move
    */
+  
   public function pollForHorizontalMove():Int
   {
     var step:Int = 0;
@@ -209,6 +242,25 @@ import flixel.group.FlxGroup;
     topBox.y = y;
     btmBox.y = y + height - hitBoxHeight;
   }
+  
+  /**
+   * Overrides the parent "hurt" function to use the implement invincibilty timer
+   * @param	damage - the amount of damage dealth by whatever enemy or object caused the damamge
+   */
+  override public function hurt(damage:Float)
+  {
+	  var options:TweenOptions = { type: FlxTween.PINGPONG};
+	  if (canTakeDamage)
+	  {
+		  // Damages player
+		 super.hurt(damage);
+		 // Makes player invulnerable
+		 canTakeDamage = false;
+		 // Starts the invicibility timer
+		 invincibleTimer = hurtInvincibility;
+		FlxFlicker.flicker(player, 2, .1);
+	  }  
+  } 
 
   //Override player.kill to drop any weilded items
   override public function kill():Void 
