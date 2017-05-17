@@ -35,8 +35,8 @@ class Trap extends FlxSprite
         super(X, Y, SimpleGraphic);
 
         //Values for the height and width of the sprite
-        h = 22;
-        w = 22;
+        h = 16;
+        w = 16;
 
         // Initializes a basic graphic for the Trap using the h, and w values
         makeGraphic(w, h, FlxColor.RED);  
@@ -125,7 +125,7 @@ class Trap extends FlxSprite
      * @param	player	The player character object
      * @param	trap	The trap object
 	 */
-    public function playerTrapResolve(player:Player, trap:Trap):Void
+    static public function playerTrapResolve(player:Player, trap:Trap):Void
     {
         //This is a call to the player's damage function
         //player.takeHit() 

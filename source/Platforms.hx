@@ -28,7 +28,7 @@ class Platforms extends FlxSprite
     private var LEFT:Bool = false;
     private var RIGHT: Bool = true;
     private var heavy:Float = 8000;
-    private var blockSize:Int = 32;
+    private var blockSize:Int = 16;
 
     /**
      *  Set the minimum and maximum X and Y coordinate positioning for the platform
