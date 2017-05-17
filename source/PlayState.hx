@@ -73,10 +73,10 @@ class PlayState extends FlxState
 			trace("Initializing PlayState");
 		#end
 
-		if (hud == null)
-		{
-			hud = new HeadsUpDisplay(0, 0, "MARIO");
-		}
+		//if (hud == null)
+		//{
+		hud = new HeadsUpDisplay(0, 0, "MARIO");
+		//}
 		super.create();
 		
 		music = setUpBackgroundMusic(); //create the music object
