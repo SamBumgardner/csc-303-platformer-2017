@@ -101,7 +101,7 @@
     <Lava id="57" x="1664" y="464" />
     <Turtle id="54" x="336" y="304" Wings="False" />
     <Turtle id="56" x="1552" y="432" Wings="False" />
-    <Turtle id="58" x="1040" y="288" Wings="True" />
+    <Turtle id="58" x="1040" y="240" Wings="True" />
     <Platform id="72" x="1952" y="192" Type="Walkway" />
     <Lava id="73" x="2416" y="464" />
     <Lava id="74" x="2432" y="464" />
@@ -224,7 +224,6 @@
     <Coin id="191" x="1344" y="272" Color="1" />
     <Turtle id="192" x="2320" y="128" Wings="True" />
     <Coin id="193" x="3152" y="384" Color="2" />
-    <DontTouchMe id="194" x="1184" y="432" />
     <DontTouchMe id="195" x="2928" y="400" />
   </Entities>
 </level>

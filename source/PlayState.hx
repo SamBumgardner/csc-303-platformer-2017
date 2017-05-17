@@ -19,21 +19,20 @@ class PlayState extends FlxState
 {
 	public var GRAVITY(default, never):Float = 600;
 
-	private var map:FlxTilemap;
-	private var _map:FlxOgmoLoader;
-	private var _mGround:FlxTilemap;
+	private var _map:FlxOgmoLoader;		//Container for all map data
+	private var _mGround:FlxTilemap;	//Container for overworld ground and walls
 	public var player:Player;
 	private var flagpole:FlagPole;
 	private var platform:Platforms;
 	private var trap:Trap;
- 	private var coins:FlxGroup;
-	private var flag_x_loc:Int = 37;
-	private var flag_y_loc:Int = 11;
+	private var flag_x_loc:Int = 37;	//These two variables spawn the flag object
+	private var flag_y_loc:Int = 11;	//next to the flagpole
 
 	public static var hud:HeadsUpDisplay;
-
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
+	public var coins:FlxTypedGroup<Coin> = new FlxTypedGroup<Coin>();
 	public var trapGroup:FlxTypedGroup<Trap> = new FlxTypedGroup<Trap>();
+	public var fireBarGroup:FlxTypedGroup<FlxTypedGroup<Trap>> = new FlxTypedGroup<FlxTypedGroup<Trap>>();
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>();
 	private var platformGroup:FlxTypedGroup<Platforms> = new FlxTypedGroup<Platforms>();
 	
@@ -46,16 +45,11 @@ class PlayState extends FlxState
 	private var flyingEnemy:FlyingTurtle;
 	private var flyingGroup:FlxTypedGroup<FlyingTurtle> = new FlxTypedGroup<FlyingTurtle>();
 	private var sentry1:Sentry;
-	private var bullets:FlxTypedGroup<Bullet>;
+	private var bullets:FlxTypedGroup<Bullet> = new FlxTypedGroup<Bullet>(20);
 	
 	override public function create():Void
 	{
 		super.create();
-		
-		coins = new FlxGroup();
-		
-		bullets = new FlxTypedGroup<Bullet>(20);
-		add(bullets);
 		
 		//Loading the map created in Ogmo Editor
 		_map = new FlxOgmoLoader(AssetPaths.CSC303_Level__oel);
@@ -76,6 +70,10 @@ class PlayState extends FlxState
 		add(turGroup);
 		add(flyingGroup);
 		add(platformGroup);
+		add(bullets);
+		add(trapGroup);
+		add(fireBarGroup);
+		add(coins);
 		
 		hud = new HeadsUpDisplay(0, 0, "MARIO");
 		add(hud);
@@ -146,7 +144,7 @@ class PlayState extends FlxState
 		else if (entityName == "Lava")
 		{
 			trap = new Trap(x, y);
-			add(trap);
+			//add(trap);
 			trapGroup.add(trap);
 		}
 		
@@ -157,14 +155,14 @@ class PlayState extends FlxState
 			trap.buildTrap(trap);
 			add(trap._grpBarTrap);
 			trap.placeTrap(trap._grpBarTrap, x, y);
-			trapGroup.add(trap);
+			fireBarGroup.add(trap._grpBarTrap);
 		}
 		
 		//Logic for adding platforms
 		else if (entityName == "Platform")
 		{
 			var type:String = entityData.get("Type");
-			if (type == "Platform")
+			if (type == "Platform")	//Stationary platform
 			{
 				platform =  new Platforms(x, y, 4, 0, 0, 0, 0, player);
 				platform.immovable = platform.solid = true;
@@ -173,7 +171,7 @@ class PlayState extends FlxState
 				platformGroup.add(platform);
 			}
 			
-			else if (type == "Elevator")
+			else if (type == "Elevator")	//Platform moving exclusively up and down
 			{
 				platform =  new Platforms(x, y, 4, 0, 0, 50, 50, player);
 				platform.immovable = platform.solid = true;
@@ -182,7 +180,7 @@ class PlayState extends FlxState
 				platformGroup.add(platform);
 			}
 			
-			else if (type == "Walkway")
+			else if (type == "Walkway")		//PLatform moving exlusively to the left and right
 			{
 				platform =  new Platforms(x, y, 4, 50, 50, 0, 0, player);
 				platform.immovable = platform.solid = true;
@@ -198,13 +196,12 @@ class PlayState extends FlxState
 			var color:Int = Std.parseInt(entityData.get("Color"));
 			if (color == 2)
 			{
-				coins.add(new Coin(x, y, "red"));
+				sprites.add(coins.add(new Coin(x, y, "red")));
 			}
 			else
 			{
-				coins.add(new Coin(x, y, "yellow"));
+				sprites.add(coins.add(new Coin(x, y, "yellow")));
 			}
-			add(coins);
 		}
 		
 		//Logic for adding Turtle/FlyingTurtles
@@ -229,8 +226,6 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		
-		//platform.platformUpdate(elapsed, sprites, platform);
 
 		hud.update(elapsed);
 
@@ -242,16 +237,16 @@ class PlayState extends FlxState
 		FlxG.overlap(player, turGroup, Turtle.playerHitResolve);
 		FlxG.overlap(player, flyingGroup, Turtle.playerHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
-		FlxG.overlap(player, trapGroup, trap.playerTrapResolve);
-		//FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
+		FlxG.overlap(player, trapGroup, Trap.playerTrapResolve);
+		FlxG.overlap(player, fireBarGroup, Trap.playerTrapResolve);
 		
 		// Add collision logic
-		FlxG.collide(platformGroup, sprites);
-		FlxG.collide(blockGroup, sprites);
-		FlxG.collide(blockGroup, bullets);
-		FlxG.collide(player, sentry1);
-		FlxG.collide(_mGround, bullets);
-		FlxG.collide(_mGround, sprites);
+		FlxG.collide(platformGroup, sprites);	//All sprites can walk on platforms
+		FlxG.collide(blockGroup, sprites);		//All sprites can walk on blocks
+		FlxG.collide(blockGroup, bullets);		//Blocks block bullets
+		FlxG.collide(player, sentry1);			
+		FlxG.collide(_mGround, bullets);		//Ground kills block
+		FlxG.collide(_mGround, sprites);		//All sprites can walk on the ground
 
     
    		if (!flagpole.level_over()){
