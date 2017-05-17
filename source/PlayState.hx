@@ -108,6 +108,7 @@ class PlayState extends FlxState
 		add(sword);
 		add(sword.hitbox);
 		add(sword.hitbox.hitboxFrames);
+		add(sword.hitbox.Animation);
 
 		//Create a new Trap
 		trap = new Trap(320,256);
