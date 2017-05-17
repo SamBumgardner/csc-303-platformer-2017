@@ -21,7 +21,7 @@ class PowerupMushroom extends PowerUp
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		// Instantiate the powerup
-		super(X*8 + 3, Y*8 + 2, AssetPaths.Mushroom_sprite__png);
+		super(X, Y, AssetPaths.Mushroom_sprite__png);
 		// Apply gravity and horizontal motion
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		maxVelocity.y = acceleration.y;

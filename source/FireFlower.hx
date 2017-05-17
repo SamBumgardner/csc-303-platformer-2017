@@ -13,7 +13,7 @@ class FireFlower extends PowerUp
 
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
-		super(X * 8 + 3, Y * 8 + 2, AssetPaths.fireflower__png);
+		super(X, Y, AssetPaths.fireflower__png);
 		acceleration.y = (cast FlxG.state).GRAVITY;
 	}
 	
