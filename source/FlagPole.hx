@@ -18,8 +18,8 @@ import flixel.util.FlxPath;
 class FlagPole extends FlxSprite 
 {
 	public var flag:WinFlag;
-	private var pole_height:Int = 210;
-	private var pole_width:Int = 5;
+	private var pole_height:Int = 192;
+	private var pole_width:Int = 16;
 	private var pole_x_pos:Float;
 	private var pole_y_pos:Float;
 	private var player_x:Float;
@@ -37,7 +37,7 @@ class FlagPole extends FlxSprite
 		win_sound = FlxG.sound.load(AssetPaths.win__wav);
 		win_sound.looped = true;
 		pole_x_pos = X;
-		pole_y_pos = Y-pole_height;
+		pole_y_pos = Y;
 		super(pole_x_pos, pole_y_pos, pole_graphic);
 		
 		//Win flag with a height of 10 and width of 30

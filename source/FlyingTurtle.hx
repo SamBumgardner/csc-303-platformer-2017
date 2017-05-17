@@ -11,7 +11,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class FlyingTurtle extends Turtle 
 {
-	private var hoverHieght:Float;
+	private var hoverHeight:Float;
 	private var flying:Bool = true;
 	private var vulnerable:Bool = false;
 
@@ -28,7 +28,7 @@ class FlyingTurtle extends Turtle
 		super(X, Y, graphic);
 		
 		// Set flying height
-		hoverHieght = Y;
+		hoverHeight = Y;
 		
 		// Lower Y acceleration variable while flying
 		acceleration.y = acceleration.y * .3;
@@ -46,9 +46,9 @@ class FlyingTurtle extends Turtle
 	 * @param	player	A player's character
 	 * @param	turt	A Turtle enemy
 	 */
-	override public function playerHitResolve(player:Player, turt:Turtle):Void
+	static public function playerHitResolve(player:Player, turt:FlyingTurtle):Void
 	{
-		if (flying) {	// The turtle is flying in the air
+		if (turt.flying) {	// The turtle is flying in the air
 			if (turt.overlaps(player.topBox)) {
 				if (player.star) {
 					turt.kill();
@@ -59,8 +59,8 @@ class FlyingTurtle extends Turtle
 				turt.fall();
 				player.bounce();
 			}
-		} else if (vulnerable) {	// The player is walking
-			super.playerHitResolve(player, turt);
+		} else if (turt.vulnerable) {	// The player is walking
+			Turtle.playerHitResolve(player, turt);
 		}
 	}
 	
@@ -116,7 +116,7 @@ class FlyingTurtle extends Turtle
 		super.update(elapsed);
 		
 		var midpoint = getMidpoint(_point);
-		if (flying && midpoint.y > hoverHieght) {
+		if (flying && midpoint.y > hoverHeight) {
 			flapWings();
 		}
 	}

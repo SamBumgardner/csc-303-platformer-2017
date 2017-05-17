@@ -4,6 +4,7 @@ package;
  * ...
  * @author Dillon Woollums
  */
+import flixel.FlxBasic;
 import flixel.group.FlxGroup;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
@@ -59,6 +60,8 @@ class HeadsUpDisplay extends FlxGroup
 		add(coinCross);
 		add(coins);
 		add(coinIcon);
+		
+		forEach(function(hudObject:FlxBasic){(cast hudObject).scrollFactor.set(0, 0); });
 	}
 	
 	/**
@@ -116,6 +119,7 @@ class HeadsUpDisplay extends FlxGroup
 		}
 		score.text = scoreString;
 	}
+	
 	/**
 	 * Updates the hud for the new frame.
 	 * @param	elapsed

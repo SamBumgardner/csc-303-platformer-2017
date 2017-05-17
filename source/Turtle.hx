@@ -13,7 +13,7 @@ class Turtle extends Enemy
 {
 	private var turtPosition:FlxPoint;
 	private var xSpeed:Float = -30;
-	public var hiding:Bool = false;
+	private var hiding:Bool = false;
 	
 
 	/**
@@ -62,9 +62,9 @@ class Turtle extends Enemy
 	 * @param	player	A player's character
 	 * @param	turt	A Turtle enemy
 	 */
-	public function playerHitResolve(player:Player, turt:Turtle):Void
+	static public function playerHitResolve(player:Player, turt:Turtle):Void
 	{
-		if (hiding) {	// Turtle is in it's shell
+		if (turt.hiding) {	// Turtle is in it's shell
 			if (player.star) { 
 				turt.kill(); 
 			} else {
@@ -92,10 +92,10 @@ class Turtle extends Enemy
 	 * @param	enemy	Another enemy in the game
 	 * @param	turt	A Turtle enemy
 	 */
-	public function enemyHitResolve(enemy:Enemy, turt:Turtle):Void
+	static public function enemyHitResolve(enemy:Enemy, turt:Turtle):Void
 	{
-		if (hiding) {
-			if (velocity.x != 0) { enemy.kill(); }
+		if (turt.hiding) {
+			if (turt.velocity.x != 0) { enemy.kill(); }
 		} else {
 			FlxG.collide(enemy, turt);
 		}
