@@ -12,7 +12,9 @@ import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
-import flixel.group.FlxGroup;
+import flixel.group.FlxGroup; 
+import flixel.system.FlxAssets;
+import flixel.math.FlxPoint;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 
@@ -29,11 +31,12 @@ class PlayState extends FlxState
 	private var platform:Platforms;
 
 	private var trap:Trap;
+ 	private var coins:FlxGroup;
  	private var coins:FlxTypedGroup<Coin> = new FlxTypedGroup<Coin>();
 	private var flag_x_loc:Int = 37;
 	//private var sword:Sword;
 	private var flag_y_loc:Int = 11;
-
+	private var playerLastVelocity:FlxPoint;
 	public static var hud:HeadsUpDisplay;
 	public var _pUp:FlxTypedGroup<PowerUp> = new FlxTypedGroup<PowerUp>();
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
@@ -54,6 +57,7 @@ class PlayState extends FlxState
 	private var sentry:Sentry;
 	private var bullets:FlxTypedGroup<Bullet> = new FlxTypedGroup<Bullet>(20);
 	
+<<<<<<< HEAD
 	override public function create():Void
 	{
 
@@ -108,6 +112,11 @@ class PlayState extends FlxState
 		hud = new HeadsUpDisplay(0, 0, "MARIO");
 		add(hud);
 	}
+=======
+	//Music
+	private var music:ReactiveBGPlatforming;
+
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
 	
 	/**
 	 * This function reads the Ogmo Level file and places the different entities based on position and
@@ -128,6 +137,7 @@ class PlayState extends FlxState
 			sprites.add(player);
 		}
 		
+<<<<<<< HEAD
 		//Logic for adding the DontTouchMes
 		else if (entityName == "DontTouchMe")
 		{
@@ -135,6 +145,50 @@ class PlayState extends FlxState
 			dtmEnemy.turnAround();
 			sprites.add(dtmGroup.add(dtmEnemy));
 		}
+=======
+		bullet.kill();
+	}
+	
+	override public function create():Void
+	{
+		#if debug
+			trace("Initializing PlayState");
+		#end
+
+		//if (hud == null)
+		//{
+		hud = new HeadsUpDisplay(0, 0, "MARIO");
+		//}
+		super.create();
+		
+		music = setUpBackgroundMusic(); //create the music object
+		music.play();
+		
+		playerLastVelocity = new FlxPoint(0, 0);
+    		/*Create the flagpole at the end of the level 
+		 * This will also instantiate the flag
+		 * flag_x_loc is the number of blocks to the right where we want the flag
+		 * flag_y_loc is the number of blocks down we want the flag
+		*/
+		flagpole = new FlagPole(32*flag_x_loc, 32*flag_y_loc);
+		add(flagpole);
+		add(flagpole.flag);
+
+		player = new Player(50, 50);
+		add(player);
+
+		//Add player (and any other sprites) to group
+		sprites.add(player);
+		
+		//create new moving platform
+		platform =  new Platforms(250, 150, 3, 100, 100, 50, 50, player);
+		platform.immovable = platform.solid = true;
+		platform.allowCollisions = FlxObject.UP;
+		platform.inContact = false;
+		add(platform);
+
+		add(player.hitBoxComponents);
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
 		
 		//Logic for adding the sentries
 		else if (entityName == "Sentry")
@@ -273,7 +327,17 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		
+<<<<<<< HEAD
 		//platform.platformUpdate(elapsed, sprites, platform);
+=======
+		FlxG.collide(map, player);
+		decideMusicMix();
+		//When player overlaps a coin, the coin is destroyed
+		FlxG.overlap(player, coins, collectCoin);
+		FlxG.collide(map, sprites);
+		
+		platform.platformUpdate(elapsed, sprites, platform);
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
 
 		hud.update(elapsed);
 
@@ -293,6 +357,7 @@ class PlayState extends FlxState
 		//FlxG.overlap(sword.hitbox.hitboxFrames, dtmGroup, sword.hit_enemy);
 		
 		// Add collision logic
+<<<<<<< HEAD
 		FlxG.collide(platformGroup, sprites);
 		FlxG.collide(blockGroup, sprites);
 		FlxG.collide(_mGround, bullets);
@@ -302,22 +367,51 @@ class PlayState extends FlxState
 			//FlxG.collide(map, sword);
 			//FlxG.collide(blockGroup, sword);
 		//}
+=======
+		FlxG.collide(blockGroup, player);
+		FlxG.collide(player, sentry1);
+		FlxG.collide(map, dtmEnemy1);
+		FlxG.collide(map, bullets);
+		FlxG.collide(blockGroup, bullets);
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
     
    		if (!flagpole.level_over()){
+			//check for the goal being reached
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
+			//allow for music changes
+			//trigger music change on speed if neccessary
 		} else {
 			//kill all enemies and bullets on screen. Deactivate cannons
 			bullets.forEachAlive(function(bullet:Bullet){bullet.kill(); });
+<<<<<<< HEAD
 			dtmGroup.forEachAlive(function(dtm:DontTouchMe){ dtm.kill(); });
 			turGroup.forEachAlive(function(tur:Turtle){ tur.kill(); });
 			flyingGroup.forEachAlive(function(fly:Turtle){ fly.kill(); });
 			sentry.active = false;
 			// time (seconds), callback, loops
+=======
+			dtmEnemy1.kill();
+			sentry1.active = false;
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
 			new FlxTimer().start(10, resetLevel, 1);
+		}			
+		if(player.equipped_item != sword){
+			FlxG.collide(map, sword);
+			FlxG.collide(blockGroup, sword);
 		}
+<<<<<<< HEAD
 		//FlxG.collide(_pUp, blockGroup);
 		//FlxG.collide(map, _pUp);
 		//FlxG.collide(_map, mushroom);
+=======
+    
+		
+
+
+		FlxG.collide(_pUp, blockGroup);
+		FlxG.collide(map, _pUp);
+		FlxG.collide(map, mushroom);
+>>>>>>> 116c829a38e239b4d177b0337c6720dfab7e3252
 	}
 	
 		/**
@@ -353,5 +447,123 @@ class PlayState extends FlxState
 	public function resetLevel(?Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
+	}
+	
+	private function setUpBackgroundMusic():ReactiveBGPlatforming
+	{
+		//Set up bass track and mixes
+		#if debug
+			trace("setting up bass track");
+		#end
+		var bassTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneBass"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Bass);
+		bassTrack.addMix("Normal", 0.9, 0.5);
+		bassTrack.addMix("RunningFast", 0.97, 0.7);
+		bassTrack.addMix("NearTurret", 0.2, 0.5);
+		bassTrack.addMix("YouWin", 1, 1);
+		
+		//Set up effects track and mixes
+		#if debug
+			trace("setting up effects track");
+		#end
+		var effectsTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneEffects"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Effects);
+		effectsTrack.addMix("Normal", 0.9, 0.5);
+		effectsTrack.addMix("RunningFast", .9, 0.5);
+		effectsTrack.addMix("NearTurret", 0.2, 0.5);
+		effectsTrack.addMix("YouWin", 0, 0.5);
+		
+		//Set up GenesisKit track and mixes
+		#if debug
+			trace("setting up genesis track");
+		#end
+		var genesisKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneGenesisKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
+		genesisKitTrack.addMix("Normal", 0, 0.5);
+		genesisKitTrack.addMix("RunningFast", 1, 0.5);
+		genesisKitTrack.addMix("NearTurret", 0, 0.5);
+		genesisKitTrack.addMix("YouWin", 1, 0.5);
+		
+		//Set up MetalKit track and mixes
+		#if debug
+			trace("setting up metalKit track");
+		#end
+		var metalKitTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneMetalKit"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.GeneralPercussion);
+		metalKitTrack.addMix("Normal", .9, 0.5);
+		metalKitTrack.addMix("RunningFast", 0.4, 0.5);
+		metalKitTrack.addMix("NearTurret", 0.5, 0.5);
+		metalKitTrack.addMix("YouWin", 0, 0.5);
+		
+		//Set up Lead track and mixes
+		#if debug
+			trace("setting up lead track");
+		#end
+		var leadTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneLead"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Lead);
+		leadTrack.addMix("Normal", .8, 0.5);
+		leadTrack.addMix("RunningFast", 0.99, 0.5);
+		leadTrack.addMix("NearTurret", 0.5, 0.5);
+		leadTrack.addMix("YouWin", 0, 0.5);
+		
+		//Set up Rhythm track and mixes
+		#if debug
+			trace("setting up rhythm track");
+		#end
+		var rhythmTrack:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
+		rhythmTrack.addMix("Normal", 1, 0.5);
+		rhythmTrack.addMix("RunningFast", 0.99, 0.3);
+		rhythmTrack.addMix("NearTurret", 0.7, 0.5);
+		rhythmTrack.addMix("YouWin", 0.4, 0.0);
+		
+		//Set up Rhythm 2 track and mixes
+		#if debug
+			trace("setting up rhythm2 track");
+		#end
+		var rhythm2Track:ReactiveBGMusicTrack = new ReactiveBGMusicTrack(FlxAssets.getSound("assets/music/FlyingBatteryZoneRhythm2"), 0, 0, 1.595, 107.205, false, ReactiveBGMusicTrackType.Rhythm);
+		rhythm2Track.addMix("Normal", 1, 0.5);
+		rhythm2Track.addMix("RunningFast", 0.99, 0.3);
+		rhythm2Track.addMix("NearTurret", 0.5, 0.5);
+		rhythm2Track.addMix("YouWin", 0.5, 0.0);
+		
+		
+		//set up track object
+		var song:ReactiveBGPlatforming = new ReactiveBGPlatforming(false);
+		song.addTrack(bassTrack);
+		song.addTrack(effectsTrack);
+		song.addTrack(genesisKitTrack);
+		song.addTrack(metalKitTrack);
+		song.addTrack(rhythmTrack);
+		song.addTrack(rhythm2Track);
+		song.setMix("Normal");
+		return song;
+	}
+	
+	public function decideMusicMix(){
+			if (flagpole.level_over()){
+				if( music.currentMix != "YouWin")
+				music.youWin();
+			}
+			else{
+				if (player.getPosition().distanceTo(sentry1.getPosition()) <= 150){
+					if (music.currentMix != "NearTurret"){
+						music.nearTurret();
+					}
+				}
+				else{
+					if (music.currentMix != "RunningFast"){
+						if (player.maxVelocity.x== player.runSpeed && Math.abs(player.velocity.x) >= player.walkSpeed){
+							music.runningFast();
+						}
+					}
+					if (music.currentMix != "Normal"){
+						if (Math.abs(player.velocity.x) <= player.walkSpeed){
+							music.normal();
+						}
+					}
+				}
+
+			}
+	}
+	
+	
+	override public function destroy(){
+		super.destroy();
+		music.destroy();
 	}
 }
