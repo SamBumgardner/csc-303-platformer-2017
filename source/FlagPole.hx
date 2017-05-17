@@ -18,7 +18,7 @@ import flixel.util.FlxPath;
 class FlagPole extends FlxSprite 
 {
 	public var flag:WinFlag;
-	private var pole_height:Int = 208;
+	private var pole_height:Int = 192;
 	private var pole_width:Int = 16;
 	private var pole_x_pos:Float;
 	private var pole_y_pos:Float;

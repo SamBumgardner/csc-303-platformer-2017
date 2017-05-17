@@ -11,7 +11,6 @@ import flixel.util.FlxColor;
  */
 class Block extends FlxSprite 
 {
-	static public var SCALEFACTOR(default, never):Int = 32;
 	static public var IMAGE(default, never):FlxGraphicAsset = AssetPaths.Brick__png;
 	public var isBreakable:Bool;
 	
