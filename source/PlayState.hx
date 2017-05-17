@@ -27,7 +27,8 @@ class PlayState extends FlxState
 
 	private var trap:Trap;
  	private var coins:FlxGroup;
-  private var flag_x_loc:Int = 17;
+	private var sword:Sword;
+	private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
 
 	public static var hud:HeadsUpDisplay;
@@ -124,6 +125,11 @@ class PlayState extends FlxState
 		// Add the powerups to the level
 		add(_pUp);
 
+		sword = new Sword(4*32, 3*32, AssetPaths.sword__png);
+		add(sword);
+		add(sword.hitbox);
+		add(sword.hitbox.hitboxFrames);
+		add(sword.hitbox.Animation);
 
 		//Create a new Trap
 		trap = new Trap(320,256);
@@ -192,6 +198,8 @@ class PlayState extends FlxState
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.playerHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
 		FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
+		FlxG.overlap(player, sword, player.pickup_item);
+		FlxG.overlap(sword.hitbox.hitboxFrames, dtmEnemy1, sword.hit_enemy);
 		
 		// Add collision logic
 		FlxG.collide(blockGroup, player);
@@ -199,6 +207,21 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
+		if(player.equipped_item != sword){
+			FlxG.collide(map, sword);
+			FlxG.collide(blockGroup, sword);
+		}
+    
+   		if (!flagpole.level_over()){
+			FlxG.overlap(player, flagpole, flagpole.win_animation);
+		} else {
+			//kill all enemies and bullets on screen. Dactivate cannons
+			bullets.forEachAlive(function(bullet:Bullet){bullet.kill(); });
+			dtmEnemy1.kill();
+			sentry1.active = false;
+			// time (seconds), callback, loops
+			new FlxTimer().start(10, resetLevel, 1);
+		}
 		FlxG.collide(_pUp, blockGroup);
 		FlxG.collide(map, _pUp);
 		FlxG.collide(map, mushroom);
@@ -217,7 +240,7 @@ class PlayState extends FlxState
 		c.kill();
 	}
 
-	private function resetLevel(Timer:FlxTimer):Void
+	public function resetLevel(?Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
 	}
