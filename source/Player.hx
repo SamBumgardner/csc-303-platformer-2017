@@ -232,7 +232,6 @@ import flixel.group.FlxGroup;
 				weilding = true;
 				equipped_item = item;
 				item.equip(this);
-				item.visible = false;
 			}
 		} 
 	}

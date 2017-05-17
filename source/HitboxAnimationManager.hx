@@ -87,7 +87,10 @@ class HitboxAnimationManager extends FlxBasic
 			}
 		}
 		for (i in 0...frameHolder.length){
-			frameHolder[i].x = ObjectReference.x + xOffsets[i] * direction;
+			if(direction == -1)
+				frameHolder[i].x = ObjectReference.x + (widths[i] * direction);
+			else 
+				frameHolder[i].x = ObjectReference.x + (xOffsets[i] * direction);
 			frameHolder[i].y = ObjectReference.y + yOffsets[i];
 		}
 		if (animating){
@@ -107,6 +110,7 @@ class HitboxAnimationManager extends FlxBasic
 			animating = false;
 			frameCounter = 0;
 			currentFrame = 0;	
+			ObjectReference.visible = true;
 		}
 		else if (frameCounter >= frameLength[currentFrame]){
 			currentFrame = currentFrame + 1;

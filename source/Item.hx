@@ -12,7 +12,6 @@ import haxe.Timer;
  */
 class Item extends FlxSprite
 {
-	private var player_trace:Player;
 	
 	public var weildable:Bool = false;
 	public var equipped:Bool = false;
@@ -38,12 +37,12 @@ class Item extends FlxSprite
 			//Optimally we would set exists to false, 
 			//and change the graphic of the character to show it has been equipped
 			if (facing == FlxObject.LEFT){
-			x = player_trace.x;
+			x = (cast (FlxG.state, PlayState)).player.x;
 			}
 			else {
-			x = player_trace.x+player_trace.frameWidth-frameWidth;
+			x = (cast (FlxG.state, PlayState)).player.x+(cast (FlxG.state, PlayState)).player.frameWidth-frameWidth;
 			}
-			y = player_trace.y;
+			y = (cast (FlxG.state, PlayState)).player.y;
 		}
 	}
 	
@@ -53,8 +52,6 @@ class Item extends FlxSprite
 	 */	
 	public function equip(player:Player){
 		equipped = true;
-		player_trace = player;
-		
 	}
 	
 	/**
@@ -64,7 +61,6 @@ class Item extends FlxSprite
 	public function drop_item(){
 		justDropped = true;
 		equipped = false;
-		player_trace = null;
 		velocity.y = 0;
 		acceleration.y = (cast FlxG.state).GRAVITY;
 		Timer.delay(function(){ justDropped = false; }, 1000);
