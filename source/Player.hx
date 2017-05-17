@@ -130,10 +130,10 @@ import flixel.group.FlxGroup;
 		step++;
     }
 	//Attack key while weilding an item
-	if (FlxG.keys.anyPressed([FlxKey.SPACE]))
+	if (FlxG.keys.anyJustReleased([FlxKey.SPACE]))
 	{
-		if (weilding && !attacking){ 
-			attacking = attack_state();
+		if (weilding && !attacking){
+			attacking = true;
 			equipped_item.attack();
 		}
 	}

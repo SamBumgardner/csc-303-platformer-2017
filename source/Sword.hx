@@ -81,6 +81,6 @@ class Sword extends Item
 	 * @param	tween
 	 */
 	private function reset_weapon(){
-	  new FlxTimer().start(.4, function(timer: FlxTimer){(cast (FlxG.state, PlayState)).player.attacking = false; }, 1);  
-  }
+		new FlxTimer().start(.4, function(timer: FlxTimer){(cast (FlxG.state, PlayState)).player.attacking = false; }, 1);
+	}
 }
