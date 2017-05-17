@@ -13,6 +13,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 
 
 class PlayState extends FlxState
@@ -25,18 +27,22 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var flagpole:FlagPole;
 	private var platform:Platforms;
+
 	private var trap:Trap;
- 	private var coins:FlxGroup;
+ 	private var coins:FlxTypedGroup<Coin> = new FlxTypedGroup<Coin>();
 	private var flag_x_loc:Int = 37;
+	//private var sword:Sword;
 	private var flag_y_loc:Int = 11;
 
 	public static var hud:HeadsUpDisplay;
-
+	public var _pUp:FlxTypedGroup<PowerUp> = new FlxTypedGroup<PowerUp>();
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
 	public var trapGroup:FlxTypedGroup<Trap> = new FlxTypedGroup<Trap>();
+	public var fireBarGroup:FlxTypedGroup<FlxTypedGroup<Trap>> = new FlxTypedGroup<FlxTypedGroup<Trap>>();
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>();
 	private var platformGroup:FlxTypedGroup<Platforms> = new FlxTypedGroup<Platforms>();
-	
+	private var mushroom:PowerupMushroom;
+	private var fireflower:FireFlower;
 	
 	// Enemies
 	private var dtmEnemy:DontTouchMe;
@@ -45,17 +51,17 @@ class PlayState extends FlxState
 	private var turGroup:FlxTypedGroup<Turtle> = new FlxTypedGroup<Turtle>();
 	private var flyingEnemy:FlyingTurtle;
 	private var flyingGroup:FlxTypedGroup<FlyingTurtle> = new FlxTypedGroup<FlyingTurtle>();
-	private var sentry1:Sentry;
-	private var bullets:FlxTypedGroup<Bullet>;
+	private var sentry:Sentry;
+	private var bullets:FlxTypedGroup<Bullet> = new FlxTypedGroup<Bullet>(20);
 	
 	override public function create():Void
 	{
-		super.create();
-		
-		coins = new FlxGroup();
-		
-		bullets = new FlxTypedGroup<Bullet>(20);
-		add(bullets);
+
+		//if (hud == null)
+		//{
+			hud = new HeadsUpDisplay(0, 0, "MARIO");
+		//}
+		//super.create();
 		
 		//Loading the map created in Ogmo Editor
 		_map = new FlxOgmoLoader(AssetPaths.CSC303_Level__oel);
@@ -65,6 +71,24 @@ class PlayState extends FlxState
 		add(_mGround);
 		_map.loadEntities(placeEntities, "Entities");
 		
+		//_pUp = new FlxGroup();
+		//// Instatiate the mushroom
+		//mushroom = new PowerupMushroom(40, 40);
+		//// Add the mushroom to the powerup group
+		//_pUp.add(mushroom);
+		//// Instantiate the fire flower
+		//fireflower = new FireFlower(32, 19);
+		//// Add the fire flower to the group
+		//_pUp.add(fireflower);
+		//// Add the powerups to the level
+		//add(_pUp);
+
+		//sword = new Sword(4*32, 3*32, AssetPaths.sword__png);
+		//add(sword);
+		//add(sword.hitbox);
+		//add(sword.hitbox.hitboxFrames);
+		//add(sword.hitbox.Animation);
+
 		//Camera will follow player as they get closer to edges of screen
 		FlxG.camera.setScrollBoundsRect(0, 0, _mGround.width, _mGround.height);
 		FlxG.worldBounds.set(0, 0, _mGround.width, _mGround.height);
@@ -76,6 +100,10 @@ class PlayState extends FlxState
 		add(turGroup);
 		add(flyingGroup);
 		add(platformGroup);
+		add(trapGroup);
+		add(fireBarGroup);
+		add(bullets);
+		add(_pUp);
 		
 		hud = new HeadsUpDisplay(0, 0, "MARIO");
 		add(hud);
@@ -111,9 +139,9 @@ class PlayState extends FlxState
 		//Logic for adding the sentries
 		else if (entityName == "Sentry")
 		{
-			sentry1 = new Sentry(x, y, bullets, player);
-			add(sentry1);
-			sprites.add(sentry1);
+			sentry = new Sentry(x, y, bullets, player);
+			add(sentry);
+			sprites.add(sentry);
 		}
 		
 		//Logic for adding the Blocks
@@ -146,7 +174,6 @@ class PlayState extends FlxState
 		else if (entityName == "Lava")
 		{
 			trap = new Trap(x, y);
-			add(trap);
 			trapGroup.add(trap);
 		}
 		
@@ -155,9 +182,8 @@ class PlayState extends FlxState
 		{
 			trap = new Trap(x, y);
 			trap.buildTrap(trap);
-			add(trap._grpBarTrap);
 			trap.placeTrap(trap._grpBarTrap, x, y);
-			trapGroup.add(trap);
+			fireBarGroup.add(trap._grpBarTrap);
 		}
 		
 		//Logic for adding platforms
@@ -224,6 +250,23 @@ class PlayState extends FlxState
 			
 		}
 		
+		//Logic for adding the ending Flagpole
+		else if (entityName == "PowerUp")
+		{
+			var type:String = entityData.get("Type");
+			if (type == "Mushroom") 
+			{
+				mushroom = new PowerupMushroom(x, y);
+				sprites.add(_pUp.add(mushroom));	
+			}
+			
+			else if (type == "FireFlower")
+			{
+				fireflower = new FireFlower(x, y);
+				sprites.add(_pUp.add(fireflower));
+			}
+		}
+		
 	}
 	
 	override public function update(elapsed:Float):Void
@@ -236,23 +279,29 @@ class PlayState extends FlxState
 
 		// Add overlap logic
 		FlxG.overlap(player, coins, collectCoin);
+		FlxG.overlap(player, mushroom, mushroom.getPowerup);
+		FlxG.overlap(player, fireflower, fireflower.getPowerup);  
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmGroup, DontTouchMe.playerHitResolve);
 		FlxG.overlap(dtmGroup, turGroup, Turtle.enemyHitResolve);
 		FlxG.overlap(player, turGroup, Turtle.playerHitResolve);
 		FlxG.overlap(player, flyingGroup, Turtle.playerHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
-		FlxG.overlap(player, trapGroup, trap.playerTrapResolve);
-		//FlxG.overlap(player, trap._grpBarTrap, trap.playerTrapResolve);
+		FlxG.overlap(player, trapGroup, Trap.playerTrapResolve);
+		FlxG.overlap(player, fireBarGroup, Trap.playerTrapResolve);
+		//FlxG.overlap(player, sword, player.pickup_item);
+		//FlxG.overlap(sword.hitbox.hitboxFrames, dtmGroup, sword.hit_enemy);
 		
 		// Add collision logic
 		FlxG.collide(platformGroup, sprites);
 		FlxG.collide(blockGroup, sprites);
-		FlxG.collide(blockGroup, bullets);
-		FlxG.collide(player, sentry1);
 		FlxG.collide(_mGround, bullets);
 		FlxG.collide(_mGround, sprites);
 
+		//if(player.equipped_item != sword){
+			//FlxG.collide(map, sword);
+			//FlxG.collide(blockGroup, sword);
+		//}
     
    		if (!flagpole.level_over()){
 			FlxG.overlap(player, flagpole, flagpole.win_animation);
@@ -262,10 +311,13 @@ class PlayState extends FlxState
 			dtmGroup.forEachAlive(function(dtm:DontTouchMe){ dtm.kill(); });
 			turGroup.forEachAlive(function(tur:Turtle){ tur.kill(); });
 			flyingGroup.forEachAlive(function(fly:Turtle){ fly.kill(); });
-			sentry1.active = false;
+			sentry.active = false;
 			// time (seconds), callback, loops
 			new FlxTimer().start(10, resetLevel, 1);
 		}
+		//FlxG.collide(_pUp, blockGroup);
+		//FlxG.collide(map, _pUp);
+		//FlxG.collide(_map, mushroom);
 	}
 	
 		/**
@@ -283,6 +335,7 @@ class PlayState extends FlxState
 		
 		bullet.kill();
 	}
+
   
   	/**
 	 * Updates HUD when player collects a coin
@@ -297,7 +350,7 @@ class PlayState extends FlxState
 		c.kill();
 	}
 
-	private function resetLevel(Timer:FlxTimer):Void
+	public function resetLevel(?Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
 	}

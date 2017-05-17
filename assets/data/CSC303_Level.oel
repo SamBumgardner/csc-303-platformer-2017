@@ -226,5 +226,7 @@
     <Coin id="193" x="3152" y="384" Color="2" />
     <DontTouchMe id="194" x="1184" y="432" />
     <DontTouchMe id="195" x="2928" y="400" />
+    <PowerUp id="196" x="240" y="432" Type="Mushroom" />
+    <PowerUp id="197" x="320" y="192" Type="FireFlower" />
   </Entities>
 </level>

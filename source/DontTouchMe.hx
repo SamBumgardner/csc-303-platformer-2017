@@ -64,7 +64,7 @@ class DontTouchMe extends Enemy
 			if (player.star) {
 				dtm.kill();
 			} else {
-				player.kill();
+				player.hurt(1);
 			}
 		} else if (dtm.overlaps(player.btmBox)) {
 			dtm.kill();

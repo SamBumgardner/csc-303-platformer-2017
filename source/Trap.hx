@@ -125,7 +125,7 @@ class Trap extends FlxSprite
      * @param	player	The player character object
      * @param	trap	The trap object
 	 */
-    public function playerTrapResolve(player:Player, trap:Trap):Void
+    static public function playerTrapResolve(player:Player, trap:Trap):Void
     {
         //This is a call to the player's damage function
         //player.takeHit() 
