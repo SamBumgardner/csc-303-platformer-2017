@@ -34,6 +34,7 @@ class ReactiveBGMusic
 		needsGlobalLooping = globalLooping;
 		tracks = new List<ReactiveBGMusicTrack>();
 		currentMix = "";
+		stop();
 	}
 	
 	public function play()
