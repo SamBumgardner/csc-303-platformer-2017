@@ -12,6 +12,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
+import flixel.FlxObject;
+import flixel.FlxSprite;
 
 
 class PlayState extends FlxState
@@ -22,21 +24,25 @@ class PlayState extends FlxState
 	public var player:Player;
 	private var flagpole:FlagPole;
 	private var platform:Platforms;
+
 	private var trap:Trap;
  	private var coins:FlxGroup;
   private var flag_x_loc:Int = 17;
 	private var flag_y_loc:Int = 11;
 
 	public static var hud:HeadsUpDisplay;
-
+	public var _pUp:FlxGroup;
 	public var sprites:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
 
 	private var blockGroup:FlxTypedGroup<Block> = new FlxTypedGroup<Block>(10);
+	private var mushroom:PowerupMushroom;
+	private var fireflower:FireFlower;
 	
 	// Enemies
 	private var dtmEnemy1:DontTouchMe;
 	private var sentry1:Sentry;
 	private var bullets:FlxTypedGroup<Bullet>;
+	
 	
 	/**
 	 * bulletHitPlayer
@@ -47,19 +53,21 @@ class PlayState extends FlxState
 	 */
 	public function bulletHitPlayer(player:Player, bullet:FlxObject):Void
 	{
-		if (!player.star) {
-			player.kill();
+		if (!player.star) 
+		{
+			player.hurt(1);
 		}
 		
 		bullet.kill();
 	}
-
 	
 	override public function create():Void
 	{
-		//if (hud == null){
+
+		if (hud == null)
+		{
 			hud = new HeadsUpDisplay(0, 0, "MARIO");
-		//}
+		}
 		super.create();
     
     		/*Create the flagpole at the end of the level 
@@ -99,9 +107,22 @@ class PlayState extends FlxState
 		
 		bullets = new FlxTypedGroup<Bullet>(20);
 		add(bullets);
-		
+	
 		sentry1 = new Sentry(320, 32, bullets, player);
 		add(sentry1);
+		
+		// Creates a group to hold all powerups, used for collision detection
+		_pUp = new FlxGroup();
+		// Instatiate the mushroom
+		mushroom = new PowerupMushroom(40, 40);
+		// Add the mushroom to the powerup group
+		_pUp.add(mushroom);
+		// Instantiate the fire flower
+		fireflower = new FireFlower(32, 19);
+		// Add the fire flower to the group
+		_pUp.add(fireflower);
+		// Add the powerups to the level
+		add(_pUp);
 
 
 		//Create a new Trap
@@ -163,7 +184,10 @@ class PlayState extends FlxState
 
 		FlxG.collide(map, player);
 
-		// Add overlap logic
+		FlxG.overlap(player, mushroom, mushroom.getPowerup);
+		FlxG.overlap(player, fireflower, fireflower.getPowerup);  
+				// Add overlap logic
+
 		FlxG.overlap(blockGroup, player.hitBoxComponents, function(b:Block, obj:FlxObject) {b.onTouch(obj, player);} );
 		FlxG.overlap(player, dtmEnemy1, dtmEnemy1.playerHitResolve);
 		FlxG.overlap(player, bullets, bulletHitPlayer);
@@ -175,17 +199,9 @@ class PlayState extends FlxState
 		FlxG.collide(map, dtmEnemy1);
 		FlxG.collide(map, bullets);
 		FlxG.collide(blockGroup, bullets);
-    
-   		if (!flagpole.level_over()){
-			FlxG.overlap(player, flagpole, flagpole.win_animation);
-		} else {
-			//kill all enemies and bullets on screen. Dactivate cannons
-			bullets.forEachAlive(function(bullet:Bullet){bullet.kill(); });
-			dtmEnemy1.kill();
-			sentry1.active = false;
-			// time (seconds), callback, loops
-			new FlxTimer().start(10, resetLevel, 1);
-		}
+		FlxG.collide(_pUp, blockGroup);
+		FlxG.collide(map, _pUp);
+		FlxG.collide(map, mushroom);
 	}
   
   	/**
@@ -199,7 +215,7 @@ class PlayState extends FlxState
 		hud.handleScoreUpdate(p.scoreTotal);
 		hud.handleCoinsUpdate(p.coinCount);
 		c.kill();
-  }
+	}
 
 	private function resetLevel(Timer:FlxTimer):Void
 	{
