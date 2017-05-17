@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxTimer;
 
 /**
  * SWORDS!!!!!!
@@ -28,11 +29,13 @@ class Sword extends Item
 		weildable = true;
 		
 		//Create hitbox parameters and create the Frame animation manager
+		//var angles:Array<Float> = [40, 60, 80, 100, 120];
 		var xOffsets:Array<Float> = [frameWidth / 4, frameWidth / 2, frameWidth , frameWidth*1.3, frameWidth*1.3];
 		var yOffsets:Array<Float> = [ -frameHeight / 6, -frameHeight / 8, 0, frameHeight/6, frameHeight / 4];
-		var angles:Array<Float> = [40, 60, 80, 100, 120];
+		var widths:Array<Float> = [frameHeight * 4 / 9, frameHeight * 6 / 9, frameHeight * 8 / 9, frameHeight * 10 / 9, frameHeight * 4 / 3];
+		var heights:Array<Float> = [frameWidth * 9 / 4, frameWidth * 9 / 6, frameWidth * 9 / 8, frameWidth * 9 / 10, frameWidth * 3 / 4];
 		var frameLength:Array<Int> = [3, 6, 9, 12, 15 ];
-		hitbox = new HitboxAnimationManager(xOffsets, yOffsets, angles, frameLength, this, SimpleGraphic, true);
+		hitbox = new HitboxAnimationManager(xOffsets, yOffsets, widths, heights, frameLength, this, SimpleGraphic, true);
 		
 	}
 	
@@ -77,7 +80,7 @@ class Sword extends Item
 	 * @param	tween
 	 */
 	private function reset_weapon(){
-	  player_trace.attacking = false;
+	  new FlxTimer().start(.1, function(timer: FlxTimer){(cast (FlxG.state, PlayState)).player.attacking = false; }, 1);  
 	  FlxG.keys.enabled = true;
   }
 }

@@ -232,6 +232,7 @@ import flixel.group.FlxGroup;
 				weilding = true;
 				equipped_item = item;
 				item.equip(this);
+				item.visible = false;
 			}
 		} 
 	}
@@ -252,8 +253,11 @@ import flixel.group.FlxGroup;
 	 * still keeps their current velocity and acceleration
 	 */
 	public function attack_state():Bool{
-		FlxG.keys.enabled = false;
-		return true;
+		if(!attacking){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
   /**

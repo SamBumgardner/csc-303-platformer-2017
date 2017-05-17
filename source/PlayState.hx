@@ -210,11 +210,10 @@ class PlayState extends FlxState
 		hud.handleScoreUpdate(p.scoreTotal);
 		hud.handleCoinsUpdate(p.coinCount);
 		c.kill();
-  }
+	}
 
-	private function resetLevel(Timer:FlxTimer):Void
+	public function resetLevel(?Timer:FlxTimer):Void
 	{
 		FlxG.resetState();
-		FlxG.keys.enabled = true;
 	}
 }

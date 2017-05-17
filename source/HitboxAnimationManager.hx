@@ -12,13 +12,14 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class HitboxAnimationManager extends FlxBasic
 {
-	public var hitboxFrames:FlxTypedGroup<FlxSprite>;
+	public var hitboxFrames:FlxTypedGroup<FlxObject>;
 	public var animating:Bool = false;
 
-	private var frameHolder:Array<FlxSprite>;
+	private var frameHolder:Array<FlxObject>;
 	private var xOffsets:Array<Float>;
 	private var yOffsets:Array<Float>;
-	private var angleOffsets:Array<Float>;
+	private var widths:Array<Float>;
+	private var heights:Array<Float>;
 	private var reverseAngleOffsets:Array<Float>;
 	private var frameLength:Array<Int>;
 	private var currentFrame:Int = 0;
@@ -28,50 +29,42 @@ class HitboxAnimationManager extends FlxBasic
 	private var reverse:Bool;
 	
 	/**
-	 * 
+	 * Be aware that FlxObjects will not be generated at an angle. Create multipl boxes on top of
+	 * each other to achieve the desired effect
 	 * @param	x_offsets -	Array of x offsets from the current position of the object
 	 * @param	y_offsets - Array of y offsets from the current position of the object
-	 * @param	angle_offsets - Array of angles for the hitboxes to make
+	 * @param	widths - Array of widths for each box to be created
+	 * @param	heights - Array of heights for each box to be created
 	 * @param	frame_length - The amount of frames any given hitbox should show for. This is cumulative
 	 * 							i.e. frame_length = [5,10,13]. Hitbox 1 will show for 5 frames. Hitbox 2 wil show for 
 	 * 							5 frames (5+5=10). hitbox 3 will show for 3 frames (5+5+3=13)
 	 * @param	referenceObject - The object for which the hitboxes are being made
 	 * @param	graphic	- graphic for hitboxes? Might be optional if I can debug FlxObjects not being able to angle
 	 * @param	reversible	- Bool if object show 'face' left and right
-	 * @param	width	- width of the hitboxes. Assumes all are the same
-	 * @param	height - height of the hitboxes. Assumes all are the same
 	 */
-	public function new(x_offsets:Array<Float>, y_offsets:Array<Float>, angle_offsets:Array<Float>, frame_length:Array<Int>, 
-						referenceObject:FlxSprite, graphic:FlxGraphicAsset, reversible:Bool = false, ?width:Int = 0, ?height:Int = 0) 
+	public function new(x_offsets:Array<Float>, y_offsets:Array<Float>, broad:Array<Float>, tall:Array<Float>, 
+						frame_length:Array<Int>, referenceObject:FlxSprite, graphic:FlxGraphicAsset, reversible:Bool = false) 
 	{
 		super();
 		xOffsets = x_offsets;
 		yOffsets = y_offsets;
-		angleOffsets = angle_offsets;
+		widths = broad;
+		heights = tall;
 		frameLength = frame_length;
 		ObjectReference = referenceObject;
 		reverse = reversible;
-		
-		if (reverse){
-			reverseAngleOffsets = new Array<Float>();
-			for (i in 0...angleOffsets.length){
-				reverseAngleOffsets.push(360 - angleOffsets[i]);
-			}
-		}
-		if (width == 0)	width = referenceObject.frameWidth;
-		if (height == 0) height = referenceObject.frameHeight;
+
 		var hitbox;
 		//create and store the hitboxes
-		frameHolder = new Array<FlxSprite>();
-		hitboxFrames = new FlxTypedGroup<FlxSprite>();
+		frameHolder = new Array<FlxObject>();
+		hitboxFrames = new FlxTypedGroup<FlxObject>();
 		for (i in 0...xOffsets.length){
-			//hitbox = new FlxObject(ObjectReference.x + xOffsets[i], ObjectReference.y + yOffsets[i], width[i], height[i]);
-			hitbox = new FlxSprite(ObjectReference.x + xOffsets[i], ObjectReference.y, graphic);
+			hitbox = new FlxObject(ObjectReference.x + xOffsets[i], ObjectReference.y + yOffsets[i], widths[i], heights[i]);
+			//hitbox = new FlxSprite(ObjectReference.x + xOffsets[i], ObjectReference.y, graphic);
 			hitbox.exists = false;
 			frameHolder.push(hitbox);
 			hitboxFrames.add(frameHolder[i]);
 		}
-		
 	}
 	
 	/**
@@ -96,7 +89,6 @@ class HitboxAnimationManager extends FlxBasic
 		for (i in 0...frameHolder.length){
 			frameHolder[i].x = ObjectReference.x + xOffsets[i] * direction;
 			frameHolder[i].y = ObjectReference.y + yOffsets[i];
-			frameHolder[i].angle = angleOffsets[i] * direction;
 		}
 		if (animating){
 			animateFrames();			
