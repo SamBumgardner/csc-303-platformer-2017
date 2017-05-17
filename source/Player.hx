@@ -42,14 +42,16 @@ import flixel.effects.FlxFlicker;
 	public var equipped_item:Item;
 	public var attacking:Bool = false;
 
-	public var hitBoxComponents:FlxTypedGroup<FlxObject>;
-	public var topBox:FlxObject;
-	public var btmBox:FlxObject;
-	public var canTakeDamage:Bool = true;
+  public var hitBoxComponents:FlxTypedGroup<FlxObject>;
+  public var topBox:FlxObject;
+  public var btmBox:FlxObject;
+
+  private var hitBoxHeight:Int = 3;
+  private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
+  private var controller:ReconfigurableController;
+  public var canTakeDamage:Bool = true;
   
-	private var hitBoxHeight:Int = 3;
-	private var hitBoxWidthOffset:Int = 4;  //how much narrower the hitboxes are than the player
-  
+
   // Variable used for overlap/collide logic with enemies. Checks if player is holding the star powerup.
 	public var star:Bool = false;
 	
@@ -70,7 +72,7 @@ import flixel.effects.FlxFlicker;
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset)
 	{
 		super(X, Y, SimpleGraphic);
-
+		controller = new ReconfigurableController();
 		// Initializes a basic graphic for the player
 		player = makeGraphic(32, 32, FlxColor.ORANGE);
 
@@ -152,12 +154,12 @@ import flixel.effects.FlxFlicker;
   {
     var step:Int = 0;
 
-    if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]))
+    if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]) || controller.isLeft() )
     {
 		facing = FlxObject.LEFT;
 		step--;
     }
-    if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]))
+    if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]) || controller.isRight() )
     {
 		facing = FlxObject.RIGHT;
 		step++;
@@ -189,7 +191,7 @@ import flixel.effects.FlxFlicker;
    */
   public function isJumping():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]);
+    return FlxG.keys.anyPressed([FlxKey.X, FlxKey.SLASH]) || controller.isJumping();
   }
 
   /**
@@ -211,7 +213,8 @@ import flixel.effects.FlxFlicker;
    */
   public function isRunning():Bool
   {
-    return FlxG.keys.anyPressed([FlxKey.Z, FlxKey.PERIOD]);
+    return FlxG.keys.anyPressed([FlxKey.Z]) || controller.isRunning();
+
   }
    
   /**
