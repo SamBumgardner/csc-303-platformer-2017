@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 import haxe.Timer;
 import states.FSM;
 import states.BaseState;
@@ -36,6 +37,10 @@ import flixel.effects.FlxFlicker;
 	
 	public var coinCount:Int = 0;
 	public var scoreTotal:Int = 0;
+	
+	public var weilding:Bool = false;
+	public var equipped_item:Item;
+	public var attacking:Bool = false;
 
   public var hitBoxComponents:FlxTypedGroup<FlxObject>;
   public var topBox:FlxObject;
@@ -151,15 +156,33 @@ import flixel.effects.FlxFlicker;
 
     if (FlxG.keys.anyPressed([FlxKey.LEFT, FlxKey.A]) || controller.isLeft() )
     {
-      step--;
+		facing = FlxObject.LEFT;
+		step--;
     }
     if (FlxG.keys.anyPressed([FlxKey.RIGHT, FlxKey.D]) || controller.isRight() )
     {
-      step++;
+		facing = FlxObject.RIGHT;
+		step++;
     }
+	//Attack key while weilding an item
+	if (FlxG.keys.anyJustReleased([FlxKey.SPACE]))
+	{
+		if (weilding && !attacking){
+			attacking = true;
+			equipped_item.attack();
+		}
+	}
+	//'g' keypress to drop the currently equipped item
+	if (FlxG.keys.anyPressed([FlxKey.G]))
+	{
+		if(weilding && !attacking){
+			dropCurrentEquip();
+		}
+	}
 
     return step;
   }
+  
 
   /**
    * Convenience method for checking if a jump is being requested.
@@ -242,6 +265,55 @@ import flixel.effects.FlxFlicker;
 	  }  
   } 
 
+  //Override player.kill to drop any weilded items
+  override public function kill():Void 
+  {
+	  if (weilding){
+		dropCurrentEquip();
+	  }
+	  super.kill();
+	  new FlxTimer().start(2, (cast (FlxG.state, PlayState)).resetLevel, 1); //This helps speed things up for debugging
+  }
+
+	/**
+	 * Method to pickup items. If the player is not holding anything
+	 * and the item is weildable, equip the item. Otherwise add it to his bag.
+	 * If player is not weilding anything and the item is weildable
+	 *	set weilding to true and equip
+	*/
+	public function pickup_item(player:Player, item:Item):Void {
+		if (!weilding && item.weildable){
+			if(!item.justDropped){
+				weilding = true;
+				equipped_item = item;
+				item.equip(this);
+			}
+		} 
+	}
+
+	/**
+	 * Method to drop the currently equipped item
+	 * 
+	 */
+	private function dropCurrentEquip():Void{
+		equipped_item.drop_item();
+		weilding = false;
+		equipped_item = null;
+	}
+	
+	/**
+	 * Functionality for keypress event to attack if an item is currently being 
+	 * weilded. Disables user input to put them in the 'attacking state', but 
+	 * still keeps their current velocity and acceleration
+	 */
+	public function attack_state():Bool{
+		if(!attacking){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
   /**
    * Causes the player to bounce upwards
    */
@@ -250,3 +322,4 @@ import flixel.effects.FlxFlicker;
 	  velocity.y = -270;
   }
  }
+
