@@ -34,7 +34,7 @@ class Sword extends Item
 		var yOffsets:Array<Float> = [ -frameHeight / 8, 0, frameHeight / 6, frameHeight / 4, frameHeight / 2];
 		var widths:Array<Float> = [frameHeight * 4 / 9, frameHeight * 6 / 9, frameHeight * 8 / 9, frameHeight, frameHeight * 7/9];
 		var heights:Array<Float> = [frameWidth * 9 / 4, frameWidth * 9 / 6, frameWidth * 9 / 8, frameWidth * 9 / 10, frameWidth * 3 / 4];
-		var frameLength:Array<Int> = [20, 40, 60, 80, 100]; // [3, 6, 9, 12, 15 ];
+		var frameLength:Array<Int> = [3, 6, 9, 12, 15 ];
 		hitbox = new HitboxAnimationManager(xOffsets, yOffsets, widths, heights, frameLength, this, SimpleGraphic, true);
 		
 	}
