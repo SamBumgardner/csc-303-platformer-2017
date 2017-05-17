@@ -35,8 +35,8 @@ class Trap extends FlxSprite
         super(X, Y, SimpleGraphic);
 
         //Values for the height and width of the sprite
-        h = 22;
-        w = 22;
+        h = 16;
+        w = 16;
 
         // Initializes a basic graphic for the Trap using the h, and w values
         makeGraphic(w, h, FlxColor.RED);  

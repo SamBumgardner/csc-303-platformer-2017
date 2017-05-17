@@ -15,6 +15,7 @@ class DontTouchMe extends Enemy
 	private var dtmPosition:FlxPoint;
 	private var xSpeed:Float = -30;
 	
+	
 		
 	/**
 	 * Intializer
@@ -57,7 +58,7 @@ class DontTouchMe extends Enemy
 	 * @param	player	A player's character
 	 * @param	dtm		A DontTouchMe enemy
 	 */
-	public function playerHitResolve(player:Player, dtm:DontTouchMe):Void
+	static public function playerHitResolve(player:Player, dtm:DontTouchMe):Void
 	{
 		if (dtm.overlaps(player.topBox)) {
 			if (player.star) {

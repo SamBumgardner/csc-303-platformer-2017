@@ -11,7 +11,6 @@ import flixel.util.FlxColor;
  */
 class Block extends FlxSprite 
 {
-	static public var SCALEFACTOR(default, never):Int = 32;
 	static public var IMAGE(default, never):FlxGraphicAsset = AssetPaths.Brick__png;
 	public var isBreakable:Bool;
 	
@@ -30,7 +29,7 @@ class Block extends FlxSprite
 		{
 			Graphic = IMAGE;
 		}
-		super(X*SCALEFACTOR, Y*SCALEFACTOR, Graphic);
+		super(X, Y, Graphic);
 		
 		immovable = true;
 		isBreakable = Breakable;

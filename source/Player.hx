@@ -74,6 +74,8 @@ import flixel.group.FlxGroup;
     btmBox = new FlxObject(X + hitBoxWidthOffset, Y + height - hitBoxHeight, width - hitBoxWidthOffset*2, hitBoxHeight);
     hitBoxComponents.add(topBox);
     hitBoxComponents.add(btmBox);
+
+	FlxG.state.add(hitBoxComponents);
 	}
 
 	/**
@@ -175,7 +177,7 @@ import flixel.group.FlxGroup;
 		scoreTotal += 100;
 	}
   }
-    
+
   /**
    * This method is called during every Player update cycle
    * to keep the hitboxes in the same position relative to the player
